@@ -1,0 +1,127 @@
+[gd_scene format=3 uid="uid://bts4blx0hl4nn"]
+
+[ext_resource type="Script" uid="uid://b5kvqbk70883r" path="res://player.gd" id="1_4flbx"]
+[ext_resource type="PackedScene" uid="uid://dog6dkl86jbxf" path="res://character.fbx" id="2_i3pqv"]
+[ext_resource type="PackedScene" uid="uid://c3188lstpepbn" path="res://character (1).fbx" id="3_hqtel"]
+[ext_resource type="Animation" uid="uid://clixjqlwh53vs" path="res://idle.res" id="4_sweqy"]
+[ext_resource type="Animation" uid="uid://bbnac2lpady6h" path="res://walk.res" id="5_2hs0m"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_fglp6"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fglp6"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4flbx"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("PresidentModel:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("AsssassinModel:rotation")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("AnimationPlayer:current_animation")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1jxqw"]
+_data = {
+&"idle": ExtResource("4_sweqy"),
+&"walk": ExtResource("5_2hs0m")
+}
+
+[node name="Player" type="CharacterBody3D" unique_id=809420733]
+script = ExtResource("1_4flbx")
+
+[node name="PresidentModel" parent="." unique_id=1749458065 instance=ExtResource("2_i3pqv")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
+visible = false
+
+[node name="AsssassinModel" parent="." unique_id=1109809797 instance=ExtResource("3_hqtel")]
+transform = Transform3D(-1.5, 0, -1.3113416e-07, 0, 1.5, 0, 1.3113416e-07, 0, -1.5, 0, 0, 0)
+visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=580867497]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_fglp6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=112899849]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_fglp6")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1190510335]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16645584, 1.4315757, -0.5162164)
+fov = 95.75528
+
+[node name="RayCast3D" type="RayCast3D" parent="Camera3D" unique_id=53775644]
+target_position = Vector3(0, 0, -3)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=509350905]
+replication_config = SubResource("SceneReplicationConfig_4flbx")
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1207028065]
+
+[node name="ColorRect" type="ColorRect" parent="HUD" unique_id=439512654]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.7989267, 0.19318363, 0.11282522, 1)
+
+[node name="ProgressBar" type="ProgressBar" parent="HUD" unique_id=1429464161]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_top = -83.0
+offset_right = 150.0
+offset_bottom = -53.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="GameOverPanel" type="Panel" parent="HUD" unique_id=902015068]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -125.0
+offset_right = 250.0
+offset_bottom = 125.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WinnerLabel" type="Label" parent="HUD/GameOverPanel" unique_id=889945054]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -86.5
+offset_top = -24.5
+offset_right = 86.5
+offset_bottom = 24.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "KAZANAN BELLİ DEĞİL
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2025879131]
+libraries/ = SubResource("AnimationLibrary_1jxqw")

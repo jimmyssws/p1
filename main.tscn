@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://bonmonio1csdd"]
+
+[ext_resource type="Script" uid="uid://7yprv15pyl1e" path="res://main.gd" id="1_ig7tw"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_fglp6"]
+size = Vector3(50, 1, 50)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3dyp6"]
+albedo_color = Color(0.728822, 0.728822, 0.728822, 1)
+roughness = 0.8
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fglp6"]
+size = Vector3(50, 1, 50)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3dyp6"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
+
+[sub_resource type="Environment" id="Environment_fglp6"]
+fog_enabled = true
+
+[node name="main" type="Node3D" unique_id=1439855045]
+script = ExtResource("1_ig7tw")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=172206383]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=200200070]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.0809536, 2.316208, 0.78757477)
+mesh = SubResource("BoxMesh_fglp6")
+surface_material_override/0 = SubResource("StandardMaterial3D_3dyp6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=979581508]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2181187, 2.251872, 0.20459747)
+shape = SubResource("BoxShape3D_fglp6")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1881046318]
+
+[node name="HostButton" type="Button" parent="CanvasLayer" unique_id=993445588]
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Kur"
+
+[node name="JoinButton" type="Button" parent="CanvasLayer" unique_id=380590105]
+offset_left = 38.0
+offset_top = -1.0
+offset_right = 81.0
+offset_bottom = 30.0
+text = "Katıl
+"
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=997947994]
+_spawnable_scenes = PackedStringArray("uid://bts4blx0hl4nn", "uid://bbk7uovn5mim2")
+spawn_path = NodePath("..")
+
+[node name="TaskBox" type="StaticBody3D" parent="." unique_id=2137125687]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TaskBox" unique_id=1634296355]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.6408405, 0)
+mesh = SubResource("BoxMesh_3dyp6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TaskBox" unique_id=248359187]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.008011103, 4.6369834, 0.019682169)
+shape = SubResource("BoxShape3D_ig7tw")
+debug_color = Color(0, 0.598802, 0.7087836, 0.41960785)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1277591935]
+transform = Transform3D(0.97601056, 0, -0.21772327, 0, 1, 0, 0.21772327, 0, 0.97601056, 0, 5.599842, 0)
+light_energy = 0.103
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1201575768]
+environment = SubResource("Environment_fglp6")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=159675726]
+transform = Transform3D(0.9987524, 1.3877788e-17, -0.049936626, 0.049831554, 0.064836256, 0.99665093, 0.0032377036, -0.99789596, 0.064755365, 4.614917, 6.9283333, 0)
+light_energy = 9.257
+shadow_enabled = true
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="." unique_id=1478373168]
+transform = Transform3D(0.9987524, 1.3877788e-17, -0.049936626, 0.049831554, 0.064836256, 0.99665093, 0.0032377036, -0.99789596, 0.064755365, -20.633299, 7.8367195, -17.069529)
+light_energy = 5.07
+shadow_enabled = true
+
+[node name="SpotLight3D3" type="SpotLight3D" parent="." unique_id=135714397]
+transform = Transform3D(0.9987524, 1.3877788e-17, -0.049936626, 0.049831554, 0.064836256, 0.99665093, 0.0032377036, -0.99789596, 0.064755365, 11.544825, 6.567354, 17.362045)
+light_energy = 5.07
+shadow_enabled = true
