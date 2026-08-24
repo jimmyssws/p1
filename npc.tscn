@@ -1,36 +1,64 @@
 [gd_scene format=3 uid="uid://bbk7uovn5mim2"]
 
 [ext_resource type="Script" uid="uid://dlmvn5hv7686l" path="res://npc.gd" id="1_ideak"]
-[ext_resource type="PackedScene" uid="uid://c3188lstpepbn" path="res://character (1).fbx" id="2_xxcha"]
-[ext_resource type="Animation" uid="uid://clixjqlwh53vs" path="res://idle.res" id="3_ul7y6"]
-[ext_resource type="Animation" uid="uid://bbnac2lpady6h" path="res://walk.res" id="4_bc6q4"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0xm2m"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_npc_body"]
+radius = 0.35
+height = 1.2
+
+[sub_resource type="StandardMaterial3D" id="Mat_Npc_Body"]
+albedo_color = Color(0.4, 0.4, 0.45, 1)
+roughness = 0.7
+
+[sub_resource type="SphereMesh" id="SphereMesh_npc_head"]
+radius = 0.26
+height = 0.52
+
+[sub_resource type="StandardMaterial3D" id="Mat_Npc_Skin"]
+albedo_color = Color(0.92, 0.76, 0.65, 1)
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_npc_visor"]
+size = Vector3(0.24, 0.08, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Npc_Visor"]
+albedo_color = Color(0.15, 0.15, 0.18, 1)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_v7lw1"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_mcvl2"]
-_data = {
-&"idle": ExtResource("3_ul7y6"),
-&"walk": ExtResource("4_bc6q4")
-}
+properties/1/path = NodePath("CharacterModel:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
 
 [node name="NPC" type="CharacterBody3D" unique_id=1982621083]
 script = ExtResource("1_ideak")
 
-[node name="AssassinModel" parent="." unique_id=1109809797 instance=ExtResource("2_xxcha")]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=298970888]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_0xm2m")
+
+[node name="CharacterModel" type="Node3D" parent="." unique_id=1109809797]
+
+[node name="Body" type="MeshInstance3D" parent="CharacterModel" unique_id=8472910]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+mesh = SubResource("CapsuleMesh_npc_body")
+surface_material_override/0 = SubResource("Mat_Npc_Body")
+
+[node name="Head" type="MeshInstance3D" parent="CharacterModel" unique_id=2938471]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
+mesh = SubResource("SphereMesh_npc_head")
+surface_material_override/0 = SubResource("Mat_Npc_Skin")
+
+[node name="Visor" type="MeshInstance3D" parent="CharacterModel" unique_id=5829103]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48, -0.22)
+mesh = SubResource("BoxMesh_npc_visor")
+surface_material_override/0 = SubResource("Mat_Npc_Visor")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1339541383]
 replication_config = SubResource("SceneReplicationConfig_v7lw1")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=119148902]
-root_node = NodePath("../AssassinModel")
-libraries/ = SubResource("AnimationLibrary_mcvl2")

@@ -1,14 +1,38 @@
 [gd_scene format=3 uid="uid://bts4blx0hl4nn"]
 
 [ext_resource type="Script" uid="uid://b5kvqbk70883r" path="res://player.gd" id="1_4flbx"]
-[ext_resource type="PackedScene" uid="uid://dog6dkl86jbxf" path="res://character.fbx" id="2_i3pqv"]
-[ext_resource type="PackedScene" uid="uid://c3188lstpepbn" path="res://character (1).fbx" id="3_hqtel"]
-[ext_resource type="Animation" uid="uid://cmh4b2b7vu20d" path="res://idle.res" id="4_sweqy"]
-[ext_resource type="Animation" uid="uid://bpl4ircxsboj0" path="res://walk.res" id="5_2hs0m"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_fglp6"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fglp6"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
+radius = 0.35
+height = 1.2
+
+[sub_resource type="StandardMaterial3D" id="Mat_Body"]
+albedo_color = Color(0.2, 0.25, 0.35, 1)
+roughness = 0.5
+
+[sub_resource type="SphereMesh" id="SphereMesh_head"]
+radius = 0.26
+height = 0.52
+
+[sub_resource type="StandardMaterial3D" id="Mat_Skin"]
+albedo_color = Color(0.92, 0.76, 0.65, 1)
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_visor"]
+size = Vector3(0.24, 0.08, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Visor"]
+albedo_color = Color(0.1, 0.1, 0.12, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tie"]
+size = Vector3(0.1, 0.35, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Tie"]
+albedo_color = Color(0.9, 0.7, 0.1, 1)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4flbx"]
 properties/0/path = NodePath(".:position")
@@ -17,45 +41,46 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
-properties/2/path = NodePath("PresidentModel:rotation")
+properties/2/path = NodePath("CharacterModel:rotation")
 properties/2/spawn = true
 properties/2/replication_mode = 1
-properties/3/path = NodePath("AssassinModel:rotation")
-properties/3/spawn = true
-properties/3/replication_mode = 1
-properties/4/path = NodePath("AnimationPlayer:current_animation")
-properties/4/spawn = true
-properties/4/replication_mode = 1
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_1jxqw"]
-_data = {
-&"idle": ExtResource("4_sweqy"),
-&"walk": ExtResource("5_2hs0m")
-}
 
 [node name="Player" type="CharacterBody3D" unique_id=809420733]
 script = ExtResource("1_4flbx")
 
-[node name="PresidentModel" parent="." unique_id=1749458065 instance=ExtResource("2_i3pqv")]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
-
-[node name="AssassinModel" parent="." unique_id=1109809797 instance=ExtResource("3_hqtel")]
-transform = Transform3D(-1.5, 0, -1.3113416e-07, 0, 1.5, 0, 1.3113416e-07, 0, -1.5, 0, 0, 0)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=580867497]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-mesh = SubResource("CapsuleMesh_fglp6")
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=112899849]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_fglp6")
 
+[node name="CharacterModel" type="Node3D" parent="." unique_id=1749458065]
+
+[node name="Body" type="MeshInstance3D" parent="CharacterModel" unique_id=580867497]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+mesh = SubResource("CapsuleMesh_body")
+surface_material_override/0 = SubResource("Mat_Body")
+
+[node name="Head" type="MeshInstance3D" parent="CharacterModel" unique_id=20039182]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
+mesh = SubResource("SphereMesh_head")
+surface_material_override/0 = SubResource("Mat_Skin")
+
+[node name="Visor" type="MeshInstance3D" parent="CharacterModel" unique_id=49201928]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48, -0.22)
+mesh = SubResource("BoxMesh_visor")
+surface_material_override/0 = SubResource("Mat_Visor")
+
+[node name="Tie" type="MeshInstance3D" parent="CharacterModel" unique_id=83720194]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -0.36)
+mesh = SubResource("BoxMesh_tie")
+surface_material_override/0 = SubResource("Mat_Tie")
+
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1190510335]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16645584, 1.4315757, -0.5162164)
-fov = 95.75528
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, -0.1)
+fov = 90.0
 
 [node name="RayCast3D" type="RayCast3D" parent="Camera3D" unique_id=53775644]
-target_position = Vector3(0, 0, -3)
+target_position = Vector3(0, 0, -3.2)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=509350905]
 replication_config = SubResource("SceneReplicationConfig_4flbx")
@@ -68,13 +93,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -2.0
-offset_top = -2.0
-offset_right = 2.0
-offset_bottom = 2.0
+offset_left = -3.0
+offset_top = -3.0
+offset_right = 3.0
+offset_bottom = 3.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.7989267, 0.19318363, 0.11282522, 1)
+color = Color(1, 0.3, 0.3, 0.9)
 
 [node name="ProgressBar" type="ProgressBar" parent="HUD" unique_id=1429464161]
 anchors_preset = 7
@@ -83,9 +108,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -150.0
-offset_top = -83.0
+offset_top = -80.0
 offset_right = 150.0
-offset_bottom = -53.0
+offset_bottom = -50.0
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -95,10 +120,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -200.0
-offset_top = -120.0
-offset_right = 200.0
-offset_bottom = -90.0
+offset_left = -250.0
+offset_top = -125.0
+offset_right = 250.0
+offset_bottom = -95.0
 grow_horizontal = 2
 grow_vertical = 0
 horizontal_alignment = 1
@@ -172,6 +197,3 @@ grow_vertical = 2
 text = "KAZANAN BELLİ DEĞİL"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2025879131]
-libraries/ = SubResource("AnimationLibrary_1jxqw")

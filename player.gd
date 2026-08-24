@@ -1,22 +1,24 @@
 extends CharacterBody3D
 
-const SPEED = 1.0
+const SPEED = 3.5
 const JUMP_VELOCITY = 4.5
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 @onready var camera = $Camera3D
 @onready var raycast = $Camera3D/RayCast3D
 @onready var progress_bar = $HUD/ProgressBar
-@onready var anim_player = $AnimationPlayer
 @onready var role_panel = $HUD/RoleCardPanel if has_node("HUD/RoleCardPanel") else null
 @onready var role_title = $HUD/RoleCardPanel/RoleTitle if has_node("HUD/RoleCardPanel/RoleTitle") else null
 @onready var role_desc = $HUD/RoleCardPanel/RoleDesc if has_node("HUD/RoleCardPanel/RoleDesc") else null
 @onready var action_prompt = $HUD/ActionPrompt if has_node("HUD/ActionPrompt") else null
+@onready var char_model = $CharacterModel if has_node("CharacterModel") else null
+@onready var body_mesh = $CharacterModel/Body if has_node("CharacterModel/Body") else null
+@onready var tie_mesh = $CharacterModel/Tie if has_node("CharacterModel/Tie") else null
 
 var task_progress: float = 0.0
 var current_role: String = "GUARD" 
-var is_game_over: bool = false # Oyunun bitip bitmediğini veya sersemleme durumunu tutar
-var assassin_cooldown: float = 0.0 # Suikastçı saldırı bekleme süresi
+var is_game_over: bool = false
+var assassin_cooldown: float = 0.0
 
 func _enter_tree():
 	var id = name.to_int()
@@ -31,56 +33,48 @@ func _ready():
 	if not is_multiplayer_authority(): 
 		return
 		
-	position = Vector3(0, 5, 0)
+	position = Vector3(0, 3, 0)
 	camera.make_current()
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
-# Sunucu bu fonksiyonu çağırarak oyuncuya rolünü ve modelini yükler
 @rpc("any_peer", "call_local")
 func assign_role(role_name: String):
 	current_role = role_name
 	
-	# Modelleri temizle
-	if has_node("PresidentModel"): $PresidentModel.hide()
-	if has_node("AssassinModel"): $AssassinModel.hide()
-	if has_node("MeshInstance3D"): $MeshInstance3D.hide()
-	
-	if current_role == "PRESIDENT":
-		if has_node("PresidentModel"):
-			$PresidentModel.show()
-			$AnimationPlayer.root_node = $PresidentModel.get_path()
-	elif current_role == "ASSASSIN":
-		if has_node("AssassinModel"):
-			$AssassinModel.show()
-			$AnimationPlayer.root_node = $AssassinModel.get_path()
-	elif current_role == "GUARD":
-		if has_node("AssassinModel"):
-			$AssassinModel.show()
-			$AnimationPlayer.root_node = $AssassinModel.get_path()
+	if body_mesh:
+		var mat = StandardMaterial3D.new()
+		if current_role == "PRESIDENT":
+			mat.albedo_color = Color(0.12, 0.25, 0.6) # Asil Başkan Laciverti
+			if tie_mesh: tie_mesh.show()
+		elif current_role == "ASSASSIN":
+			mat.albedo_color = Color(0.2, 0.2, 0.25) # Sivil Koyu Ceket (Kamufle)
+			if tie_mesh: tie_mesh.hide()
+		elif current_role == "GUARD":
+			mat.albedo_color = Color(0.18, 0.28, 0.22) # Koruma Koyu Haki/Gri
+			if tie_mesh: tie_mesh.hide()
+		body_mesh.set_surface_override_material(0, mat)
 
 	if is_multiplayer_authority():
 		_display_role_card(role_name)
 
-# Oyuncunun ekranına 4.5 saniye boyunca şık bir rol kartı gösterir
 func _display_role_card(role_name: String):
 	if not role_panel or not role_title or not role_desc: return
 	
 	if role_name == "PRESIDENT":
 		role_title.text = "🏛️ SENİN ROLÜN: BAŞKAN"
-		role_desc.text = "Görevin: Miting kürsüsüne (TaskBox) git, konuşmayı tamamla!"
+		role_desc.text = "Miting kürsüsüne (TaskBox) git, [E] ile konuşmayı tamamla!"
 	elif role_name == "ASSASSIN":
 		role_title.text = "🗡️ SENİN ROLÜN: SUİKASTÇI"
-		role_desc.text = "Görevin: Sivil gibi davran, gizlice yaklaşıp [E] ile Başkanı indir!"
+		role_desc.text = "Sivillerin arasına karış, gizlice yaklaşıp [E] ile Başkanı indir!"
 	elif role_name == "GUARD":
 		role_title.text = "🛡️ SENİN ROLÜN: KORUMA"
-		role_desc.text = "Görevin: Başkanı koru, şüphelilerin üstünü [E] ile ara!"
+		role_desc.text = "Başkanı koru, şüphelilerin üstünü [E] ile ara!"
 		
 	role_panel.show()
 	await get_tree().create_timer(4.5).timeout
 	if role_panel:
 		role_panel.hide()
 
-# Sersemletme / Ceza fonksiyonu (Ağ üzerinden herkes birbirini sersemletebilir)
 @rpc("any_peer", "call_local")
 func apply_stun_effect(duration: float, message: String):
 	is_game_over = true
@@ -111,14 +105,14 @@ func _input(event):
 	if is_game_over: return
 		
 	if event is InputEventMouseMotion:
-		rotate_y(-event.relative.x * 0.005)
-		camera.rotate_x(-event.relative.y * 0.005)
-		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+		rotate_y(-event.relative.x * 0.004)
+		camera.rotate_x(-event.relative.y * 0.004)
+		camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-85), deg_to_rad(85))
 	
 	if event.is_action_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
-	# --- 🗡️ SUİKASTÇI SALDIRI & İNFAZ MEKANİĞİ ---
+	# --- 🗡️ SUİKASTÇI SALDIRI & İNFAZ ---
 	if current_role == "ASSASSIN" and event.is_action_pressed("interact"):
 		if assassin_cooldown > 0:
 			_show_temp_prompt("⏳ Bıçak Hazır Değil! (%.1f sn)" % assassin_cooldown)
@@ -128,18 +122,15 @@ func _input(event):
 			var target = raycast.get_collider()
 			if target is CharacterBody3D:
 				if "current_role" in target:
-					# 1. Hedef BAŞKAN ise -> SUİKASTÇI KAZANDI!
 					if target.current_role == "PRESIDENT":
 						get_node("/root/main").rpc("net_game_over", "BAŞKAN SUİKASTE UĞRADI!
 🗡️ SUİKASTÇI KAZANDI!")
-					# 2. Hedef KORUMA ise -> Korumayı 4 saniye sersemletir!
 					elif target.current_role == "GUARD":
 						target.rpc("apply_stun_effect", 4.0, "SUİKASTÇI SALDIRISINA UĞRADINIZ!
 4 Saniye Sersemsiniz!")
 						assassin_cooldown = 4.0
 						_show_temp_prompt("💥 KORUMAYI SERSEMLETTİNİZ! (4 sn)")
 				else:
-					# 3. Hedef Masum SİVİL (NPC) ise -> Sivili indirir, ama 4 sn bekleme alır
 					target.queue_free()
 					assassin_cooldown = 4.0
 					_show_temp_prompt("⚠️ MASUM SİVİL VURULDU! (4 sn Bekleme)")
@@ -154,7 +145,6 @@ func _show_temp_prompt(msg: String):
 func _physics_process(delta):
 	if not is_multiplayer_authority(): return
 	
-	# Cooldown sayacı
 	if assassin_cooldown > 0:
 		assassin_cooldown -= delta
 		if assassin_cooldown < 0: assassin_cooldown = 0.0
@@ -173,23 +163,16 @@ func _physics_process(delta):
 	if direction:
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
-		anim_player.play("walk")
 		
-		var target_angle = atan2(direction.x, direction.z)
-		
-		if has_node("PresidentModel") and $PresidentModel.visible:
-			$PresidentModel.global_rotation.y = lerp_angle($PresidentModel.global_rotation.y, target_angle, 15 * delta)
-		elif has_node("AssassinModel") and $AssassinModel.visible:
-			$AssassinModel.global_rotation.y = lerp_angle($AssassinModel.global_rotation.y, target_angle, 15 * delta)
+		if char_model:
+			var target_angle = atan2(direction.x, direction.z)
+			char_model.global_rotation.y = lerp_angle(char_model.global_rotation.y, target_angle, 15 * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
-		anim_player.play("idle")
 		
-		if has_node("PresidentModel") and $PresidentModel.visible:
-			$PresidentModel.global_rotation.y = lerp_angle($PresidentModel.global_rotation.y, global_rotation.y + PI, 10 * delta)
-		elif has_node("AssassinModel") and $AssassinModel.visible:
-			$AssassinModel.global_rotation.y = lerp_angle($AssassinModel.global_rotation.y, global_rotation.y + PI, 10 * delta)
+		if char_model:
+			char_model.global_rotation.y = lerp_angle(char_model.global_rotation.y, global_rotation.y, 10 * delta)
 
 	move_and_slide()
 
@@ -197,7 +180,7 @@ func _physics_process(delta):
 	if current_role == "PRESIDENT":
 		if Input.is_action_pressed("interact") and raycast.is_colliding() and raycast.get_collider().name == "TaskBox":
 			progress_bar.show()
-			task_progress += 20.0 * delta # 5 saniyede mitingi tamamlar
+			task_progress += 20.0 * delta
 			progress_bar.value = task_progress
 			
 			if task_progress >= 100.0:
@@ -215,7 +198,7 @@ func _physics_process(delta):
 			var suspect = raycast.get_collider()
 			
 			progress_bar.show()
-			task_progress += 33.0 * delta # 3 saniyede arar
+			task_progress += 33.0 * delta
 			progress_bar.value = task_progress
 			
 			if task_progress >= 100.0:
@@ -223,7 +206,6 @@ func _physics_process(delta):
 				progress_bar.hide()
 				
 				if "current_role" in suspect:
-					# Suikastçı yakalandı!
 					if suspect.current_role == "ASSASSIN":
 						get_node("/root/main").rpc("net_game_over", "SUİKASTÇI YAKALANDI!
 🛡️ KORUMALAR KAZANDI!")
@@ -231,7 +213,6 @@ func _physics_process(delta):
 						apply_stun_effect(3.0, "MASUM BİRİNİ ARADINIZ!
 3 Saniye Cezalısınız!")
 				else:
-					# Masum NPC Sivil arandı
 					apply_stun_effect(3.0, "MASUM VATANDAŞI TACİZ ETTİNİZ!
 3 Saniye Cezalısınız!")
 		else:
