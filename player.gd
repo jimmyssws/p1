@@ -141,6 +141,19 @@ var sfx_gunshot: AudioStreamPlayer3D = null
 var sfx_taser: AudioStreamPlayer3D = null
 var sfx_scan: AudioStreamPlayer3D = null
 var sfx_task_complete: AudioStreamPlayer = null
+var sfx_footstep: AudioStreamPlayer = null
+var sfx_heartbeat: AudioStreamPlayer = null
+var sfx_hit_impact: AudioStreamPlayer = null
+
+# 💥 Geri Bildirim Sistemi
+var _shake_intensity: float = 0.0
+var _shake_timer: float = 0.0
+var _camera_origin: Vector3 = Vector3.ZERO
+var _hit_flash_node: ColorRect = null
+var _footstep_timer: float = 0.0
+var _heartbeat_active: bool = false
+var _heartbeat_interval: float = 1.0
+var _heartbeat_timer: float = 0.0
 
 # Komik Sivil Eşya Havuzu
 const SILLY_ITEMS = [
@@ -156,6 +169,7 @@ func _enter_tree():
 	$MultiplayerSynchronizer.set_multiplayer_authority(id)
 
 func _ready():
+	add_to_group("players")
 	floor_snap_length = 0.35
 	floor_max_angle = 0.85
 	floor_constant_speed = true
@@ -313,6 +327,35 @@ func _setup_sounds():
 	sfx_task_complete.stream = load("res://sounds/task_complete.wav")
 	sfx_task_complete.volume_db = 3.0
 	add_child(sfx_task_complete)
+
+	sfx_footstep = AudioStreamPlayer.new()
+	sfx_footstep.stream = load("res://sounds/footstep.wav")
+	sfx_footstep.volume_db = -4.0
+	add_child(sfx_footstep)
+
+	sfx_heartbeat = AudioStreamPlayer.new()
+	sfx_heartbeat.stream = load("res://sounds/heartbeat.wav")
+	sfx_heartbeat.volume_db = -6.0
+	add_child(sfx_heartbeat)
+
+	sfx_hit_impact = AudioStreamPlayer.new()
+	sfx_hit_impact.stream = load("res://sounds/hit_impact.wav")
+	sfx_hit_impact.volume_db = 2.0
+	add_child(sfx_hit_impact)
+
+	_setup_feedback()
+
+func _setup_feedback():
+	_hit_flash_node = ColorRect.new()
+	_hit_flash_node.color = Color(1, 0, 0, 0)
+	_hit_flash_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hit_flash_node.anchors_preset = Control.PRESET_FULL_RECT
+	var hud = get_node_or_null("HUD")
+	if hud:
+		hud.add_child(_hit_flash_node)
+		_hit_flash_node.z_index = 10
+	_camera_origin = Vector3.ZERO
+
 
 
 @rpc("any_peer", "call_local")
@@ -696,6 +739,8 @@ func _execute_president_rally_call():
 # 🔪 Suikastçı Bıçak İnfazı
 func _execute_assassin_knife():
 	_animate_hand_action()
+	if sfx_knife: sfx_knife.play()
+	trigger_camera_shake(0.25, 0.15)
 	set_weapon_exposed(true)
 	if raycast.is_colliding():
 		var col = raycast.get_collider()
@@ -721,6 +766,7 @@ func _execute_assassin_pistol():
 	_update_weapon_hud()
 	_animate_hand_action()
 	if sfx_gunshot: sfx_gunshot.play()
+	trigger_camera_shake(0.7, 0.35)
 	
 	# 🔥 Silahı HEMEN hem yerelde hem ağda açığa çıkar!
 	set_weapon_exposed(true)
@@ -761,6 +807,7 @@ func _execute_guard_taser():
 	taser_cooldown = 4.0
 	_animate_hand_action()
 	if sfx_taser: sfx_taser.play()
+	trigger_camera_shake(0.3, 0.2)
 	_update_weapon_hud()
 	
 	if not raycast.is_colliding():
@@ -1024,6 +1071,12 @@ func _physics_process(delta):
 
 	move_and_slide()
 
+	# --- 💥 GERİ BİLDİRİM ---
+	var is_moving = velocity.length() > 0.3
+	_update_footsteps(delta, is_moving)
+	_update_heartbeat(delta)
+	_process_camera_shake(delta)
+
 	# --- 🏛️ 3 AŞAMALI BAŞKAN GÖREV SİSTEMİ ---
 	_handle_president_task(delta)
 
@@ -1058,6 +1111,9 @@ func apply_player_stun(duration: float = 4.5):
 	is_downed = true
 	downed_timer = duration
 	rotation_degrees.z = 85.0
+	if is_multiplayer_authority():
+		trigger_hit_flash(0.6, 0.25)
+		trigger_camera_shake(0.8, 0.5)
 
 
 # 📻 Koruma 3: Taktik Telsiz / Radar İhbarı (Şüpheliyi Ekranda ve Haritada Aydınlat)
@@ -1151,5 +1207,98 @@ func _execute_assassin_drop_weapon():
 	_update_weapon_hud()
 
 
+
 func _on_volume_slider_changed(val: float):
 	Global.set_volume(val)
+
+# ===================================================
+# 💥 GERİ BİLDİRİM SİSTEMİ
+# ===================================================
+
+# 📷 Kamera Titremesi — intensity: 0.0-1.0, duration sn
+func trigger_camera_shake(intensity: float = 0.4, duration: float = 0.3):
+	if not is_multiplayer_authority(): return
+	_shake_intensity = intensity
+	_shake_timer = duration
+
+# 🔴 Ekran Kırmızı Flash (vurulma hissi)
+func trigger_hit_flash(alpha: float = 0.45, duration: float = 0.18):
+	if not is_multiplayer_authority(): return
+	if not _hit_flash_node: return
+	_hit_flash_node.color = Color(1, 0.05, 0.05, alpha)
+	if sfx_hit_impact and not sfx_hit_impact.playing:
+		sfx_hit_impact.play()
+	get_tree().create_timer(duration).timeout.connect(func():
+		if _hit_flash_node:
+			_hit_flash_node.color = Color(1, 0, 0, 0)
+	)
+
+# 💓 Kalp Atışı — Başkan tehlikede (suikastçı 18m içinde)
+func _update_heartbeat(delta: float):
+	if not is_multiplayer_authority(): return
+	if current_role != "PRESIDENT" or is_game_over:
+		if _heartbeat_active:
+			_heartbeat_active = false
+			if sfx_heartbeat: sfx_heartbeat.volume_db = -80.0
+		return
+
+	var assassin_nearby = false
+	var closest_dist = 999.0
+	for node in get_tree().get_nodes_in_group("players"):
+		if node and node != self and node.get("current_role") == "ASSASSIN":
+			var d = global_position.distance_to(node.global_position)
+			if d < closest_dist:
+				closest_dist = d
+
+	if closest_dist < 18.0:
+		assassin_nearby = true
+		var t = clamp(1.0 - (closest_dist / 18.0), 0.0, 1.0)
+		_heartbeat_interval = lerp(1.2, 0.45, t)
+		if sfx_heartbeat:
+			sfx_heartbeat.volume_db = lerp(-12.0, 0.0, t)
+	elif mission_state == 2 and not mission_done[2]:
+		assassin_nearby = true
+		_heartbeat_interval = 1.0
+		if sfx_heartbeat: sfx_heartbeat.volume_db = -10.0
+
+	_heartbeat_active = assassin_nearby
+
+	if _heartbeat_active:
+		_heartbeat_timer -= delta
+		if _heartbeat_timer <= 0.0:
+			_heartbeat_timer = _heartbeat_interval
+			if sfx_heartbeat and not sfx_heartbeat.playing:
+				sfx_heartbeat.play()
+	else:
+		if sfx_heartbeat: sfx_heartbeat.volume_db = -80.0
+
+# 👣 Adım Sesi — yürürken periyodik
+func _update_footsteps(delta: float, is_moving: bool):
+	if not is_multiplayer_authority(): return
+	if not is_moving or not is_on_floor() or drone_mode:
+		_footstep_timer = 0.0
+		return
+	var step_interval = 0.38 if sprint_active else 0.52
+	_footstep_timer += delta
+	if _footstep_timer >= step_interval:
+		_footstep_timer = 0.0
+		if sfx_footstep and not sfx_footstep.playing:
+			sfx_footstep.pitch_scale = randf_range(0.88, 1.12)
+			sfx_footstep.play()
+
+# 🎥 Kamera Titremesi İşleme (_physics_process'te çağrılır)
+func _process_camera_shake(delta: float):
+	if not is_multiplayer_authority(): return
+	if _shake_timer > 0:
+		_shake_timer -= delta
+		var shake = _shake_intensity * (_shake_timer / 0.3)
+		if camera:
+			camera.position = Vector3(
+				randf_range(-shake, shake) * 0.06,
+				randf_range(-shake, shake) * 0.06,
+				0.0
+			)
+	else:
+		_shake_intensity = 0.0
+		if camera:
+			camera.position = Vector3.ZERO
