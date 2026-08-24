@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suikastçı & Başkan | 3D Sosyal Çıkarım Oyunu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            gold: '#F5C22B',
+                            blue: '#1E40AF',
+                            red: '#DC2626',
+                            dark: '#080C14',
+                            card: '#0F172A',
+                            accent: '#38BDF8'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glow-gold {
+            box-shadow: 0 0 35px -5px rgba(245, 194, 43, 0.35);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 35px -5px rgba(56, 189, 248, 0.35);
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-slate-100 font-sans min-h-screen selection:bg-brand-gold selection:text-black">
+
+    <!-- Header / Navbar -->
+    <header class="border-b border-slate-800/80 sticky top-0 z-50 glass-card">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-gold to-amber-600 flex items-center justify-center text-xl shadow-lg shadow-amber-500/20">
+                    👑
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
+                        SUİKASTÇI & BAŞKAN
+                    </h1>
+                    <p class="text-xs text-brand-gold font-mono font-semibold">3D MULTIPLAYER v1.2</p>
+                </div>
+            </div>
+
+            <!-- Server Status Badge -->
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-medium">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>100.68.81.79:9999 • AKTİF</span>
+                </div>
+                <a href="#download" class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-gold to-amber-500 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-sm transition-all transform hover:scale-[1.02] shadow-lg shadow-amber-500/25">
+                    🎮 Oyunu İndir
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="max-w-7xl mx-auto px-6 pt-16 pb-24">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/60 border border-slate-700 text-slate-300 text-xs font-medium mb-6">
+                🎉 Akşam Discord Playtest Lobi Sunucusu Hazır!
+            </div>
+            <h2 class="text-5xl sm:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+                Miting Meydanında <br>
+                <span class="bg-gradient-to-r from-brand-gold via-amber-300 to-sky-400 bg-clip-text text-transparent">
+                    Kimseye Güvenme!
+                </span>
+            </h2>
+            <p class="text-lg text-slate-400 mb-10 leading-relaxed">
+                45 kişilik canlı miting kalabalığı, 3 aşamalı başkanlık rotası, çelik çanta kalkanı ve gökyüzü dronu! 
+                Suikastçı sivillerin arasına karıştı; korumalar dedektörle tarama yapıyor.
+            </p>
+
+            <!-- Quick Action Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="/play.html" target="_blank" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 font-bold text-base shadow-xl shadow-sky-500/25 transition-all transform hover:scale-105 flex items-center justify-center gap-3">
+                    <span>🌐</span>
+                    <span>Tarayıcıda Hemen Oyna</span>
+                </a>
+                <a href="#download" class="w-full sm:w-auto px-8 py-4 rounded-2xl glass-card hover:bg-slate-800/80 font-bold text-base border border-slate-700 hover:border-brand-gold transition-all transform hover:scale-105 flex items-center justify-center gap-3 text-slate-200">
+                    <span>📥</span>
+                    <span>Masaüstü İndir (144+ FPS)</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Role Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+            <!-- BAŞKAN -->
+            <div class="glass-card rounded-3xl p-8 border-t-4 border-t-brand-gold hover:border-brand-gold transition-all group">
+                <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                    🏛️
+                </div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-2xl font-bold text-white">BAŞKAN</h3>
+                    <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-300 font-semibold">HEDEF</span>
+                </div>
+                <p class="text-sm text-slate-400 mb-6">
+                    Mitingdeki 3 aşamalı görevi (Kürsü Konuşması, Halkla Selamlaşma, Basın Röportajı) tamamla ve hayatta kal!
+                </p>
+                <div class="space-y-2.5 font-mono text-xs text-slate-300">
+                    <div class="p-2.5 rounded-xl bg-slate-900/60 flex items-center justify-between">
+                        <span>[1] 🏃 Adrenalin Deparı</span>
+                        <span class="text-amber-400">%80 Hız (3 sn)</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-slate-900/60 flex items-center justify-between">
+                        <span>[2] 📢 Megafon</span>
+                        <span class="text-amber-400">Halkı Çağır</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-slate-900/60 flex items-center justify-between">
+                        <span>[3] 💼 Çelik Çanta</span>
+                        <span class="text-amber-400">1 Darbe Kalkanı</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-slate-900/60 flex items-center justify-between">
+                        <span>[4] 🕺 Seçim Şarkısı</span>
+                        <span class="text-amber-400">25m Coşku</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KORUMA -->
+            <div class="glass-card rounded-3xl p-8 border-t-4 border-t-sky-500 hover:border-sky-400 transition-all group">
+                <div class="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                    🛡️
+                </div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-2xl font-bold text-white">KORUMA</h3>
+                    <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-sky-500/20 text-sky-300 font-semibold">SAVUNMA</span>
+                </div>
+                <p class="text-sm text-slate-400 mb-6">
+                    Siyah takım ve gözlüklerinle meydanı tara! Absürt eşyaları ele, suikastçıyı tespit edip taser ile yere ser.
+                </p>
+                <div class="space-y-2.5 font-mono text-xs text-slate-300">
+                    <div class="p-2.5 rounded-xl bg-slate-900/60 flex items-center justify-between">
+                        <span>[1] ⚡ Elektroşok Taser</span>
+                        <span class="text-sky-400">14m Şok (4 sn)</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-slate-900/60 flex items-center justify-between">
+                        <span>[2] 📡 Metal Dedektörü</span>
+                        <span class="text-sky-400">Absürt Eşya Tara</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-slate-900/60 flex items-center justify-between">
+                        <span>[3 / V] 🚁 Gözetleme Dronu</span>
+                        <span class="text-sky-400">45 sn Hava Kamerası</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUİKASTÇI -->
+            <div class="glass-card rounded-3xl p-8 border-t-4 border-t-rose-500 hover:border-rose-400 transition-all group">
+                <div class="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">
+                    🗡️
+                </div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-2xl font-bold text-white">SUİKASTÇI</h3>
+                    <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-rose-500/20 text-rose-300 font-semibold">GİZLİLİK</span>
+                </div>
+                <p class="text-sm text-slate-400 mb-6">
+                    Sivillerle birebir aynı kıyafettesin! Turnikelerden izdiham çıkararak içeri dal veya arka çitlerden sızarak Başkanı indir.
+                </p>
+                <div class="space-y-2.5 font-mono text-xs text-slate-300">
+                    <div class="p-2.5 rounded-xl bg-slate-900/60 flex items-center justify-between">
+                        <span>[1] 🔪 Susturuculu Bıçak</span>
+                        <span class="text-rose-400">Sessiz Tek Vuruş</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-slate-900/60 flex items-center justify-between">
+                        <span>[2] 🔫 9mm Tabanca</span>
+                        <span class="text-rose-400">18m Uzak Atış</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-slate-900/60 flex items-center justify-between">
+                        <span>[3] 📢 İzdiham Çıkar</span>
+                        <span class="text-rose-400">Turnikeleri Yardır</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download & Join Instructions Section -->
+        <div id="download" class="glass-card rounded-3xl p-10 border border-slate-800 mb-16">
+            <div class="max-w-3xl">
+                <h3 class="text-3xl font-extrabold mb-4">🚀 Akşam Nasıl Katılacaksınız?</h3>
+                <p class="text-slate-400 mb-8 leading-relaxed">
+                    Evdeki ana sunucumuz (<span class="font-mono text-brand-gold font-bold">100.68.81.79:9999</span>) 7/24 uyanık bekliyor.
+                    Oyunu açıp tek tıkla <span class="font-semibold text-white">"⚡ Ana Sunucuya Katıl"</span> butonuna basmanız yeterli!
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+                        <div>
+                            <div class="text-lg font-bold text-white mb-1">🪟 Windows (.exe)</div>
+                            <div class="text-xs text-slate-400 font-mono">v1.2 • 28.4 MB • DirectX 12</div>
+                        </div>
+                        <a href="/download/windows" class="px-4 py-2.5 rounded-xl bg-brand-gold hover:bg-amber-400 text-slate-950 font-bold text-xs transition-all">
+                            İndir
+                        </a>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+                        <div>
+                            <div class="text-lg font-bold text-white mb-1">🍏 macOS (Apple Silicon)</div>
+                            <div class="text-xs text-slate-400 font-mono">v1.2 • 31.2 MB • Metal / Vulkan</div>
+                        </div>
+                        <a href="/download/mac" class="px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition-all">
+                            İndir
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive SFX Test Soundboard -->
+        <div class="glass-card rounded-3xl p-10 border border-slate-800">
+            <h3 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                <span>🔊</span>
+                <span>Oyun Sesleri & Atmosfer Testi</span>
+            </h3>
+            <p class="text-xs text-slate-400 mb-6 font-mono">Akşam oyuna girmeden önce tüm efektleri canlı dinle:</p>
+
+            <div class="flex flex-wrap gap-3">
+                <button onclick="playSound('silly')" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-mono font-medium flex items-center gap-2 border border-slate-700 hover:border-brand-gold transition-all">
+                    <span>🤪</span> Sivil Gevezeliği (Sims)
+                </button>
+                <button onclick="playSound('alarm')" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-mono font-medium flex items-center gap-2 border border-slate-700 hover:border-rose-500 transition-all">
+                    <span>🚨</span> Turnike X-Ray Alarmı
+                </button>
+                <button onclick="playSound('cheer')" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-mono font-medium flex items-center gap-2 border border-slate-700 hover:border-amber-500 transition-all">
+                    <span>👏</span> Miting Coşkusu & Alkış
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 py-8 text-center text-xs text-slate-500 font-mono">
+        <p>👑 Geliştirici: Yusuf Ali Karpuz & Malor AI • 2026</p>
+    </footer>
+
+    <script>
+        function playSound(type) {
+            let audioPath = '';
+            if (type === 'silly') audioPath = '/sounds/silly_chatter_1.wav';
+            else if (type === 'alarm') audioPath = '/sounds/alarm_siren.wav';
+            else if (type === 'cheer') audioPath = '/sounds/cheer_applause.wav';
+            
+            if (audioPath) {
+                const a = new Audio(audioPath);
+                a.play().catch(e => console.log('Audio error:', e));
+            }
+        }
+    </script>
+</body>
+</html>

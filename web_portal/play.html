@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suikastçı & Başkan - 3D Tarayıcı Sürümü</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; background: #080C14; font-family: system-ui, -apple-system, sans-serif; user-select: none; }
+        #crosshair {
+            position: absolute; top: 50%; left: 50%; width: 10px; height: 10px;
+            background: #F5C22B; border-radius: 50%; transform: translate(-50%, -50%);
+            pointer-events: none; box-shadow: 0 0 10px #F5C22B; z-index: 30;
+        }
+        .hud-glass {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="crosshair"></div>
+    <div id="canvas-container" class="w-screen h-screen"></div>
+
+    <!-- Start & Pause Overlay -->
+    <div id="startOverlay" class="absolute inset-0 bg-slate-950/80 backdrop-blur-md flex flex-col items-center justify-center z-50 text-white p-6">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-3xl mb-4 shadow-xl shadow-amber-500/25">
+            👑
+        </div>
+        <h1 class="text-4xl font-extrabold mb-2 tracking-tight">SUIKASTÇI & BAŞKAN</h1>
+        <p class="text-xs font-mono text-amber-400 font-semibold mb-6">3D WEBGL BROWSER EDITION</p>
+        
+        <div class="glass-panel p-6 rounded-2xl bg-slate-900/90 border border-slate-800 max-w-sm w-full mb-6 text-xs text-slate-300 font-mono space-y-2">
+            <div class="flex justify-between"><span>🎮 Hareket:</span><span class="text-white font-bold">W, A, S, D</span></div>
+            <div class="flex justify-between"><span>👁️ Çevreye Bak:</span><span class="text-white font-bold">Fareyi Oynat</span></div>
+            <div class="flex justify-between"><span>🦘 Zıpla:</span><span class="text-white font-bold">Boşluk (Space)</span></div>
+            <div class="flex justify-between"><span>⚡ Yetenekler:</span><span class="text-white font-bold">1, 2, 3, 4</span></div>
+            <div class="flex justify-between"><span>🎭 Rol Değiş:</span><span class="text-amber-400 font-bold">F1, F2, F3</span></div>
+        </div>
+
+        <button id="startBtn" class="px-10 py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm tracking-wider transition-all transform hover:scale-105 shadow-xl shadow-amber-500/30">
+            MEYDANA GİR (OYNA)
+        </button>
+    </div>
+
+    <!-- HUD Elements -->
+    <!-- Top Status Pill -->
+    <div class="absolute top-4 left-1/2 -translate-x-1/2 flex items-center gap-3 px-6 py-2 rounded-2xl hud-glass text-white font-mono text-xs z-40">
+        <span id="timerText" class="text-amber-400 font-bold">⏱️ 02:00</span>
+        <span class="text-slate-600">|</span>
+        <span id="missionText" class="text-slate-200">🎙️ 1. Görev: Kürsü Konuşması Yap</span>
+    </div>
+
+    <!-- Top Left Role Indicator -->
+    <div class="absolute top-4 left-4 px-4 py-2.5 rounded-2xl hud-glass text-white text-xs font-mono z-40 flex items-center gap-2">
+        <span class="text-slate-400">ROL:</span>
+        <span id="roleBadge" class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold">🏛️ BAŞKAN</span>
+    </div>
+
+    <!-- Bottom Right Hotbar -->
+    <div class="absolute bottom-4 right-4 flex flex-col items-end gap-1.5 z-40">
+        <div id="hotbarTitle" class="text-[11px] font-mono text-sky-400 font-bold tracking-wider">🏛️ BAŞKAN YETENEKLERİ</div>
+        <div class="flex items-center gap-2" id="slotContainer">
+            <div id="slot1" class="px-3.5 py-2 rounded-xl bg-blue-600 border-2 border-amber-400 text-white font-mono text-xs font-bold shadow-lg shadow-amber-400/25">
+                [1] 🏃 Depar
+            </div>
+            <div id="slot2" class="px-3.5 py-2 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-300 font-mono text-xs">
+                [2] 📢 Megafon
+            </div>
+            <div id="slot3" class="px-3.5 py-2 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-300 font-mono text-xs">
+                [3] 💼 Çanta
+            </div>
+            <div id="slot4" class="px-3.5 py-2 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-300 font-mono text-xs">
+                [4] 🕺 Şarkı
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Prompt Center -->
+    <div id="actionPrompt" class="absolute bottom-20 left-1/2 -translate-x-1/2 px-6 py-2.5 rounded-xl bg-slate-950/90 border border-slate-800 text-amber-300 font-mono text-xs z-40">
+        [E] Kürsü Konuşması Yap (~13 sn)
+    </div>
+
+    <script>
+        let scene, camera, renderer;
+        let moveF = false, moveB = false, moveL = false, moveR = false;
+        let velocityY = 0;
+        let isGrounded = true;
+        let isLocked = false;
+        let yaw = 0, pitch = 0;
+        let playerPos = new THREE.Vector3(0, 1.8, 15);
+        let npcs = [];
+        let currentRole = 'PRESIDENT';
+        let matchTimer = 120;
+
+        const startOverlay = document.getElementById('startOverlay');
+        const startBtn = document.getElementById('startBtn');
+        const timerText = document.getElementById('timerText');
+        const roleBadge = document.getElementById('roleBadge');
+        const hotbarTitle = document.getElementById('hotbarTitle');
+
+        startBtn.addEventListener('click', () => {
+            document.body.requestPointerLock();
+            startOverlay.style.display = 'none';
+            isLocked = true;
+        });
+
+        document.addEventListener('pointerlockchange', () => {
+            if (document.pointerLockElement === document.body) {
+                isLocked = true;
+                startOverlay.style.display = 'none';
+            } else {
+                isLocked = false;
+                startOverlay.style.display = 'flex';
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isLocked) return;
+            yaw -= e.movementX * 0.0024;
+            pitch -= e.movementY * 0.0024;
+            pitch = Math.max(-Math.PI / 2.3, Math.min(Math.PI / 2.3, pitch));
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'KeyW' || e.code === 'ArrowUp') moveF = true;
+            if (e.code === 'KeyS' || e.code === 'ArrowDown') moveB = true;
+            if (e.code === 'KeyA' || e.code === 'ArrowLeft') moveL = true;
+            if (e.code === 'KeyD' || e.code === 'ArrowRight') moveR = true;
+            if (e.code === 'Space' && isGrounded) {
+                velocityY = 7.0;
+                isGrounded = false;
+            }
+            if (e.code === 'F1') switchRole('PRESIDENT');
+            if (e.code === 'F2') switchRole('GUARD');
+            if (e.code === 'F3') switchRole('ASSASSIN');
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.code === 'KeyW' || e.code === 'ArrowUp') moveF = false;
+            if (e.code === 'KeyS' || e.code === 'ArrowDown') moveB = false;
+            if (e.code === 'KeyA' || e.code === 'ArrowLeft') moveL = false;
+            if (e.code === 'KeyD' || e.code === 'ArrowRight') moveR = false;
+        });
+
+        function switchRole(role) {
+            currentRole = role;
+            if (role === 'PRESIDENT') {
+                roleBadge.textContent = '🏛️ BAŞKAN';
+                roleBadge.className = 'px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold';
+                hotbarTitle.textContent = '🏛️ BAŞKAN YETENEKLERİ';
+                document.getElementById('slot1').textContent = '[1] 🏃 Depar';
+                document.getElementById('slot2').textContent = '[2] 📢 Megafon';
+                document.getElementById('slot3').textContent = '[3] 💼 Çanta';
+                document.getElementById('slot4').style.display = 'block';
+            } else if (role === 'GUARD') {
+                roleBadge.textContent = '🛡️ KORUMA';
+                roleBadge.className = 'px-2 py-0.5 rounded-md bg-sky-500/20 text-sky-300 font-bold';
+                hotbarTitle.textContent = '🛡️ KORUMA EKİPMANLARI';
+                document.getElementById('slot1').textContent = '[1] ⚡ Taser';
+                document.getElementById('slot2').textContent = '[2] 📡 Dedektör';
+                document.getElementById('slot3').textContent = '[3] 🚁 Drone';
+                document.getElementById('slot4').style.display = 'none';
+            } else if (role === 'ASSASSIN') {
+                roleBadge.textContent = '🗡️ SUİKASTÇI';
+                roleBadge.className = 'px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-300 font-bold';
+                hotbarTitle.textContent = '🗡️ SUİKASTÇI CEPHANESİ';
+                document.getElementById('slot1').textContent = '[1] 🔪 Bıçak';
+                document.getElementById('slot2').textContent = '[2] 🔫 Tabanca';
+                document.getElementById('slot3').textContent = '[3] 📢 İzdiham';
+                document.getElementById('slot4').style.display = 'none';
+            }
+        }
+
+        function init() {
+            const container = document.getElementById('canvas-container');
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x4A8FDE); // Bright Blue Sky
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 500);
+            camera.position.copy(playerPos);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
+
+            // Lighting
+            const ambient = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambient);
+
+            const sun = new THREE.DirectionalLight(0xFFF7E6, 1.2);
+            sun.position.set(30, 50, 25);
+            sun.castShadow = true;
+            scene.add(sun);
+
+            // Ground (100x110m Plaza)
+            const ground = new THREE.Mesh(
+                new THREE.PlaneGeometry(100, 110),
+                new THREE.MeshStandardMaterial({ color: 0x828C99, roughness: 0.85 })
+            );
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            // Stage Platform
+            const stage = new THREE.Mesh(
+                new THREE.BoxGeometry(26, 1.4, 14),
+                new THREE.MeshStandardMaterial({ color: 0x1E293B, roughness: 0.4 })
+            );
+            stage.position.set(0, 0.7, -35);
+            stage.castShadow = true;
+            stage.receiveShadow = true;
+            scene.add(stage);
+
+            // Stage Backdrop
+            const backdrop = new THREE.Mesh(
+                new THREE.BoxGeometry(26, 6.5, 0.5),
+                new THREE.MeshStandardMaterial({ color: 0x0F172A })
+            );
+            backdrop.position.set(0, 4.0, -41.6);
+            scene.add(backdrop);
+
+            // Stage Podium
+            const podium = new THREE.Mesh(
+                new THREE.BoxGeometry(1.5, 1.3, 1.0),
+                new THREE.MeshStandardMaterial({ color: 0x0F172A })
+            );
+            podium.position.set(0, 2.05, -31);
+            scene.add(podium);
+
+            // Gold Emblem
+            const emblem = new THREE.Mesh(
+                new THREE.BoxGeometry(0.7, 0.7, 0.05),
+                new THREE.MeshStandardMaterial({ color: 0xF5C22B, metalness: 0.8 })
+            );
+            emblem.position.set(0, 2.15, -30.48);
+            scene.add(emblem);
+
+            // Red Press Tent
+            const pressRoof = new THREE.Mesh(
+                new THREE.BoxGeometry(10, 0.6, 8),
+                new THREE.MeshStandardMaterial({ color: 0xDC2626 })
+            );
+            pressRoof.position.set(30, 3.8, -8);
+            scene.add(pressRoof);
+
+            // Blue Water Tent
+            const waterRoof = new THREE.Mesh(
+                new THREE.BoxGeometry(10, 0.6, 8),
+                new THREE.MeshStandardMaterial({ color: 0x2563EB })
+            );
+            waterRoof.position.set(-30, 3.8, -8);
+            scene.add(waterRoof);
+
+            // Spawn 40 Animated NPCs
+            const colors = [0x3B82F6, 0x10B981, 0xF59E0B, 0x8B5CF6, 0xEF4444, 0x6B7280, 0x14B8A6];
+            for (let i = 0; i < 40; i++) {
+                const group = new THREE.Group();
+                const col = colors[i % colors.length];
+
+                // Body
+                const body = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.35, 0.35, 1.3, 12),
+                    new THREE.MeshStandardMaterial({ color: col })
+                );
+                body.position.y = 0.85;
+                body.castShadow = true;
+                group.add(body);
+
+                // Head
+                const head = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.24, 12, 12),
+                    new THREE.MeshStandardMaterial({ color: 0xFBD38D })
+                );
+                head.position.y = 1.65;
+                group.add(head);
+
+                const rx = (Math.random() - 0.5) * 65;
+                const rz = (Math.random() - 0.5) * 55 - 5;
+                group.position.set(rx, 0, rz);
+                scene.add(group);
+
+                npcs.push({
+                    mesh: group,
+                    targetX: rx,
+                    targetZ: rz,
+                    speed: 0.02 + Math.random() * 0.03
+                });
+            }
+
+            // Match timer countdown loop
+            setInterval(() => {
+                if (matchTimer > 0) {
+                    matchTimer--;
+                    const m = String(Math.floor(matchTimer / 60)).padStart(2, '0');
+                    const s = String(matchTimer % 60).padStart(2, '0');
+                    timerText.textContent = `⏱️ ${m}:${s}`;
+                }
+            }, 1000);
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        let lastTime = performance.now();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const now = performance.now();
+            const delta = Math.min(0.1, (now - lastTime) / 1000);
+            lastTime = now;
+
+            if (isLocked) {
+                // Movement direction vectors
+                const forward = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+                const right = new THREE.Vector3(1, 0, 0).applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw);
+                const moveVec = new THREE.Vector3();
+
+                if (moveF) moveVec.add(forward);
+                if (moveB) moveVec.sub(forward);
+                if (moveR) moveVec.add(right);
+                if (moveL) moveVec.sub(right);
+
+                if (moveVec.lengthSq() > 0) {
+                    moveVec.normalize();
+                    const speed = 12.0 * delta;
+                    playerPos.addScaledVector(moveVec, speed);
+                }
+
+                // Gravity & Jump
+                velocityY -= 20.0 * delta;
+                playerPos.y += velocityY * delta;
+                if (playerPos.y <= 1.8) {
+                    playerPos.y = 1.8;
+                    velocityY = 0;
+                    isGrounded = true;
+                }
+
+                // Camera Position & Rotation
+                camera.position.copy(playerPos);
+                camera.rotation.order = 'YXZ';
+                camera.rotation.y = yaw;
+                camera.rotation.x = pitch;
+            }
+
+            // NPC wandering
+            for (let npc of npcs) {
+                const dx = npc.targetX - npc.mesh.position.x;
+                const dz = npc.targetZ - npc.mesh.position.z;
+                const dist = Math.sqrt(dx * dx + dz * dz);
+                if (dist < 1.0) {
+                    npc.targetX = (Math.random() - 0.5) * 65;
+                    npc.targetZ = (Math.random() - 0.5) * 55 - 5;
+                } else {
+                    npc.mesh.position.x += (dx / dist) * npc.speed;
+                    npc.mesh.position.z += (dz / dist) * npc.speed;
+                    npc.mesh.rotation.y = Math.atan2(dx, dz);
+                }
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        init();
+        animate();
+    </script>
+</body>
+</html>

@@ -1,10 +1,19 @@
 [gd_scene format=3 uid="uid://bts4blx0hl4nn"]
 
 [ext_resource type="Script" uid="uid://b5kvqbk70883r" path="res://player.gd" id="1_4flbx"]
+[ext_resource type="Script" path="res://minimap.gd" id="minimap_script"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fglp6"]
 radius = 0.4
 height = 1.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_3rd_gun"]
+size = Vector3(0.08, 0.12, 0.28)
+
+[sub_resource type="StandardMaterial3D" id="Mat_3rd_Gun"]
+albedo_color = Color(0.05, 0.05, 0.08, 1)
+metallic = 0.95
+roughness = 0.2
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
 radius = 0.35
@@ -22,17 +31,99 @@ height = 0.52
 albedo_color = Color(0.92, 0.76, 0.65, 1)
 roughness = 0.6
 
-[sub_resource type="BoxMesh" id="BoxMesh_visor"]
-size = Vector3(0.24, 0.08, 0.1)
+[sub_resource type="BoxMesh" id="BoxMesh_sunglasses"]
+size = Vector3(0.28, 0.08, 0.12)
 
-[sub_resource type="StandardMaterial3D" id="Mat_Visor"]
-albedo_color = Color(0.1, 0.1, 0.12, 1)
+[sub_resource type="StandardMaterial3D" id="Mat_Sunglasses"]
+albedo_color = Color(0.02, 0.02, 0.03, 1)
+metallic = 0.9
+roughness = 0.1
 
 [sub_resource type="BoxMesh" id="BoxMesh_tie"]
-size = Vector3(0.1, 0.35, 0.05)
+size = Vector3(0.12, 0.38, 0.06)
 
 [sub_resource type="StandardMaterial3D" id="Mat_Tie"]
-albedo_color = Color(0.9, 0.7, 0.1, 1)
+albedo_color = Color(0.95, 0.75, 0.1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_blade"]
+size = Vector3(0.03, 0.07, 0.32)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Blade"]
+albedo_color = Color(0.85, 0.88, 0.9, 1)
+metallic = 0.9
+roughness = 0.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_handle"]
+size = Vector3(0.04, 0.05, 0.14)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Handle"]
+albedo_color = Color(0.2, 0.12, 0.08, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_gun_barrel"]
+size = Vector3(0.05, 0.07, 0.25)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Gun_Metal"]
+albedo_color = Color(0.15, 0.16, 0.18, 1)
+metallic = 0.8
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_gun_grip"]
+size = Vector3(0.045, 0.12, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Gun_Grip"]
+albedo_color = Color(0.1, 0.1, 0.1, 1)
+roughness = 0.7
+
+[sub_resource type="BoxMesh" id="BoxMesh_taser_body"]
+size = Vector3(0.06, 0.09, 0.22)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Taser_Yellow"]
+albedo_color = Color(0.95, 0.8, 0.1, 1)
+roughness = 0.4
+
+[sub_resource type="BoxMesh" id="BoxMesh_taser_prong"]
+size = Vector3(0.05, 0.03, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Taser_Cyan"]
+albedo_color = Color(0.1, 0.8, 1.0, 1)
+emission_enabled = true
+emission = Color(0.1, 0.8, 1.0, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wand"]
+top_radius = 0.02
+bottom_radius = 0.02
+height = 0.35
+
+[sub_resource type="StandardMaterial3D" id="Mat_Wand_Grey"]
+albedo_color = Color(0.25, 0.28, 0.3, 1)
+roughness = 0.5
+
+[sub_resource type="TorusMesh" id="TorusMesh_ring"]
+inner_radius = 0.08
+outer_radius = 0.14
+
+[sub_resource type="StandardMaterial3D" id="Mat_Detector_Green"]
+albedo_color = Color(0.1, 0.9, 0.3, 1)
+emission_enabled = true
+emission = Color(0.1, 0.9, 0.3, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_cone"]
+top_radius = 0.15
+bottom_radius = 0.04
+height = 0.28
+
+[sub_resource type="StandardMaterial3D" id="Mat_Megaphone_White"]
+albedo_color = Color(0.9, 0.9, 0.92, 1)
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_mega_handle"]
+size = Vector3(0.04, 0.12, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Megaphone_Red"]
+albedo_color = Color(0.85, 0.2, 0.2, 1)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_4flbx"]
 properties/0/path = NodePath(".:position")
@@ -44,6 +135,48 @@ properties/1/replication_mode = 1
 properties/2/path = NodePath("CharacterModel:rotation")
 properties/2/spawn = true
 properties/2/replication_mode = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_briefcase_body"]
+size = Vector3(0.42, 0.32, 0.08)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Briefcase_Black"]
+albedo_color = Color(0.08, 0.08, 0.1, 1)
+metallic = 0.5
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_briefcase_handle"]
+size = Vector3(0.12, 0.04, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Briefcase_Silver"]
+albedo_color = Color(0.85, 0.88, 0.9, 1)
+metallic = 0.9
+roughness = 0.2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Slot_Inactive"]
+bg_color = Color(0.06, 0.09, 0.16, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25, 0.35, 0.5, 0.4)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Slot_Active"]
+bg_color = Color(0.12, 0.3, 0.6, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.95, 0.75, 0.15, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0.95, 0.75, 0.15, 0.3)
+shadow_size = 4
 
 [node name="Player" type="CharacterBody3D" unique_id=809420733]
 script = ExtResource("1_4flbx")
@@ -64,10 +197,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
 mesh = SubResource("SphereMesh_head")
 surface_material_override/0 = SubResource("Mat_Skin")
 
-[node name="Visor" type="MeshInstance3D" parent="CharacterModel" unique_id=49201928]
+[node name="HandWeapon" type="MeshInstance3D" parent="CharacterModel" unique_id=9876543]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42, 0.48, -0.32)
+mesh = SubResource("BoxMesh_3rd_gun")
+surface_material_override/0 = SubResource("Mat_3rd_Gun")
+
+[node name="Sunglasses" type="MeshInstance3D" parent="CharacterModel" unique_id=49201928]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48, -0.22)
-mesh = SubResource("BoxMesh_visor")
-surface_material_override/0 = SubResource("Mat_Visor")
+mesh = SubResource("BoxMesh_sunglasses")
+surface_material_override/0 = SubResource("Mat_Sunglasses")
 
 [node name="Tie" type="MeshInstance3D" parent="CharacterModel" unique_id=83720194]
 visible = false
@@ -80,12 +220,94 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, -0.1)
 fov = 90.0
 
 [node name="RayCast3D" type="RayCast3D" parent="Camera3D" unique_id=53775644]
-target_position = Vector3(0, 0, -3.2)
+target_position = Vector3(0, 0, -18)
+
+[node name="HandAnchor" type="Node3D" parent="Camera3D" unique_id=98721345]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32, -0.26, -0.48)
+
+[node name="KnifeModel" type="Node3D" parent="Camera3D/HandAnchor" unique_id=38472910]
+visible = false
+
+[node name="Blade" type="MeshInstance3D" parent="Camera3D/HandAnchor/KnifeModel" unique_id=1928374]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -0.15)
+mesh = SubResource("BoxMesh_blade")
+surface_material_override/0 = SubResource("Mat_Blade")
+
+[node name="Handle" type="MeshInstance3D" parent="Camera3D/HandAnchor/KnifeModel" unique_id=5829103]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.06)
+mesh = SubResource("BoxMesh_handle")
+surface_material_override/0 = SubResource("Mat_Handle")
+
+[node name="PistolModel" type="Node3D" parent="Camera3D/HandAnchor" unique_id=48291029]
+visible = false
+
+[node name="Barrel" type="MeshInstance3D" parent="Camera3D/HandAnchor/PistolModel" unique_id=9382710]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -0.1)
+mesh = SubResource("BoxMesh_gun_barrel")
+surface_material_override/0 = SubResource("Mat_Gun_Metal")
+
+[node name="Grip" type="MeshInstance3D" parent="Camera3D/HandAnchor/PistolModel" unique_id=8472910]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.258819, 0, -0.258819, 0.9659258, 0, -0.04, 0)
+mesh = SubResource("BoxMesh_gun_grip")
+surface_material_override/0 = SubResource("Mat_Gun_Grip")
+
+[node name="TaserModel" type="Node3D" parent="Camera3D/HandAnchor" unique_id=19283745]
+visible = false
+
+[node name="TaserBody" type="MeshInstance3D" parent="Camera3D/HandAnchor/TaserModel" unique_id=83729104]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -0.08)
+mesh = SubResource("BoxMesh_taser_body")
+surface_material_override/0 = SubResource("Mat_Taser_Yellow")
+
+[node name="TaserProng" type="MeshInstance3D" parent="Camera3D/HandAnchor/TaserModel" unique_id=2938471]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -0.2)
+mesh = SubResource("BoxMesh_taser_prong")
+surface_material_override/0 = SubResource("Mat_Taser_Cyan")
+
+[node name="DetectorModel" type="Node3D" parent="Camera3D/HandAnchor" unique_id=58291023]
+visible = false
+
+[node name="Wand" type="MeshInstance3D" parent="Camera3D/HandAnchor/DetectorModel" unique_id=4829104]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0)
+mesh = SubResource("CylinderMesh_wand")
+surface_material_override/0 = SubResource("Mat_Wand_Grey")
+
+[node name="SensorRing" type="MeshInstance3D" parent="Camera3D/HandAnchor/DetectorModel" unique_id=1827394]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, -0.25)
+mesh = SubResource("TorusMesh_ring")
+surface_material_override/0 = SubResource("Mat_Detector_Green")
+
+[node name="MegaphoneModel" type="Node3D" parent="Camera3D/HandAnchor" unique_id=94827103]
+visible = false
+
+[node name="Cone" type="MeshInstance3D" parent="Camera3D/HandAnchor/MegaphoneModel" unique_id=3847291]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.05, -0.14)
+mesh = SubResource("CylinderMesh_cone")
+surface_material_override/0 = SubResource("Mat_Megaphone_White")
+
+[node name="Handle" type="MeshInstance3D" parent="Camera3D/HandAnchor/MegaphoneModel" unique_id=9283741]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.06, 0)
+mesh = SubResource("BoxMesh_mega_handle")
+surface_material_override/0 = SubResource("Mat_Megaphone_Red")
+
+[node name="BriefcaseModel" type="Node3D" parent="Camera3D/HandAnchor" unique_id=94827199]
+visible = false
+
+[node name="CaseBody" type="MeshInstance3D" parent="Camera3D/HandAnchor/BriefcaseModel" unique_id=3847298]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, -0.1)
+mesh = SubResource("BoxMesh_briefcase_body")
+surface_material_override/0 = SubResource("Mat_Briefcase_Black")
+
+[node name="CaseHandle" type="MeshInstance3D" parent="Camera3D/HandAnchor/BriefcaseModel" unique_id=9283748]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13, -0.1)
+mesh = SubResource("BoxMesh_briefcase_handle")
+surface_material_override/0 = SubResource("Mat_Briefcase_Silver")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=509350905]
 replication_config = SubResource("SceneReplicationConfig_4flbx")
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1207028065]
+mouse_filter = 2
 
 [node name="ColorRect" type="ColorRect" parent="HUD" unique_id=439512654]
 anchors_preset = 8
@@ -120,13 +342,141 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -250.0
-offset_top = -125.0
-offset_right = 250.0
-offset_bottom = -95.0
+offset_left = -200.0
+offset_top = -90.0
+offset_right = 200.0
+offset_bottom = -65.0
 grow_horizontal = 2
 grow_vertical = 0
 horizontal_alignment = 1
+
+[node name="WeaponPanel" type="Control" parent="HUD" unique_id=9827104]
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -460.0
+offset_top = -75.0
+offset_right = -15.0
+offset_bottom = -15.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="VBox" type="VBoxContainer" parent="HUD/WeaponPanel" unique_id=9827105]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 4
+
+[node name="CategoryLabel" type="Label" parent="HUD/WeaponPanel/VBox" unique_id=9827106]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.75, 0.95, 0.9)
+theme_override_font_sizes/font_size = 11
+text = "🎒 EKİPMANLAR & YETENEKLER"
+horizontal_alignment = 2
+
+[node name="SlotRow" type="HBoxContainer" parent="HUD/WeaponPanel/VBox" unique_id=9827107]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="Slot1" type="PanelContainer" parent="HUD/WeaponPanel/VBox/SlotRow" unique_id=9827108]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_Slot_Inactive")
+
+[node name="Label" type="Label" parent="HUD/WeaponPanel/VBox/SlotRow/Slot1" unique_id=9827109]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "[1] 🔪 Bıçak"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot2" type="PanelContainer" parent="HUD/WeaponPanel/VBox/SlotRow" unique_id=9827110]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_Slot_Inactive")
+
+[node name="Label" type="Label" parent="HUD/WeaponPanel/VBox/SlotRow/Slot2" unique_id=9827111]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "[2] 🔫 Tabanca"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot3" type="PanelContainer" parent="HUD/WeaponPanel/VBox/SlotRow" unique_id=9827112]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_Slot_Inactive")
+
+[node name="Label" type="Label" parent="HUD/WeaponPanel/VBox/SlotRow/Slot3" unique_id=9827113]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "[3] 📢 İzdiham"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot4" type="PanelContainer" parent="HUD/WeaponPanel/VBox/SlotRow" unique_id=9827114]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_Slot_Inactive")
+
+[node name="Label" type="Label" parent="HUD/WeaponPanel/VBox/SlotRow/Slot4" unique_id=9827115]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "[4] 🕺 Şarkı"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScanResultPanel" type="Panel" parent="HUD" unique_id=4829104]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -180.0
+offset_right = 220.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScanTitle" type="Label" parent="HUD/ScanResultPanel" unique_id=9382710]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 8.0
+offset_right = 200.0
+offset_bottom = 32.0
+grow_horizontal = 2
+text = "📡 METAL DEDEKTÖRÜ SONUCU"
+horizontal_alignment = 1
+
+[node name="ScanItems" type="Label" parent="HUD/ScanResultPanel" unique_id=1928374]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -60.0
+offset_right = 200.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Üzerinde: 🥤 Gazoz Kapağı, 🔌 Ütü, 🔑 Paslı Anahtar"
+horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="RoleCardPanel" type="Panel" parent="HUD" unique_id=58291023]
 anchors_preset = 5
@@ -197,3 +547,162 @@ grow_vertical = 2
 text = "KAZANAN BELLİ DEĞİL"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="MissionPanel" type="Panel" parent="HUD" unique_id=7654321]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -180.0
+offset_top = 58.0
+offset_right = 180.0
+offset_bottom = 88.0
+grow_horizontal = 2
+
+[node name="MissionLabel" type="Label" parent="HUD/MissionPanel" unique_id=7654322]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -14.0
+offset_right = 250.0
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "⏳ Kürsü  ❌ Halk  ❌ Basın"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RoleIndicator" type="Label" parent="HUD" unique_id=8810001]
+visible = false
+layout_mode = 1
+anchor_left = 0.0
+anchor_top = 0.0
+offset_left = 14.0
+offset_top = 60.0
+offset_right = 180.0
+offset_bottom = 86.0
+text = "🛡️ KORUMA"
+
+[node name="PausePanel" type="ColorRect" parent="HUD" unique_id=8820001]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.0, 0.0, 0.05, 0.75)
+
+[node name="VBox" type="VBoxContainer" parent="HUD/PausePanel" unique_id=8820002]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -170.0
+offset_top = -180.0
+offset_right = 170.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+
+[node name="PauseTitle" type="Label" parent="HUD/PausePanel/VBox" unique_id=8820003]
+theme_override_font_sizes/font_size = 28
+text = "⏸️  DURAKLATILDI"
+horizontal_alignment = 1
+
+[node name="HSep" type="HSeparator" parent="HUD/PausePanel/VBox" unique_id=8820004]
+
+[node name="ControlsLabel" type="Label" parent="HUD/PausePanel/VBox" unique_id=8820005]
+theme_override_font_sizes/font_size = 13
+text = "WASD — Hareket     Boşluk — Zıpla     E — Etkileşim
+1 / 2 — Silah Seç     F1/F2/F3 — Test Rolü"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="HUD/PausePanel/VBox" unique_id=8820006]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 10)
+
+[node name="ResumeButton" type="Button" parent="HUD/PausePanel/VBox" unique_id=8820007]
+custom_minimum_size = Vector2(0, 48)
+text = "▶️  Devam Et"
+
+[node name="QuitButton" type="Button" parent="HUD/PausePanel/VBox" unique_id=8820008]
+custom_minimum_size = Vector2(0, 48)
+text = "🚪  Ana Menüye Dön"
+
+[node name="ControlsLabel2" type="Label" parent="HUD/PausePanel/VBox" unique_id=8820009]
+theme_override_font_sizes/font_size = 12
+text = "F — Drone Uçur (Koruma)"
+horizontal_alignment = 1
+
+[node name="Minimap" type="Control" parent="HUD" unique_id=9110001]
+layout_mode = 1
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -154.0
+offset_right = 152.0
+offset_bottom = -14.0
+script = ExtResource("minimap_script")
+
+[node name="SummaryPanel" type="ColorRect" parent="HUD" unique_id=9210001]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.02, 0.03, 0.08, 0.92)
+
+[node name="VBox" type="VBoxContainer" parent="HUD/SummaryPanel" unique_id=9210002]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -160.0
+offset_right = 240.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="SummaryTitle" type="Label" parent="HUD/SummaryPanel/VBox" unique_id=9210003]
+theme_override_font_sizes/font_size = 22
+text = "🏁 TUR SONA ERDİ"
+horizontal_alignment = 1
+
+[node name="WinnerLabel" type="Label" parent="HUD/SummaryPanel/VBox" unique_id=9210004]
+theme_override_font_sizes/font_size = 18
+text = "..."
+horizontal_alignment = 1
+
+[node name="HSep" type="HSeparator" parent="HUD/SummaryPanel/VBox" unique_id=9210005]
+
+[node name="RoleLabel" type="Label" parent="HUD/SummaryPanel/VBox" unique_id=9210006]
+theme_override_font_sizes/font_size = 15
+text = "Rolün: —"
+horizontal_alignment = 1
+
+[node name="TimeLabel" type="Label" parent="HUD/SummaryPanel/VBox" unique_id=9210007]
+theme_override_font_sizes/font_size = 15
+text = "Süre: —"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="HUD/SummaryPanel/VBox" unique_id=9210008]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 12)
+
+[node name="QuitButton" type="Button" parent="HUD/SummaryPanel/VBox" unique_id=9210009]
+custom_minimum_size = Vector2(0, 50)
+theme_override_font_sizes/font_size = 16
+text = "🚪  Ana Menüye Dön"
+

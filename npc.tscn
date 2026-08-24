@@ -22,12 +22,6 @@ height = 0.52
 albedo_color = Color(0.92, 0.76, 0.65, 1)
 roughness = 0.6
 
-[sub_resource type="BoxMesh" id="BoxMesh_npc_visor"]
-size = Vector3(0.24, 0.08, 0.1)
-
-[sub_resource type="StandardMaterial3D" id="Mat_Npc_Visor"]
-albedo_color = Color(0.15, 0.15, 0.18, 1)
-
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_v7lw1"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
@@ -54,11 +48,6 @@ surface_material_override/0 = SubResource("Mat_Npc_Body")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
 mesh = SubResource("SphereMesh_npc_head")
 surface_material_override/0 = SubResource("Mat_Npc_Skin")
-
-[node name="Visor" type="MeshInstance3D" parent="CharacterModel" unique_id=5829103]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48, -0.22)
-mesh = SubResource("BoxMesh_npc_visor")
-surface_material_override/0 = SubResource("Mat_Npc_Visor")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1339541383]
 replication_config = SubResource("SceneReplicationConfig_v7lw1")
