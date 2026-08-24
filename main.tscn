@@ -35,18 +35,94 @@ shape = SubResource("BoxShape3D_fglp6")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1881046318]
 
-[node name="HostButton" type="Button" parent="CanvasLayer" unique_id=993445588]
-offset_right = 8.0
-offset_bottom = 8.0
-text = "Kur"
+[node name="LobbyPanel" type="Panel" parent="CanvasLayer" unique_id=74829103]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -120.0
+offset_right = 180.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="JoinButton" type="Button" parent="CanvasLayer" unique_id=380590105]
-offset_left = 38.0
-offset_top = -1.0
-offset_right = 81.0
-offset_bottom = 30.0
-text = "Katıl
-"
+[node name="TitleLabel" type="Label" parent="CanvasLayer/LobbyPanel" unique_id=9872134]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 16.0
+offset_right = 150.0
+offset_bottom = 44.0
+grow_horizontal = 2
+text = "🏛️ SUİKASTÇI & BAŞKAN"
+horizontal_alignment = 1
+
+[node name="HostButton" type="Button" parent="CanvasLayer/LobbyPanel" unique_id=993445588]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -140.0
+offset_top = -25.0
+offset_right = 140.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "👑 Oda Kur (Host)"
+
+[node name="IpInput" type="LineEdit" parent="CanvasLayer/LobbyPanel" unique_id=11928374]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -140.0
+offset_top = 22.0
+offset_right = 40.0
+offset_bottom = 56.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "127.0.0.1"
+placeholder_text = "Sunucu IP Adresi"
+alignment = 1
+
+[node name="JoinButton" type="Button" parent="CanvasLayer/LobbyPanel" unique_id=380590105]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 48.0
+offset_top = 22.0
+offset_right = 140.0
+offset_bottom = 56.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "🚀 Katıl"
+
+[node name="InfoLabel" type="Label" parent="CanvasLayer/LobbyPanel" unique_id=48392019]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -32.0
+offset_right = 160.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Tailscale veya LAN IP ile bağlanabilirsiniz"
+horizontal_alignment = 1
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=997947994]
 _spawnable_scenes = PackedStringArray("uid://bts4blx0hl4nn", "uid://bbk7uovn5mim2")

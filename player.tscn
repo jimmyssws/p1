@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://b5kvqbk70883r" path="res://player.gd" id="1_4flbx"]
 [ext_resource type="PackedScene" uid="uid://dog6dkl86jbxf" path="res://character.fbx" id="2_i3pqv"]
 [ext_resource type="PackedScene" uid="uid://c3188lstpepbn" path="res://character (1).fbx" id="3_hqtel"]
-[ext_resource type="Animation" uid="uid://clixjqlwh53vs" path="res://idle.res" id="4_sweqy"]
-[ext_resource type="Animation" uid="uid://bbnac2lpady6h" path="res://walk.res" id="5_2hs0m"]
+[ext_resource type="Animation" uid="uid://cmh4b2b7vu20d" path="res://idle.res" id="4_sweqy"]
+[ext_resource type="Animation" uid="uid://bpl4ircxsboj0" path="res://walk.res" id="5_2hs0m"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_fglp6"]
 
@@ -20,7 +20,7 @@ properties/1/replication_mode = 1
 properties/2/path = NodePath("PresidentModel:rotation")
 properties/2/spawn = true
 properties/2/replication_mode = 1
-properties/3/path = NodePath("AsssassinModel:rotation")
+properties/3/path = NodePath("AssassinModel:rotation")
 properties/3/spawn = true
 properties/3/replication_mode = 1
 properties/4/path = NodePath("AnimationPlayer:current_animation")
@@ -38,11 +38,9 @@ script = ExtResource("1_4flbx")
 
 [node name="PresidentModel" parent="." unique_id=1749458065 instance=ExtResource("2_i3pqv")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
-visible = false
 
-[node name="AsssassinModel" parent="." unique_id=1109809797 instance=ExtResource("3_hqtel")]
+[node name="AssassinModel" parent="." unique_id=1109809797 instance=ExtResource("3_hqtel")]
 transform = Transform3D(-1.5, 0, -1.3113416e-07, 0, 1.5, 0, 1.3113416e-07, 0, -1.5, 0, 0, 0)
-visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=580867497]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -91,6 +89,59 @@ offset_bottom = -53.0
 grow_horizontal = 2
 grow_vertical = 0
 
+[node name="ActionPrompt" type="Label" parent="HUD" unique_id=38472910]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -120.0
+offset_right = 200.0
+offset_bottom = -90.0
+grow_horizontal = 2
+grow_vertical = 0
+horizontal_alignment = 1
+
+[node name="RoleCardPanel" type="Panel" parent="HUD" unique_id=58291023]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -220.0
+offset_top = 20.0
+offset_right = 220.0
+offset_bottom = 100.0
+grow_horizontal = 2
+
+[node name="RoleTitle" type="Label" parent="HUD/RoleCardPanel" unique_id=19283745]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 8.0
+offset_right = 200.0
+offset_bottom = 35.0
+grow_horizontal = 2
+text = "ROLÜNÜZ BELİRLENİYOR..."
+horizontal_alignment = 1
+
+[node name="RoleDesc" type="Label" parent="HUD/RoleCardPanel" unique_id=83729104]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -42.0
+offset_right = 200.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Göreviniz hazırlanıyor..."
+horizontal_alignment = 1
+
 [node name="GameOverPanel" type="Panel" parent="HUD" unique_id=902015068]
 visible = false
 anchors_preset = 8
@@ -112,14 +163,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -86.5
-offset_top = -24.5
-offset_right = 86.5
-offset_bottom = 24.5
+offset_left = -200.0
+offset_top = -40.0
+offset_right = 200.0
+offset_bottom = 40.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "KAZANAN BELLİ DEĞİL
-"
+text = "KAZANAN BELLİ DEĞİL"
 horizontal_alignment = 1
 vertical_alignment = 1
 
