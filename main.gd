@@ -166,10 +166,16 @@ func _redistribute_roles():
 			ass_node.rpc("assign_role", "ASSASSIN")
 		players_to_assign.erase(assassin_id)
 		
+	var available_classes = [1, 2, 3]
+	available_classes.shuffle()
+	var class_idx = 0
 	for guard_id in players_to_assign:
 		var guard_node = get_node_or_null(str(guard_id))
 		if guard_node:
-			guard_node.rpc("assign_role", "GUARD")
+			var g_class = available_classes[class_idx % available_classes.size()]
+			class_idx += 1
+			guard_node.rpc("assign_role", "GUARD", g_class)
+
 
 @rpc("any_peer", "call_local")
 func net_game_over(message: String):

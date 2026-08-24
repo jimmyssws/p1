@@ -316,8 +316,10 @@ func _setup_sounds():
 
 
 @rpc("any_peer", "call_local")
-func assign_role(role_name: String):
+func assign_role(role_name: String, g_class: int = 0):
 	current_role = role_name
+	if role_name == "GUARD" and g_class > 0:
+		guard_class = g_class
 	
 	if current_role == "PRESIDENT":
 		global_position = Vector3(0, 2.5, -28.0)
@@ -480,8 +482,15 @@ func _display_role_card(role_name: String):
 		role_title.text = "🗡️ SENİN ROLÜN: SUİKASTÇI"
 		role_desc.text = "[1] Bıçak & [2] Tek Mermili Tabanca. Sivil gibi davran, Başkanı indir!"
 	elif role_name == "GUARD":
-		role_title.text = "🛡️ SENİN ROLÜN: KORUMA"
-		role_desc.text = "[1] Taser Şok & [2] Dedektör ile şüphelileri tara. Başkanı koru!"
+		if guard_class == 1:
+			role_title.text = "🛡️ SENİN ROLÜN: KORUMA 1 — DEDEKTÖR UZMANI"
+			role_desc.text = "[1] Taser (7.5m) & [2] Metal Dedektörü. Şüphelileri tara, Başkanı koru!"
+		elif guard_class == 2:
+			role_title.text = "🛡️ SENİN ROLÜN: KORUMA 2 — DRON OPERATÖRÜ"
+			role_desc.text = "[1] Taser & [2] Gözetleme Dronu (45sn batarya). Havadan izle, silahı yakala!"
+		elif guard_class == 3:
+			role_title.text = "🛡️ SENİN ROLÜN: KORUMA 3 — TAKTİK TELSİZ"
+			role_desc.text = "[1] Taser & [2] Radar İhbarı & [3] Megafon. Suikastçıyı aydınlat, durdur!"
 		
 	role_panel.show()
 	await get_tree().create_timer(2.0).timeout
@@ -574,7 +583,7 @@ func _input(event):
 			return
 		_toggle_pause()
 
-	# --- 🧪 DEBUG F1/F2/F3 / C / G ---
+	# --- 🎮 GAMEPLAY TUŞLARI ---
 	if event is InputEventKey and event.pressed:
 		if event.keycode == KEY_F:
 			if current_role == "GUARD" and guard_class == 2:
@@ -584,30 +593,6 @@ func _input(event):
 			var mn = get_node_or_null("/root/main")
 			if mn and mn.has_method("restart_match"):
 				mn.rpc("restart_match")
-		elif event.keycode == KEY_F1:
-			current_role = "PRESIDENT"
-			global_position = Vector3(0, 2.5, -28.0)
-			mission_state = 0
-			mission_done = [false, false, false]
-			_update_weapon_hud()
-			_update_role_indicator("PRESIDENT")
-			_update_mission_hud()
-			if mission_panel: mission_panel.show()
-			_show_temp_prompt("👑 TEST: BAŞKAN")
-		elif event.keycode == KEY_F2:
-			if current_role == "GUARD":
-				guard_class = (guard_class % 3) + 1
-			else:
-				current_role = "GUARD"
-				guard_class = 1
-			selected_slot = 1
-			if drone_mode: _deactivate_drone()
-			_update_weapon_hud()
-			_update_role_indicator("GUARD %d" % guard_class)
-			var c_name = "DEDEKTÖR"
-			if guard_class == 2: c_name = "DRON"
-			elif guard_class == 3: c_name = "MEGAFON (HERKES DURSUN)"
-			_show_temp_prompt("🛡️ KORUMA %d (%s) SEÇİLDİ!" % [guard_class, c_name])
 		elif event.keycode == KEY_C:
 			is_mimic_pose = not is_mimic_pose
 			if is_mimic_pose:
@@ -617,13 +602,7 @@ func _input(event):
 		elif event.keycode == KEY_G:
 			if current_role == "ASSASSIN":
 				_execute_assassin_drop_weapon()
-		elif event.keycode == KEY_F3:
-			current_role = "ASSASSIN"
-			pistol_ammo = 1
-			_update_weapon_hud()
-			_update_role_indicator("ASSASSIN")
-			if mission_panel: mission_panel.hide()
-			_show_temp_prompt("🗡️ TEST: SUİKASTÇI")
+
 
 	# --- 🔢 SİLAH SEÇİMİ (1, 2, 3, 4) ---
 	if event is InputEventKey and event.pressed:
