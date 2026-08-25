@@ -61,26 +61,38 @@ func _ready():
 	_setup_npc_materials()
 	_decide_next_behavior()
 
+# 🎨 Statik Paylaşımlı Materyal Paleti (FPS Optimizasyonu - Sıfır Ekstra Draw Call)
+static var SHARED_SHIRT_MATS: Array[StandardMaterial3D] = []
+static var SHARED_PANTS_MATS: Array[StandardMaterial3D] = []
+
+static func _init_shared_materials():
+	if SHARED_SHIRT_MATS.size() > 0: return
+	for col in CIVILIAN_COLORS:
+		var s_mat = StandardMaterial3D.new()
+		s_mat.albedo_color = col
+		s_mat.roughness = 0.7
+		SHARED_SHIRT_MATS.append(s_mat)
+		
+		var p_mat = StandardMaterial3D.new()
+		p_mat.albedo_color = col.darkened(0.2)
+		p_mat.roughness = 0.85
+		SHARED_PANTS_MATS.append(p_mat)
+
 func _setup_npc_materials():
+	_init_shared_materials()
 	var torso = get_node_or_null("CharacterModel/AnimMesh/character/root/torso")
 	var leg_l = get_node_or_null("CharacterModel/AnimMesh/character/root/leg-left")
 	var leg_r = get_node_or_null("CharacterModel/AnimMesh/character/root/leg-right")
 	
-	var shirt_color = CIVILIAN_COLORS[randi() % CIVILIAN_COLORS.size()]
-	var pants_color = CIVILIAN_COLORS[randi() % CIVILIAN_COLORS.size()]
-	
-	var shirt_mat = StandardMaterial3D.new()
-	shirt_mat.albedo_color = shirt_color
-	shirt_mat.roughness = 0.7
-	
-	var pants_mat = StandardMaterial3D.new()
-	pants_mat.albedo_color = pants_color
-	pants_mat.roughness = 0.8
+	var shirt_mat = SHARED_SHIRT_MATS[randi() % SHARED_SHIRT_MATS.size()]
+	var pants_mat = SHARED_PANTS_MATS[randi() % SHARED_PANTS_MATS.size()]
 	
 	if torso: torso.set_surface_override_material(0, shirt_mat)
 	if leg_l: leg_l.set_surface_override_material(0, pants_mat)
 	if leg_r: leg_r.set_surface_override_material(0, pants_mat)
-
+	
+	if anim_player:
+		anim_player.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_PHYSICS
 func _physics_process(delta):
 	if is_stunned:
 		stun_time_left -= delta
@@ -130,6 +142,7 @@ func _physics_process(delta):
 	if current_state == NpcState.PANIC:
 		speed = RUN_SPEED
 
+	_update_avoidance_cache(delta)
 	var player_avoid = _get_player_avoidance()
 	if player_avoid != Vector3.ZERO and current_state != NpcState.PANIC:
 		var avoid_dir = (direction + player_avoid * 1.5).normalized()
@@ -163,17 +176,26 @@ func _update_npc_animation():
 			anim_player.play("idle")
 		anim_player.speed_scale = 1.0
 
+var _cached_avoid: Vector3 = Vector3.ZERO
+var _avoid_timer: float = 0.0
+
 func _get_player_avoidance() -> Vector3:
+	return _cached_avoid
+
+func _update_avoidance_cache(delta: float):
+	_avoid_timer -= delta
+	if _avoid_timer > 0.0: return
+	_avoid_timer = 0.2 # Saniyede sadece 5 kez kontrol et (FPS Uçuşu)
+	
 	var avoid = Vector3.ZERO
 	var players = get_tree().get_nodes_in_group("players")
 	for p in players:
 		if p and is_instance_valid(p):
 			var dist = global_position.distance_to(p.global_position)
-			if dist < 2.0 and dist > 0.01:
+			if dist < 2.2 and dist > 0.05:
 				avoid += (global_position - p.global_position).normalized() / dist
 	avoid.y = 0
-	return avoid.normalized()
-
+	_cached_avoid = avoid.normalized()
 func _decide_next_behavior():
 	if current_state == NpcState.CHAT or randf() < 0.05:
 		_play_random_gibberish()

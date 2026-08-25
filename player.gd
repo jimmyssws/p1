@@ -627,9 +627,45 @@ func _input(event):
 			return
 		_toggle_pause()
 
-	# --- 🎮 GAMEPLAY TUŞLARI ---
+		# --- 🎮 GAMEPLAY & TEST TUŞLARI ---
 	if event is InputEventKey and event.pressed:
-		if event.keycode == KEY_F:
+		if event.keycode == KEY_F1:
+			current_role = "PRESIDENT"
+			global_position = Vector3(0, 2.8, -32.0)
+			mission_state = 0
+			mission_done = [false, false, false]
+			has_briefcase_shield = true
+			if drone_mode: _deactivate_drone()
+			_update_weapon_hud()
+			_update_role_indicator("PRESIDENT")
+			_update_mission_hud()
+			if mission_panel: mission_panel.show()
+			_show_temp_prompt("👑 TEST: BAŞKAN SEÇİLDİ (Kürsü Görevi Aktif)")
+		elif event.keycode == KEY_F2:
+			if current_role == "GUARD":
+				guard_class = (guard_class % 3) + 1
+			else:
+				current_role = "GUARD"
+				guard_class = 1
+			selected_slot = 1
+			if drone_mode: _deactivate_drone()
+			_update_weapon_hud()
+			_update_role_indicator("GUARD")
+			if mission_panel: mission_panel.hide()
+			var c_name = "DEDEKTÖR"
+			if guard_class == 2: c_name = "DRON"
+			elif guard_class == 3: c_name = "MEGAFON (HERKES DURSUN)"
+			_show_temp_prompt("🛡️ TEST: KORUMA %d (%s) SEÇİLDİ!" % [guard_class, c_name])
+		elif event.keycode == KEY_F3:
+			current_role = "ASSASSIN"
+			pistol_ammo = 1
+			selected_slot = 1
+			if drone_mode: _deactivate_drone()
+			_update_weapon_hud()
+			_update_role_indicator("ASSASSIN")
+			if mission_panel: mission_panel.hide()
+			_show_temp_prompt("🗡️ TEST: SUİKASTÇI SEÇİLDİ (Gizli Silah Hazır)")
+		elif event.keycode == KEY_F:
 			if current_role == "GUARD" and guard_class == 2:
 				if drone_mode: _deactivate_drone()
 				else: _activate_drone()
