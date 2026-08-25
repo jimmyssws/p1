@@ -85,20 +85,20 @@ const GIBBERISH_SOUNDS = [
 
 func _setup_npc_voice():
 	sfx_voice = AudioStreamPlayer3D.new()
-	sfx_voice.unit_size       = 8.0
-	sfx_voice.max_distance    = 25.0
-	sfx_voice.volume_db       = -18.0
+	sfx_voice.unit_size       = 12.0
+	sfx_voice.max_distance    = 22.0
+	sfx_voice.volume_db       = 2.0
 	sfx_voice.attenuation_model = AudioStreamPlayer3D.ATTENUATION_LOGARITHMIC
 	add_child(sfx_voice)
 
 func _play_random_gibberish():
 	if not sfx_voice or voice_cooldown > 0.0: return
-	voice_cooldown = randf_range(6.0, 18.0)
+	voice_cooldown = randf_range(3.0, 7.0)
 	var path = GIBBERISH_SOUNDS[randi() % GIBBERISH_SOUNDS.size()]
 	var stream = load(path) as AudioStreamWAV
 	if stream:
 		sfx_voice.stream      = stream
-		sfx_voice.pitch_scale = randf_range(0.85, 1.25)
+		sfx_voice.pitch_scale = randf_range(0.85, 1.35)
 		sfx_voice.play()
 
 # ------ Materyal batching ------

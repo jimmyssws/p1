@@ -42,50 +42,75 @@ var sfx_crowd_ambient: AudioStreamPlayer = null
 var sfx_crowd_panic: AudioStreamPlayer = null
 
 func _setup_ambient_audio():
-	# 🎵 Miting Arka Plan Marş & Müziği
-	sfx_rally_music = AudioStreamPlayer.new()
-	var music_stream = load("res://sounds/rally_ambient_music.wav") as AudioStreamWAV
-	if music_stream:
-		music_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
-		music_stream.loop_end  = -1  # -1 = tüm dosya boyunca döngü
-		sfx_rally_music.stream    = music_stream
-		sfx_rally_music.volume_db = -16.0
-		add_child(sfx_rally_music)
-		sfx_rally_music.play()
+	# 🎵 Miting Arka Plan Marş & Müziği (Dolu Dolu ve Enerjik)
+	if not sfx_rally_music:
+		sfx_rally_music = AudioStreamPlayer.new()
+		var music_stream = load("res://sounds/rally_ambient_music.wav") as AudioStreamWAV
+		if music_stream:
+			music_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+			music_stream.loop_end  = -1
+			sfx_rally_music.stream    = music_stream
+			sfx_rally_music.volume_db = -5.0
+			add_child(sfx_rally_music)
+			sfx_rally_music.play()
 
-	# 🔊 NPC Kalabalık Uğultusu (3D konumsal)
-	ambient_player = AudioStreamPlayer3D.new()
-	var murmur_stream = load("res://sounds/npc_murmur.wav") as AudioStreamWAV
-	if murmur_stream:
-		murmur_stream.loop_mode    = AudioStreamWAV.LOOP_FORWARD
-		murmur_stream.loop_end     = -1
-		ambient_player.stream      = murmur_stream
-		ambient_player.unit_size   = 14.0
-		ambient_player.max_distance = 30.0
-		ambient_player.volume_db   = 3.0
-		ambient_player.position    = Vector3(0, 1.0, -5.0)
-		ambient_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_LOGARITHMIC
-		add_child(ambient_player)
-		ambient_player.play()
+	# 🔊 Sürekli Kalabalık Uğultusu (2D Genel Atmosfer)
+	if not sfx_crowd_ambient:
+		sfx_crowd_ambient = AudioStreamPlayer.new()
+		var amb_stream = load("res://sounds/crowd_ambient.wav") as AudioStreamWAV
+		if amb_stream:
+			amb_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+			amb_stream.loop_end  = -1
+			sfx_crowd_ambient.stream    = amb_stream
+			sfx_crowd_ambient.volume_db = -3.5
+			add_child(sfx_crowd_ambient)
+			sfx_crowd_ambient.play()
 
-	# 🚨 Alarm sireni
-	sfx_alarm = AudioStreamPlayer.new()
-	var alarm_stream = load("res://sounds/alarm_siren.wav") as AudioStreamWAV
-	if alarm_stream:
-		sfx_alarm.stream    = alarm_stream
-		sfx_alarm.volume_db = 6.0
-		add_child(sfx_alarm)
+	# 🔊 3D Konumsal Kalabalık (Meydan Ortası Z = -8.0)
+	if not ambient_player:
+		ambient_player = AudioStreamPlayer3D.new()
+		var murmur_stream = load("res://sounds/npc_murmur.wav") as AudioStreamWAV
+		if murmur_stream:
+			murmur_stream.loop_mode    = AudioStreamWAV.LOOP_FORWARD
+			murmur_stream.loop_end     = -1
+			ambient_player.stream      = murmur_stream
+			ambient_player.unit_size   = 16.0
+			ambient_player.max_distance = 60.0
+			ambient_player.volume_db   = 5.0
+			ambient_player.position    = Vector3(0, 1.2, -8.0)
+			ambient_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_LOGARITHMIC
+			add_child(ambient_player)
+			ambient_player.play()
 
-	# 👏 Alkış / coşku sesi
-	sfx_cheer = AudioStreamPlayer.new()
-	var cheer_stream = load("res://sounds/cheer_applause.wav") as AudioStreamWAV
-	if cheer_stream:
-		sfx_cheer.stream    = cheer_stream
-		sfx_cheer.volume_db = 5.0
-		add_child(sfx_cheer)
+	# 🚨 Alarm Sireni
+	if not sfx_alarm:
+		sfx_alarm = AudioStreamPlayer.new()
+		var alarm_stream = load("res://sounds/alarm_siren.wav") as AudioStreamWAV
+		if alarm_stream:
+			sfx_alarm.stream    = alarm_stream
+			sfx_alarm.volume_db = 7.0
+			add_child(sfx_alarm)
+
+	# 👏 Alkış / Coşku Sesi
+	if not sfx_cheer:
+		sfx_cheer = AudioStreamPlayer.new()
+		var cheer_stream = load("res://sounds/cheer_applause.wav") as AudioStreamWAV
+		if cheer_stream:
+			sfx_cheer.stream    = cheer_stream
+			sfx_cheer.volume_db = 6.0
+			add_child(sfx_cheer)
+
+	# 😱 Panik Çığlık Sesi
+	if not sfx_crowd_panic:
+		sfx_crowd_panic = AudioStreamPlayer.new()
+		sfx_crowd_panic.stream = load("res://sounds/crowd_panic.wav")
+		sfx_crowd_panic.volume_db = 3.0
+		add_child(sfx_crowd_panic)
 
 
 func _ready():
+	_setup_ambient_audio()
+	_create_news_ticker_ui()
 	sync_poll_score(46.0, "📊 Canlı Anket Başladı")
 	sync_timer(180)
 	if has_node("TopBarHUD"):
@@ -631,24 +656,79 @@ func trigger_crowd_cheer(source: Vector3, radius: float):
 			if n.global_position.distance_to(source) <= radius:
 				n.trigger_cheer(4.5)
 
+var news_ticker_panel: PanelContainer = null
+var news_ticker_label: Label = null
+var _news_ticker_timer: float = 0.0
+
+func _create_news_ticker_ui():
+	if not has_node("TopBarHUD"): return
+	var top_hud = get_node("TopBarHUD")
+	
+	news_ticker_panel = PanelContainer.new()
+	news_ticker_panel.name = "DynamicNewsTicker"
+	news_ticker_panel.custom_minimum_size = Vector2(740, 44)
+	news_ticker_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	news_ticker_panel.position = Vector2(0, 56)
+	
+	var style = StyleBoxTexture.new()
+	var red_tex = load("res://ui_kenney/red_button00.png")
+	if red_tex:
+		style.texture = red_tex
+		style.texture_margin_left = 14
+		style.texture_margin_right = 14
+		style.texture_margin_top = 8
+		style.texture_margin_bottom = 8
+	news_ticker_panel.add_theme_stylebox_override("panel", style)
+	
+	var margin = MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 16)
+	margin.add_theme_constant_override("margin_right", 16)
+	news_ticker_panel.add_child(margin)
+	
+	var hbox = HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 12)
+	margin.add_child(hbox)
+	
+	var badge = Label.new()
+	badge.text = "🔴 SON DAKİKA:"
+	badge.add_theme_font_size_override("font_size", 14)
+	badge.add_theme_color_override("font_color", Color(1.0, 0.9, 0.2))
+	hbox.add_child(badge)
+	
+	news_ticker_label = Label.new()
+	news_ticker_label.text = "BAŞKAN MİTİNG ALANINDA HALKA HİTAP EDİYOR!"
+	news_ticker_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	news_ticker_label.add_theme_font_size_override("font_size", 13)
+	news_ticker_label.add_theme_color_override("font_color", Color(1, 1, 1))
+	hbox.add_child(news_ticker_label)
+	
+	top_hud.add_child(news_ticker_panel)
+	news_ticker_panel.hide()
+
 @rpc("any_peer", "call_local")
 func show_campaign_promise(promise_index: int):
-	var ticker = get_node_or_null("TopBarHUD/NewsTicker")
-	var ticker_lbl = get_node_or_null("TopBarHUD/NewsTicker/HBox/Label")
-	if not ticker or not ticker_lbl: return
-	
 	var PROMISES = [
-		"🔴 BAŞKAN MÜJDELEDİ: 'HER MAHALLEYE BEDAVA DÖNER VE ÇAY ÇEŞMESİ GELİYOR!'",
-		"🔴 SEÇİM VAADİ: 'GELİR VERGİSİ %0'A İNDİRİLECEK, HER GENCE BEDAVA DRON VERİLECEK!'",
-		"🔴 TARİHİ SÖZ: 'MİTİNG ALANI DÜNYANIN EN BÜYÜK MANGAL PARKI İLAN EDİLECEK!'"
+		"BAŞKAN MÜJDELEDİ: 'HER MAHALLEYE BEDAVA DÖNER, ÇAY ÇEŞMESİ VE 1000 MBPS İNTERNET!'",
+		"TARİHİ VAAT: 'EMEKLİLERE VE GENÇLERE ÇİFTE BAYRAM İKRAMİYESİ + HERKESE BEDAVA DRON!'",
+		"BÜYÜK MİTİNG COŞKUSU: 'MİTİNG ALANI DÜNYANIN EN BÜYÜK MANGAL PARKI İLAN EDİLECEK!'",
+		"SEÇİM BEYANNAMESİ: 'TÜM VERGİLER KALDIRILDI, ŞEHİR İÇİ ULAŞIM TAMAMEN ÜCRETSİZ!'"
 	]
-	
 	var idx = clamp(promise_index, 0, PROMISES.size() - 1)
-	ticker_lbl.text = PROMISES[idx]
-	ticker.show()
-	await get_tree().create_timer(7.0).timeout
-	if ticker_lbl.text == PROMISES[idx]:
-		ticker.hide()
+	var text_msg = PROMISES[idx]
+	
+	if not news_ticker_panel:
+		_create_news_ticker_ui()
+		
+	if news_ticker_label and news_ticker_panel:
+		news_ticker_label.text = text_msg
+		news_ticker_panel.show()
+		_news_ticker_timer = 8.0
+		
+	if sfx_cheer:
+		sfx_cheer.play()
+		
+	# Miting alanındaki halkı coştur
+	trigger_crowd_cheer(Vector3(0, 0, -22), 45.0)
 
 @rpc("any_peer", "call_local")
 func net_game_over(message: String):
@@ -671,6 +751,11 @@ func _process(delta):
 		_trend_clear_timer -= delta
 		if _trend_clear_timer <= 0.0 and poll_trend_label:
 			poll_trend_label.text = ""
+			
+	if _news_ticker_timer > 0.0:
+		_news_ticker_timer -= delta
+		if _news_ticker_timer <= 0.0 and news_ticker_panel:
+			news_ticker_panel.hide()
 
 @rpc("any_peer", "call_local")
 func sync_poll_score(score: float, trend_msg: String = ""):
