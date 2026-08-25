@@ -62,6 +62,12 @@ var _mouse_sway: Vector2 = Vector2.ZERO
 @onready var pause_quit_btn = $HUD/PausePanel/VBox/QuitButton if has_node("HUD/PausePanel/VBox/QuitButton") else null
 
 var is_paused: bool = false
+# 🖱️ Fare Hassasiyeti Ayarı
+var base_sensitivity: float = 0.0035
+var mouse_sensitivity: float = 1.0
+@onready var sens_slider = $HUD/PausePanel/VBox/SensContainer/SensSlider if has_node("HUD/PausePanel/VBox/SensContainer/SensSlider") else null
+@onready var sens_val_label = $HUD/PausePanel/VBox/SensContainer/SensHeader/SensValLabel if has_node("HUD/PausePanel/VBox/SensContainer/SensHeader/SensValLabel") else null
+
 
 # 💼 Çelik Çanta Kalkanı (Başkan)
 var has_briefcase_shield: bool = true
@@ -220,12 +226,36 @@ func _ready():
 	_update_weapon_hud()
 
 func _setup_pause_menu():
+	_load_mouse_settings()
+	if sens_slider:
+		sens_slider.value_changed.connect(_on_sensitivity_changed)
 	if pause_resume_btn:
 		pause_resume_btn.pressed.connect(_toggle_pause)
 	if pause_quit_btn:
 		pause_quit_btn.pressed.connect(_quit_to_menu)
 	if summary_quit:
 		summary_quit.pressed.connect(_quit_to_menu)
+
+
+func _load_mouse_settings():
+	var cfg = ConfigFile.new()
+	if cfg.load("user://settings.cfg") == OK:
+		mouse_sensitivity = cfg.get_value("controls", "mouse_sensitivity", 1.0)
+	if sens_slider:
+		sens_slider.value = mouse_sensitivity
+	_update_sens_label(mouse_sensitivity)
+
+func _on_sensitivity_changed(val: float):
+	mouse_sensitivity = val
+	_update_sens_label(val)
+	var cfg = ConfigFile.new()
+	cfg.load("user://settings.cfg")
+	cfg.set_value("controls", "mouse_sensitivity", val)
+	cfg.save("user://settings.cfg")
+
+func _update_sens_label(val: float):
+	if sens_val_label:
+		sens_val_label.text = "%.2fx (%%%d)" % [val, int(val * 100)]
 
 func _toggle_pause():
 	is_paused = not is_paused
@@ -681,15 +711,16 @@ func _input(event):
 		if Input.get_mouse_mode() != Input.MOUSE_MODE_CAPTURED:
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
-	# 🖱️ Fare Hareketi ile Bakış Açısı
+		# 🖱️ Fare Hareketi ile Bakış Açısı
 	if event is InputEventMouseMotion and not is_paused:
+		var sens = base_sensitivity * mouse_sensitivity
 		if drone_mode and drone_anchor and drone_camera:
-			drone_anchor.rotate_y(-event.relative.x * 0.004)
-			drone_camera.rotate_x(-event.relative.y * 0.004)
+			drone_anchor.rotate_y(-event.relative.x * sens)
+			drone_camera.rotate_x(-event.relative.y * sens)
 			drone_camera.rotation.x = clamp(drone_camera.rotation.x, deg_to_rad(-80), deg_to_rad(80))
 		elif camera:
-			rotate_y(-event.relative.x * 0.004)
-			camera.rotate_x(-event.relative.y * 0.004)
+			rotate_y(-event.relative.x * sens)
+			camera.rotate_x(-event.relative.y * sens)
 			camera.rotation.x = clamp(camera.rotation.x, deg_to_rad(-85), deg_to_rad(85))
 
 	# ⏸️ ESC ile Duraklatma

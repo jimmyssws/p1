@@ -694,6 +694,32 @@ text = "WASD — Hareket     Boşluk — Zıpla     E — Etkileşim
 1 / 2 — Silah Seç     F1/F2/F3 — Test Rolü"
 horizontal_alignment = 1
 
+[node name="SensContainer" type="VBoxContainer" parent="HUD/PausePanel/VBox" unique_id=8820010]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SensHeader" type="HBoxContainer" parent="HUD/PausePanel/VBox/SensContainer" unique_id=8820011]
+layout_mode = 2
+
+[node name="SensTitle" type="Label" parent="HUD/PausePanel/VBox/SensContainer/SensHeader" unique_id=8820012]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 14
+text = "🖱️ Fare Hassasiyeti"
+
+[node name="SensValLabel" type="Label" parent="HUD/PausePanel/VBox/SensContainer/SensHeader" unique_id=8820013]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.2, 0.75, 1.0, 1.0)
+text = "1.00x (%100)"
+
+[node name="SensSlider" type="HSlider" parent="HUD/PausePanel/VBox/SensContainer" unique_id=8820014]
+custom_minimum_size = Vector2(0, 28)
+min_value = 0.2
+max_value = 3.0
+step = 0.05
+value = 1.0
+
 [node name="Spacer" type="Control" parent="HUD/PausePanel/VBox" unique_id=8820006]
 layout_mode = 2
 custom_minimum_size = Vector2(0, 10)
