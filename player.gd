@@ -570,17 +570,32 @@ func _display_role_card(role_name: String):
 
 func _update_role_indicator(role_name: String):
 	if not role_indicator: return
+	var role_txt = "🏛️ BAŞKAN"
+	var col = Color(0.35, 0.75, 1.0)
 	match role_name:
 		"PRESIDENT":
-			role_indicator.text = "🏛️ BAŞKAN"
-			role_indicator.add_theme_color_override("font_color", Color(0.4, 0.7, 1.0))
+			role_txt = "👑 BAŞKAN"
+			col = Color(0.95, 0.8, 0.2)
 		"GUARD":
-			role_indicator.text = "🛡️ KORUMA"
-			role_indicator.add_theme_color_override("font_color", Color(0.3, 0.9, 0.4))
+			var c_name = "DEDEKTÖR"
+			if guard_class == 2: c_name = "DRON"
+			elif guard_class == 3: c_name = "MEGAFON"
+			role_txt = "🛡️ KORUMA %d (%s)" % [guard_class, c_name]
+			col = Color(0.3, 0.9, 0.45)
 		"ASSASSIN":
-			role_indicator.text = "🗡️ SUİKASTÇI"
-			role_indicator.add_theme_color_override("font_color", Color(0.95, 0.35, 0.35))
+			role_txt = "🗡️ SUİKASTÇI"
+			col = Color(0.95, 0.35, 0.35)
+			
+	role_indicator.text = role_txt
+	role_indicator.add_theme_color_override("font_color", col)
 	role_indicator.show()
+	
+	# TopHeader içindeki RoleLabel'ı da güncelle
+	var top_role_lbl = get_node_or_null("/root/main/TopBarHUD/TopHeader/Margin/HBox/LeftBox/RoleBadge/RoleLabel")
+	if top_role_lbl:
+		top_role_lbl.text = "  %s  " % role_txt
+		top_role_lbl.add_theme_color_override("font_color", col)
+
 
 @rpc("any_peer", "call_local")
 func apply_stun_effect(duration: float, message: String):

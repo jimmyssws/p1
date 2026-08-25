@@ -10,10 +10,10 @@ var match_timer_active: bool = false
 var president_poll_pct: float = 46.0
 var _trend_clear_timer: float = 0.0
 
-@onready var pres_vote_label = $TopBarHUD/TopPanel/PollPanel/HBox/PresVoteLabel if has_node("TopBarHUD/TopPanel/PollPanel/HBox/PresVoteLabel") else null
-@onready var opp_vote_label = $TopBarHUD/TopPanel/PollPanel/HBox/OppVoteLabel if has_node("TopBarHUD/TopPanel/PollPanel/HBox/OppVoteLabel") else null
-@onready var vote_progress_bar = $TopBarHUD/TopPanel/PollPanel/HBox/VoteProgressBar if has_node("TopBarHUD/TopPanel/PollPanel/HBox/VoteProgressBar") else null
-@onready var poll_trend_label = $TopBarHUD/TopPanel/PollPanel/HBox/TrendLabel if has_node("TopBarHUD/TopPanel/PollPanel/HBox/TrendLabel") else null
+@onready var pres_vote_label = $TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/PresVoteLabel if has_node("TopBarHUD/TopPanel/PollPanel/HBox/PresVoteLabel") else null
+@onready var opp_vote_label = $TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/OppVoteLabel if has_node("TopBarHUD/TopPanel/PollPanel/HBox/OppVoteLabel") else null
+@onready var vote_progress_bar = $TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/VoteProgressBar if has_node("TopBarHUD/TopPanel/PollPanel/HBox/VoteProgressBar") else null
+@onready var poll_trend_label = $TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/TrendBadge/TrendLabel if has_node("TopBarHUD/TopPanel/PollPanel/HBox/TrendLabel") else null
 
 var sfx_crowd_ambient: AudioStreamPlayer = null
 var sfx_crowd_panic: AudioStreamPlayer = null
@@ -21,8 +21,8 @@ var sfx_crowd_panic: AudioStreamPlayer = null
 @onready var host_btn = $CanvasLayer/LobbyPanel/HostButton if has_node("CanvasLayer/LobbyPanel/HostButton") else null
 @onready var join_btn = $CanvasLayer/LobbyPanel/JoinButton if has_node("CanvasLayer/LobbyPanel/JoinButton") else null
 @onready var ip_input = $CanvasLayer/LobbyPanel/IpInput if has_node("CanvasLayer/LobbyPanel/IpInput") else null
-@onready var timer_label = $TopBarHUD/TopPanel/TimerLabel if has_node("TopBarHUD/TopPanel/TimerLabel") else null
-@onready var status_label = $TopBarHUD/TopPanel/StatusLabel if has_node("TopBarHUD/TopPanel/StatusLabel") else null
+@onready var timer_label = $TopBarHUD/TopHeader/Margin/HBox/LeftBox/TimerBadge/TimerLabel if has_node("TopBarHUD/TopPanel/TimerLabel") else null
+@onready var status_label = $TopBarHUD/TopHeader/Margin/HBox/RightBox/StatusBadge/StatusLabel if has_node("TopBarHUD/TopPanel/StatusLabel") else null
 
 
 var ambient_player: AudioStreamPlayer3D = null
