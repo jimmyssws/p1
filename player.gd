@@ -943,13 +943,13 @@ func _execute_president_rally_call():
 		return
 	megaphone_cooldown = 10.0
 	_animate_hand_action()
-	_show_temp_prompt("📢 'SEVGİLİ VATANDAŞLARIM!' (+1.8% Seçim Oyu)")
+	_show_temp_prompt("📢 'SEVGİLİ VATANDAŞLARIM!' (+1.8% Seçim Oyu & Miting Coşkusu)")
 	var mn = get_node_or_null("/root/main")
 	if mn:
 		if mn.has_method("adjust_poll_score"):
 			mn.adjust_poll_score(1.8, "📢 Miting Coşkusu (+1.8%)")
-		if mn.has_method("trigger_crowd_panic"):
-			mn.rpc("trigger_crowd_panic", Vector3(0, 0, -12), 30.0)
+		if mn.has_method("trigger_crowd_cheer"):
+			mn.rpc("trigger_crowd_cheer", global_position, 35.0)
 	_update_weapon_hud()
 
 # 🔪 Suikastçı Bıçak İnfazı (SADECE 2.4m YAKIN TEMAS)
@@ -1271,17 +1271,6 @@ func _physics_process(delta):
 		velocity.x = 0.0
 		velocity.z = 0.0
 		move_and_slide()
-	# 🖐️ Eldeki Silah ve Kol için Prosedürel Yürüme Sallantısı (Weapon Bobbing)
-	if hand_anchor and is_on_floor() and velocity.length() > 0.5:
-		_bob_timer += delta * velocity.length()
-		var bob_y = sin(_bob_timer * 1.8) * 0.008
-		var sway_x = cos(_bob_timer * 0.9) * 0.006
-		hand_anchor.position.y = _hand_def_pos.y + bob_y
-		hand_anchor.position.x = _hand_def_pos.x + sway_x
-	elif hand_anchor:
-		hand_anchor.position.y = lerp(hand_anchor.position.y, _hand_def_pos.y, 8.0 * delta)
-		hand_anchor.position.x = lerp(hand_anchor.position.x, _hand_def_pos.x, 8.0 * delta)
-
 		return
 
 	if drone_mode:

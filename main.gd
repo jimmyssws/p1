@@ -246,12 +246,6 @@ func _redistribute_roles():
 			guard_node.rpc("assign_role", "GUARD", g_class)
 
 func _spawn_npcs(count: int = 130):
-	# 👥 130 Kişilik Gerçekçi Miting Meydanı Dağılımı:
-	# 1. Sahne Önü Fanatik Kalabalık (72 Kişi)
-	# 2. WC ve Büfe Kuyruğundakiler (20 Kişi)
-	# 3. Banklarda Oturanlar ve Havuz Başı (14 Kişi)
-	# 4. Serbest Dolaşan Masum Siviller (24 Kişi)
-	
 	var total_spawned = 0
 	
 	# --- GRUP 1: SAHNE ÖNÜ COŞKULU DİNLEYİCİLER (~72 Kişi) ---
@@ -259,32 +253,29 @@ func _spawn_npcs(count: int = 130):
 		var npc = npc_scene.instantiate()
 		npc.name = "NPC_%d" % total_spawned
 		total_spawned += 1
-		# Sahne önü sıkı kalabalık alanı: X: -13 ile 13, Z: -24 ile -10
 		var pos = Vector3(randf_range(-13.0, 13.0), 0.5, randf_range(-24.5, -9.5))
 		npc.position = pos
-		add_child.call_deferred(npc, true)
-		npc.call_deferred("set_archetype", 0) # STAGE_FANATIC
+		add_child(npc, true)
+		npc.set_archetype(0) # STAGE_FANATIC
 		
-	# --- GRUP 2: WC VE BÜFE SIRASI BEKLEYENLER (~20 Kişi) ---
-	# Sol WC Kuyruğu (8 Kişi)
+	# --- GRUP 2: WC VE BÜFE SIRASI BEKLEYENLER (~16 Kişi) ---
 	for i in range(8):
 		var npc = npc_scene.instantiate()
 		npc.name = "NPC_%d" % total_spawned
 		total_spawned += 1
 		var pos = Vector3(-26.0 + randf_range(-0.4, 0.4), 0.5, -16.0 + (i * 1.35))
 		npc.position = pos
-		add_child.call_deferred(npc, true)
-		npc.call_deferred("set_archetype", 1, pos) # WC_QUEUE
+		add_child(npc, true)
+		npc.set_archetype(1, pos) # WC_QUEUE
 		
-	# Sağ WC Kuyruğu (8 Kişi)
 	for i in range(8):
 		var npc = npc_scene.instantiate()
 		npc.name = "NPC_%d" % total_spawned
 		total_spawned += 1
 		var pos = Vector3(26.0 + randf_range(-0.4, 0.4), 0.5, -16.0 + (i * 1.35))
 		npc.position = pos
-		add_child.call_deferred(npc, true)
-		npc.call_deferred("set_archetype", 1, pos) # WC_QUEUE
+		add_child(npc, true)
+		npc.set_archetype(1, pos) # WC_QUEUE
 
 	# --- GRUP 3: BANKLAR VE HAVUZ ÇEVRESİ DİNLENENLER (~14 Kişi) ---
 	for i in range(14):
@@ -293,36 +284,36 @@ func _spawn_npcs(count: int = 130):
 		total_spawned += 1
 		var roll = randf()
 		var pos = Vector3.ZERO
-		if roll < 0.35: # Sol Bank
+		if roll < 0.35:
 			pos = Vector3(-12.0 + randf_range(-1.2, 1.2), 0.5, -2.0 + randf_range(-0.6, 0.6))
-		elif roll < 0.70: # Sağ Bank
+		elif roll < 0.70:
 			pos = Vector3(12.0 + randf_range(-1.2, 1.2), 0.5, -2.0 + randf_range(-0.6, 0.6))
-		else: # Süs Havuzu Çevresi
+		else:
 			var angle = randf() * PI * 2
 			pos = Vector3(cos(angle) * 4.5, 0.5, 6.0 + sin(angle) * 4.5)
 		npc.position = pos
-		add_child.call_deferred(npc, true)
-		npc.call_deferred("set_archetype", 2) # BENCH_RELAXER
+		add_child(npc, true)
+		npc.set_archetype(2) # BENCH_RELAXER
 
-	# --- GRUP 5: DIŞARIDA TURNİKE SIRASINDA DOĞANLAR (~28 Kişi) ---
+	# --- GRUP 4: DIŞARIDA TURNİKE SIRASINDA DOĞANLAR (~28 Kişi) ---
 	for i in range(28):
 		var npc = npc_scene.instantiate()
 		npc.name = "NPC_%d" % total_spawned
 		total_spawned += 1
 		var pos = Vector3(randf_range(-7.0, 7.0), 0.5, randf_range(26.0, 42.0))
 		npc.position = pos
-		add_child.call_deferred(npc, true)
-		npc.call_deferred("set_archetype", 4) # QUEUE_ENTRANCE
+		add_child(npc, true)
+		npc.set_archetype(4) # QUEUE_ENTRANCE
 
-	# --- GRUP 4: MEYDANDA SERBEST GEZEN SİVİLLER (~24 Kişi) ---
+	# --- GRUP 5: MEYDANDA SERBEST GEZEN SİVİLLER (~24 Kişi) ---
 	for i in range(24):
 		var npc = npc_scene.instantiate()
 		npc.name = "NPC_%d" % total_spawned
 		total_spawned += 1
-		var pos = Vector3(randf_range(-26.0, 26.0), 0.5, randf_range(8.0, 38.0))
+		var pos = Vector3(randf_range(-26.0, 26.0), 0.5, randf_range(0.0, 18.0))
 		npc.position = pos
-		add_child.call_deferred(npc, true)
-		npc.call_deferred("set_archetype", 3) # ROAMER
+		add_child(npc, true)
+		npc.set_archetype(3) # ROAMER # ROAMER
 @rpc("any_peer", "call_local")
 func trigger_crowd_panic(source: Vector3, radius: float):
 	if sfx_crowd_panic and not sfx_crowd_panic.playing:
@@ -340,10 +331,12 @@ func trigger_crowd_stampede(start_pos: Vector3, target_pos: Vector3):
 
 @rpc("any_peer", "call_local")
 func trigger_crowd_cheer(source: Vector3, radius: float):
+	if sfx_cheer and not sfx_cheer.playing:
+		sfx_cheer.play()
 	for n in get_tree().get_nodes_in_group("npcs"):
 		if n and is_instance_valid(n) and n.has_method("trigger_cheer"):
 			if n.global_position.distance_to(source) <= radius:
-				n.trigger_cheer(3.5)
+				n.trigger_cheer(4.5)
 
 @rpc("any_peer", "call_local")
 func show_campaign_promise(promise_index: int):

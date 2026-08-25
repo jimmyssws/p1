@@ -63,8 +63,8 @@ func _play_random_gibberish():
 		sfx_voice.pitch_scale = randf_range(0.85, 1.25)
 		sfx_voice.play()
 
-func set_archetype(arch: NpcArchetype, custom_target: Vector3 = Vector3.ZERO):
-	archetype = arch
+func set_archetype(arch: int, custom_target: Vector3 = Vector3.ZERO):
+	archetype = arch as NpcArchetype
 	queue_target_pos = custom_target
 	match archetype:
 		NpcArchetype.STAGE_FANATIC:
@@ -238,6 +238,13 @@ func _physics_process(delta):
 		velocity.x = 0.0
 		velocity.z = 0.0
 
+	# 🏛️ Meydan Sınırlarında Merkeze Geri Dönme (Meydanın Boşalmasını Engelleme)
+	if abs(global_position.x) > 28.0 or global_position.z < -28.0 or (archetype != NpcArchetype.QUEUE_ENTRANCE and global_position.z > 22.0):
+		var center_target = Vector3(randf_range(-6, 6), 0, randf_range(-14, -6))
+		var steer_dir = (center_target - global_position).normalized()
+		steer_dir.y = 0
+		direction = steer_dir
+
 	move_and_slide()
 	_update_npc_animation()
 
@@ -329,17 +336,26 @@ func _pick_random_wander():
 	direction = Vector3(cos(angle), 0, sin(angle)).normalized()
 	state_timer = randf_range(2.5, 5.5)
 
+func trigger_cheer(duration: float):
+	current_state = NpcState.CHEER
+	state_timer = duration
+	_face_target(Vector3(0, 1.4, -28.0))
+	var to_stage = (Vector3(0, 0, -22.0) - global_position).normalized()
+	to_stage.y = 0
+	direction = to_stage * 0.4
+	_play_random_gibberish()
+
 @rpc("any_peer", "call_local")
 func on_panic_triggered(source: Vector3, radius: float):
 	if global_position.distance_to(source) <= radius:
 		current_state = NpcState.PANIC
 		panic_source = source
 		var away_dir = (global_position - source).normalized()
-		away_dir.x += randf_range(-0.5, 0.5)
-		away_dir.z += randf_range(-0.5, 0.5)
+		away_dir.x += randf_range(-0.6, 0.6)
+		away_dir.z += randf_range(-0.6, 0.6)
 		direction = away_dir.normalized()
 		direction.y = 0
-		state_timer = randf_range(6.0, 10.0)
+		state_timer = randf_range(3.0, 5.0)
 		_play_random_gibberish()
 
 @rpc("any_peer", "call_local")
@@ -350,11 +366,6 @@ func on_stampede_triggered(start_gate: Vector3, target_area: Vector3):
 	direction.y = 0
 	state_timer = randf_range(7.0, 12.0)
 	_play_random_gibberish()
-
-func trigger_cheer(duration: float):
-	current_state = NpcState.CHEER
-	state_timer = duration
-	direction = Vector3.ZERO
 
 @rpc("any_peer", "call_local")
 func apply_stun(duration: float = 4.5):
@@ -403,4 +414,7 @@ func on_guard_freeze_command():
 				break
 	else:
 		state_timer = 3.5
-		_play_random_gibberish()
+
+func die_and_drop(weapon_type: String = "BIÇAK"):
+	apply_stun(20.0)
+	_play_random_gibberish()
