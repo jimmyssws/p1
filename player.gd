@@ -12,15 +12,15 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var role_desc = $HUD/RoleCardPanel/RoleDesc if has_node("HUD/RoleCardPanel/RoleDesc") else null
 @onready var action_prompt = $HUD/ActionPrompt if has_node("HUD/ActionPrompt") else null
 @onready var weapon_panel = $HUD/WeaponPanel if has_node("HUD/WeaponPanel") else null
-@onready var slot_category = $HUD/WeaponPanel/Margin/VBox/CategoryLabel if has_node("HUD/WeaponPanel/VBox/CategoryLabel") else null
-@onready var slot1_panel = $HUD/WeaponPanel/Margin/VBox/SlotRow/Slot1 if has_node("HUD/WeaponPanel/VBox/SlotRow/Slot1") else null
-@onready var slot1_label = $HUD/WeaponPanel/Margin/VBox/SlotRow/Slot1/Label if has_node("HUD/WeaponPanel/VBox/SlotRow/Slot1/Label") else null
-@onready var slot2_panel = $HUD/WeaponPanel/Margin/VBox/SlotRow/Slot2 if has_node("HUD/WeaponPanel/VBox/SlotRow/Slot2") else null
-@onready var slot2_label = $HUD/WeaponPanel/Margin/VBox/SlotRow/Slot2/Label if has_node("HUD/WeaponPanel/VBox/SlotRow/Slot2/Label") else null
-@onready var slot3_panel = $HUD/WeaponPanel/Margin/VBox/SlotRow/Slot3 if has_node("HUD/WeaponPanel/VBox/SlotRow/Slot3") else null
-@onready var slot3_label = $HUD/WeaponPanel/Margin/VBox/SlotRow/Slot3/Label if has_node("HUD/WeaponPanel/VBox/SlotRow/Slot3/Label") else null
-@onready var slot4_panel = $HUD/WeaponPanel/Margin/VBox/SlotRow/Slot4 if has_node("HUD/WeaponPanel/VBox/SlotRow/Slot4") else null
-@onready var slot4_label = $HUD/WeaponPanel/Margin/VBox/SlotRow/Slot4/Label if has_node("HUD/WeaponPanel/VBox/SlotRow/Slot4/Label") else null
+@onready var slot_category = $HUD/WeaponPanel/Margin/VBox/CategoryLabel if has_node("HUD/WeaponPanel/Margin/VBox/CategoryLabel") else null
+@onready var slot1_panel = $HUD/WeaponPanel/Margin/VBox/SlotRow/Slot1 if has_node("HUD/WeaponPanel/Margin/VBox/SlotRow/Slot1") else null
+@onready var slot1_label = $HUD/WeaponPanel/Margin/VBox/SlotRow/Slot1/Label if has_node("HUD/WeaponPanel/Margin/VBox/SlotRow/Slot1/Label") else null
+@onready var slot2_panel = $HUD/WeaponPanel/Margin/VBox/SlotRow/Slot2 if has_node("HUD/WeaponPanel/Margin/VBox/SlotRow/Slot2") else null
+@onready var slot2_label = $HUD/WeaponPanel/Margin/VBox/SlotRow/Slot2/Label if has_node("HUD/WeaponPanel/Margin/VBox/SlotRow/Slot2/Label") else null
+@onready var slot3_panel = $HUD/WeaponPanel/Margin/VBox/SlotRow/Slot3 if has_node("HUD/WeaponPanel/Margin/VBox/SlotRow/Slot3") else null
+@onready var slot3_label = $HUD/WeaponPanel/Margin/VBox/SlotRow/Slot3/Label if has_node("HUD/WeaponPanel/Margin/VBox/SlotRow/Slot3/Label") else null
+@onready var slot4_panel = $HUD/WeaponPanel/Margin/VBox/SlotRow/Slot4 if has_node("HUD/WeaponPanel/Margin/VBox/SlotRow/Slot4") else null
+@onready var slot4_label = $HUD/WeaponPanel/Margin/VBox/SlotRow/Slot4/Label if has_node("HUD/WeaponPanel/Margin/VBox/SlotRow/Slot4/Label") else null
 @onready var scan_panel = $HUD/ScanResultPanel if has_node("HUD/ScanResultPanel") else null
 @onready var scan_title = $HUD/ScanResultPanel/ScanTitle if has_node("HUD/ScanResultPanel/ScanTitle") else null
 @onready var scan_items = $HUD/ScanResultPanel/ScanItems if has_node("HUD/ScanResultPanel/ScanItems") else null
@@ -451,32 +451,32 @@ func _update_weapon_hud():
 	if not weapon_panel or not slot1_panel or not slot2_panel or not slot3_panel: return
 	weapon_panel.show()
 	
-	# Taktik Teçhizat Yuva Stili
+	# Yumuşak Çizgi Film / Parti Oyunu Yuva Stili
 	var _set_slot = func(panel: PanelContainer, label: Label, text: String, is_active: bool, is_disabled: bool = false):
 		if not panel or not label: return
 		panel.show()
 		label.text = text
 		var sb = StyleBoxFlat.new()
-		sb.corner_radius_top_left = 2
-		sb.corner_radius_top_right = 2
-		sb.corner_radius_bottom_right = 2
-		sb.corner_radius_bottom_left = 2
+		sb.corner_radius_top_left = 12
+		sb.corner_radius_top_right = 12
+		sb.corner_radius_bottom_right = 12
+		sb.corner_radius_bottom_left = 12
 		
 		if is_active:
-			sb.bg_color = Color(0.14, 0.32, 0.62, 0.98)
-			sb.border_color = Color(0.98, 0.8, 0.15, 1.0)
-			sb.set_border_width_all(2)
+			sb.bg_color = Color(0.2, 0.55, 0.95, 0.95) # Canlı Tatlı Mavi
+			sb.border_color = Color(1.0, 0.9, 0.3, 1.0) # Sıcak Sarı Çerçeve
+			sb.set_border_width_all(3)
 			label.add_theme_color_override("font_color", Color(1, 1, 1))
 		elif is_disabled:
-			sb.bg_color = Color(0.06, 0.07, 0.09, 0.7)
-			sb.border_color = Color(0.2, 0.18, 0.18, 0.4)
-			sb.set_border_width_all(1)
-			label.add_theme_color_override("font_color", Color(0.4, 0.4, 0.4))
+			sb.bg_color = Color(0.18, 0.2, 0.26, 0.6)
+			sb.border_color = Color(0.3, 0.35, 0.42, 0.4)
+			sb.set_border_width_all(2)
+			label.add_theme_color_override("font_color", Color(0.55, 0.6, 0.68))
 		else:
-			sb.bg_color = Color(0.08, 0.1, 0.14, 0.9)
-			sb.border_color = Color(0.22, 0.28, 0.38, 0.6)
-			sb.set_border_width_all(1)
-			label.add_theme_color_override("font_color", Color(0.78, 0.86, 0.95))
+			sb.bg_color = Color(0.12, 0.15, 0.24, 0.85) # Yumuşak Koyu Lacivert
+			sb.border_color = Color(0.28, 0.38, 0.52, 0.8)
+			sb.set_border_width_all(2)
+			label.add_theme_color_override("font_color", Color(0.9, 0.95, 1.0))
 		panel.add_theme_stylebox_override("panel", sb)
 
 	if current_role == "ASSASSIN":

@@ -20,60 +20,65 @@
 [ext_resource type="PackedScene" path="res://models_city/pavement-fountain.glb" id="fountain"]
 [ext_resource type="PackedScene" path="res://models_city/flag.glb" id="rally_flag"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_TV_Header_BG"]
-bg_color = Color(0.04, 0.05, 0.08, 0.94)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Soft_TopHeader"]
+bg_color = Color(0.12, 0.15, 0.22, 0.9)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.28, 0.36, 0.5, 0.85)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Soft_Pill_Blue"]
+bg_color = Color(0.18, 0.45, 0.85, 0.95)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.25, 0.32, 0.45, 0.8)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-shadow_color = Color(0, 0, 0, 0.6)
-shadow_size = 8
+border_color = Color(0.4, 0.7, 1.0, 0.9)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Live_Blinker"]
-bg_color = Color(0.85, 0.12, 0.15, 0.95)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(1, 0.4, 0.4, 0.9)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Soft_Pill_Yellow"]
+bg_color = Color(0.95, 0.75, 0.15, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1.0, 0.92, 0.45, 0.9)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_TV_Recessed_Badge"]
-bg_color = Color(0.08, 0.1, 0.15, 0.95)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.2, 0.28, 0.4, 0.7)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Soft_Pill_Dark"]
+bg_color = Color(0.08, 0.1, 0.16, 0.85)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.24, 0.32, 0.45, 0.8)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_TV_Poll_Fill"]
-bg_color = Color(0.12, 0.45, 0.95, 1.0)
-corner_radius_top_left = 1
-corner_radius_bottom_left = 1
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Soft_Poll_Fill"]
+bg_color = Color(0.22, 0.6, 0.98, 1.0)
+corner_radius_top_left = 8
+corner_radius_bottom_left = 8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_TV_Poll_Track"]
-bg_color = Color(0.88, 0.18, 0.18, 1.0)
-corner_radius_top_right = 1
-corner_radius_bottom_right = 1
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_News_Badge_Yellow"]
-bg_color = Color(0.98, 0.78, 0.08, 1.0)
-corner_radius_top_left = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_News_Ticker_Red"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Soft_Poll_Track"]
+bg_color = Color(0.95, 0.32, 0.32, 1.0)
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
 bg_color = Color(0.65, 0.08, 0.1, 0.96)
 border_width_top = 1
 border_width_right = 1
@@ -729,156 +734,105 @@ spot_angle = 55.0
 
 [node name="TopHeader" type="PanelContainer" parent="TopBarHUD" unique_id=1827394]
 mouse_filter = 2
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = 16.0
-offset_top = 8.0
-offset_right = -16.0
-offset_bottom = 54.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -480.0
+offset_top = 10.0
+offset_right = 480.0
+offset_bottom = 58.0
 grow_horizontal = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_TV_Header_BG")
+theme_override_styles/panel = SubResource("StyleBoxFlat_Soft_TopHeader")
 
 [node name="Margin" type="MarginContainer" parent="TopBarHUD/TopHeader" unique_id=1827395]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_right = 10
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
 
 [node name="HBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin" unique_id=1827396]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="LeftBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox" unique_id=1827397]
 layout_mode = 2
-size_flags_horizontal = 2
 theme_override_constants/separation = 8
-
-[node name="LiveBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox" unique_id=1827380]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_Live_Blinker")
-
-[node name="LiveLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox/LiveBadge" unique_id=1827381]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 12
-text = " ● CANLI "
-vertical_alignment = 1
 
 [node name="TimerBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox" unique_id=1827398]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_TV_Recessed_Badge")
+theme_override_styles/panel = SubResource("StyleBoxFlat_Soft_Pill_Yellow")
 
 [node name="TimerLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox/TimerBadge" unique_id=3847291]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.88, 0.3, 1)
+theme_override_colors/font_color = Color(0.15, 0.12, 0.05, 1)
 theme_override_font_sizes/font_size = 13
-text = " SÜRE [ 03:00 ] "
+text = " ⏱️ 03:00 "
 vertical_alignment = 1
 
 [node name="RoleBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox" unique_id=1827399]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_TV_Recessed_Badge")
+theme_override_styles/panel = SubResource("StyleBoxFlat_Soft_Pill_Blue")
 
 [node name="RoleLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox/RoleBadge" unique_id=1827400]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.35, 0.85, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 12
-text = " PROTOKOL: BAŞKAN "
+text = " 👑 BAŞKAN "
 vertical_alignment = 1
 
 [node name="CenterPollBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox" unique_id=1827401]
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 3
 theme_override_constants/separation = 8
 alignment = 1
 
 [node name="PresVoteLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox" unique_id=9871236]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.78, 1, 1)
+theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
 theme_override_font_sizes/font_size = 13
-text = "🏛️ İKTİDAR %46.0"
+text = "🏛️ BAŞKAN %46.0"
 vertical_alignment = 1
 
 [node name="VoteProgressBar" type="ProgressBar" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox" unique_id=9871237]
-custom_minimum_size = Vector2(170, 14)
+custom_minimum_size = Vector2(160, 16)
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_styles/background = SubResource("StyleBoxFlat_TV_Poll_Track")
-theme_override_styles/fill = SubResource("StyleBoxFlat_TV_Poll_Fill")
+theme_override_styles/background = SubResource("StyleBoxFlat_Soft_Poll_Track")
+theme_override_styles/fill = SubResource("StyleBoxFlat_Soft_Poll_Fill")
 value = 46.0
 show_percentage = false
 
 [node name="OppVoteLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox" unique_id=9871238]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
+theme_override_colors/font_color = Color(1, 0.45, 0.45, 1)
 theme_override_font_sizes/font_size = 13
-text = "🦅 MUHALEFET %54.0"
+text = "🦅 RAKİP %54.0"
 vertical_alignment = 1
 
 [node name="TrendBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox" unique_id=1827402]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_TV_Recessed_Badge")
+theme_override_styles/panel = SubResource("StyleBoxFlat_Soft_Pill_Dark")
 
 [node name="TrendLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/TrendBadge" unique_id=9871239]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.9, 0.25, 1)
-theme_override_font_sizes/font_size = 11
-text = " 📊 SANDIK ANKETİ "
+theme_override_colors/font_color = Color(0.98, 0.85, 0.35, 1)
+theme_override_font_sizes/font_size = 12
+text = "  📊 Canlı Anket  "
 vertical_alignment = 1
 
 [node name="RightBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox" unique_id=1827403]
 layout_mode = 2
-size_flags_horizontal = 8
 theme_override_constants/separation = 8
 
 [node name="StatusBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/RightBox" unique_id=1827404]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_TV_Recessed_Badge")
+theme_override_styles/panel = SubResource("StyleBoxFlat_Soft_Pill_Dark")
 
 [node name="StatusLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/RightBox/StatusBadge" unique_id=9283741]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_colors/font_color = Color(0.85, 0.92, 1, 1)
 theme_override_font_sizes/font_size = 12
-text = " GÜNDEM: KÜRSÜ HİTABI "
-vertical_alignment = 1
-
-[node name="NewsTicker" type="PanelContainer" parent="TopBarHUD" unique_id=7482910]
-mouse_filter = 2
-visible = false
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 20.0
-offset_top = -54.0
-offset_right = -20.0
-offset_bottom = -14.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_News_Ticker_Red")
-
-[node name="HBox" type="HBoxContainer" parent="TopBarHUD/NewsTicker" unique_id=7482911]
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="BadgeBox" type="PanelContainer" parent="TopBarHUD/NewsTicker/HBox" unique_id=7482918]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_News_Badge_Yellow")
-
-[node name="Badge" type="Label" parent="TopBarHUD/NewsTicker/HBox/BadgeBox" unique_id=7482912]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.05, 0.05, 0.05, 1)
-theme_override_font_sizes/font_size = 13
-text = "  🚨 SON DAKİKA  "
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Label" type="Label" parent="TopBarHUD/NewsTicker/HBox" unique_id=7482913]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 13
-text = "   🔴 BAŞKAN MİTİNG MEYDANINDA TARİHİ VAATLERİNİ AÇIKLIYOR!"
+text = " 👥 Miting Meydanı (65 Kişi) "
 vertical_alignment = 1
 
 
@@ -1021,86 +975,63 @@ surface_material_override/0 = SubResource("Mat_Large_Leaves")
 [node name="Col" type="CollisionShape3D" parent="PlazaTree_7" unique_id=8837]
 shape = SubResource("CylinderShape3D_large_tree")
 
-# --- 🏙️ TATLI ÇİZGİ FİLM BİNALARI (SOL ŞEHİR SOKAĞI) ---
+# --- 🏙️ TATLI ÇİZGİ FİLM ŞEHİR SOKAKLARI (SOL CADDE) ---
 [node name="Building_L1" parent="." instance=ExtResource("bld_a")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -34.0, 0.0, -25.0)
+transform = Transform3D(-1.96701e-07, 0, 4.5, 0, 4.5, 0, -4.5, 0, -1.96701e-07, -35.0, 0.0, -22.0)
 
 [node name="Building_L2" parent="." instance=ExtResource("bld_b")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -34.0, 0.0, -12.0)
+transform = Transform3D(-1.96701e-07, 0, 4.5, 0, 4.5, 0, -4.5, 0, -1.96701e-07, -35.0, 0.0, -2.0)
 
 [node name="Building_L3" parent="." instance=ExtResource("bld_c")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -34.0, 0.0, 2.0)
+transform = Transform3D(-1.96701e-07, 0, 4.5, 0, 4.5, 0, -4.5, 0, -1.96701e-07, -35.0, 0.0, 18.0)
 
-[node name="Building_L4" parent="." instance=ExtResource("bld_d")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -34.0, 0.0, 16.0)
+# --- 🏙️ TATLI ÇİZGİ FİLM ŞEHİR SOKAKLARI (SAĞ CADDE) ---
+[node name="Building_R1" parent="." instance=ExtResource("bld_d")]
+transform = Transform3D(1.96701e-07, 0, -4.5, 0, 4.5, 0, 4.5, 0, 1.96701e-07, 35.0, 0.0, -22.0)
 
-# --- 🏙️ TATLI ÇİZGİ FİLM BİNALARI (SAĞ ŞEHİR SOKAĞI) ---
-[node name="Building_R1" parent="." instance=ExtResource("bld_e")]
-transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34.0, 0.0, -25.0)
+[node name="Building_R2" parent="." instance=ExtResource("bld_e")]
+transform = Transform3D(1.96701e-07, 0, -4.5, 0, 4.5, 0, 4.5, 0, 1.96701e-07, 35.0, 0.0, -2.0)
 
-[node name="Building_R2" parent="." instance=ExtResource("bld_f")]
-transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34.0, 0.0, -12.0)
+[node name="Building_R3" parent="." instance=ExtResource("bld_f")]
+transform = Transform3D(1.96701e-07, 0, -4.5, 0, 4.5, 0, 4.5, 0, 1.96701e-07, 35.0, 0.0, 18.0)
 
-[node name="Building_R3" parent="." instance=ExtResource("bld_g")]
-transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34.0, 0.0, 2.0)
-
-[node name="Building_R4" parent="." instance=ExtResource("bld_h")]
-transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34.0, 0.0, 16.0)
-
-# --- ⛲ MİTİNG MEYDANI MERKEZ HAVUZU & SÜSLERİ ---
+# --- ⛲ MİTİNG MEYDANI SÜS HAVUZU ---
 [node name="CentralFountain" parent="." instance=ExtResource("fountain")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0.0, 0.0, 6.0)
+transform = Transform3D(3.0, 0, 0, 0, 3.0, 0, 0, 0, 3.0, 0.0, 0.0, 10.0)
 
-# --- 🚓 GÜVENLİK BARİKATI & ARAÇLAR ---
+# --- 🚓 MEYDAN GİRİŞİ PARKLARI ---
 [node name="PoliceCar" parent="." instance=ExtResource("car_pol")]
-transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, -14.0, 0.0, 40.0)
+transform = Transform3D(1.4, 0, 0.35, 0, 1.45, 0, -0.35, 0, 1.4, -14.0, 0.0, 42.0)
 
 [node name="TaxiCar" parent="." instance=ExtResource("car_tax")]
-transform = Transform3D(0.866025, 0, -0.5, 0, 1, 0, 0.5, 0, 0.866025, 14.0, 0.0, 41.0)
+transform = Transform3D(1.3, 0, -0.65, 0, 1.45, 0, 0.65, 0, 1.3, 14.0, 0.0, 42.0)
 
-[node name="SedanCar" parent="." instance=ExtResource("car_sed")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.0, 0.0, 43.0)
-
-# --- 💡 SOKAK LAMBALARI & PARKE BANKLARI ---
+# --- 💡 SOKAK AYDINLATMALARI VE BANKLAR ---
 [node name="StreetLight_1" parent="." instance=ExtResource("street_light")]
-transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, -20.0, 0.0, -10.0)
+transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, -22.0, 0.0, -10.0)
 
 [node name="StreetLight_2" parent="." instance=ExtResource("street_light")]
-transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 20.0, 0.0, -10.0)
-
-[node name="StreetLight_3" parent="." instance=ExtResource("street_light")]
-transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, -20.0, 0.0, 24.0)
-
-[node name="StreetLight_4" parent="." instance=ExtResource("street_light")]
-transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 20.0, 0.0, 24.0)
+transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, 22.0, 0.0, -10.0)
 
 [node name="PlazaBench_1" parent="." instance=ExtResource("plaza_bench")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -12.0, 0.0, -4.0)
+transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, -14.0, 0.0, 0.0)
 
 [node name="PlazaBench_2" parent="." instance=ExtResource("plaza_bench")]
-transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 12.0, 0.0, -4.0)
+transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, 14.0, 0.0, 0.0)
 
-[node name="PlazaBench_3" parent="." instance=ExtResource("plaza_bench")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.0, 14.0)
-
-# --- 🚩 MİTİNG SAHNESİ BAYRAKLARI & GÖZCÜ KULELERİ ---
+# --- 🚩 SAHNE YANI GÖZCÜ KULELERİ VE BAYRAKLAR ---
 [node name="RallyFlag_Left" parent="." instance=ExtResource("rally_flag")]
-transform = Transform3D(2.0, 0, 0, 0, 2.0, 0, 0, 0, 2.0, -13.5, 1.4, -30.0)
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -13.5, 1.4, -30.0)
 
 [node name="RallyFlag_Right" parent="." instance=ExtResource("rally_flag")]
-transform = Transform3D(2.0, 0, 0, 0, 2.0, 0, 0, 0, 2.0, 13.5, 1.4, -30.0)
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 13.5, 1.4, -30.0)
 
-[node name="WatchWaterTower_L" parent="." instance=ExtResource("water_tower")]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -34.0, 6.0, -25.0)
+[node name="WatchTower_L" parent="." instance=ExtResource("water_tower")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -26.0, 0.0, -32.0)
 
-[node name="WatchWaterTower_R" parent="." instance=ExtResource("water_tower")]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 34.0, 6.0, -25.0)
+[node name="WatchTower_R" parent="." instance=ExtResource("water_tower")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 26.0, 0.0, -32.0)
 
-[node name="TrashCan_1" parent="." instance=ExtResource("trash_can")]
-transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, -18.0, 0.0, 8.0)
-
-[node name="TrashCan_2" parent="." instance=ExtResource("trash_can")]
-transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 18.0, 0.0, 8.0)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=997947994]
 _spawnable_scenes = PackedStringArray("uid://bts4blx0hl4nn", "uid://bbk7uovn5mim2")

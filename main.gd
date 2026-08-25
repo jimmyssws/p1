@@ -115,9 +115,10 @@ func sync_timer(seconds_left: int):
 			timer_label.modulate = Color(1, 0.2, 0.2)
 
 func _on_host_pressed():
-	peer.create_server(9999)
-	multiplayer.multiplayer_peer = peer
-	multiplayer.peer_connected.connect(_add_player)
+	var err = peer.create_server(9999)
+	if err == OK:
+		multiplayer.multiplayer_peer = peer
+		multiplayer.peer_connected.connect(_add_player)
 	
 	if has_node("CanvasLayer"):
 		$CanvasLayer.hide()
