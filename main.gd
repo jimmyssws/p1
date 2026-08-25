@@ -249,7 +249,7 @@ func _spawn_npcs(count: int = 65):
 			
 		npc.name = "NPC_%d" % i
 		npc.position = pos
-		add_child(npc, true)
+		add_child.call_deferred(npc, true)
 
 @rpc("any_peer", "call_local")
 func trigger_crowd_panic(source: Vector3, radius: float):
