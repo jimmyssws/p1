@@ -1,6 +1,16 @@
 [gd_scene format=3 uid="uid://bonmonio1csdd"]
 
 [ext_resource type="Script" uid="uid://7yprv15pyl1e" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="Texture2D" path="res://ui_kenney/grey_panel.png" id="tex_grey_panel"]
+[ext_resource type="Texture2D" path="res://ui_kenney/blue_panel.png" id="tex_blue_panel"]
+[ext_resource type="Texture2D" path="res://ui_kenney/yellow_panel.png" id="tex_yellow_panel"]
+[ext_resource type="Texture2D" path="res://ui_kenney/blue_button00.png" id="tex_blue_btn"]
+[ext_resource type="Texture2D" path="res://ui_kenney/yellow_button00.png" id="tex_yellow_btn"]
+[ext_resource type="Texture2D" path="res://ui_kenney/red_button00.png" id="tex_red_btn"]
+[ext_resource type="Texture2D" path="res://ui_kenney/green_button00.png" id="tex_green_btn"]
+[ext_resource type="Texture2D" path="res://ui_kenney/grey_button00.png" id="tex_grey_btn"]
+[ext_resource type="PackedScene" path="res://models_city/platform-large.glb" id="stage_platform"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/box_B.gltf" id="stage_crate"]
 [ext_resource type="PackedScene" path="res://models_kaykit/gltf/building_A.gltf" id="bld_a"]
 [ext_resource type="PackedScene" path="res://models_kaykit/gltf/building_B.gltf" id="bld_b"]
 [ext_resource type="PackedScene" path="res://models_kaykit/gltf/building_C.gltf" id="bld_c"]
@@ -20,62 +30,48 @@
 [ext_resource type="PackedScene" path="res://models_city/pavement-fountain.glb" id="fountain"]
 [ext_resource type="PackedScene" path="res://models_city/flag.glb" id="rally_flag"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Soft_TopHeader"]
-bg_color = Color(0.12, 0.15, 0.22, 0.9)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.28, 0.36, 0.5, 0.85)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
-shadow_color = Color(0, 0, 0, 0.35)
-shadow_size = 6
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_TopHeader"]
+texture = ExtResource("tex_grey_panel")
+texture_margin_left = 12.0
+texture_margin_top = 10.0
+texture_margin_right = 12.0
+texture_margin_bottom = 10.0
+modulate_color = Color(0.92, 0.95, 1.0, 0.96)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Soft_Pill_Blue"]
-bg_color = Color(0.18, 0.45, 0.85, 0.95)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.4, 0.7, 1.0, 0.9)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_TimerBadge"]
+texture = ExtResource("tex_yellow_btn")
+texture_margin_left = 10.0
+texture_margin_top = 8.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Soft_Pill_Yellow"]
-bg_color = Color(0.95, 0.75, 0.15, 0.95)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1.0, 0.92, 0.45, 0.9)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_RoleBadge"]
+texture = ExtResource("tex_blue_btn")
+texture_margin_left = 10.0
+texture_margin_top = 8.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Soft_Pill_Dark"]
-bg_color = Color(0.08, 0.1, 0.16, 0.85)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.24, 0.32, 0.45, 0.8)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_StatusBadge"]
+texture = ExtResource("tex_grey_btn")
+texture_margin_left = 10.0
+texture_margin_top = 8.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Soft_Poll_Fill"]
-bg_color = Color(0.22, 0.6, 0.98, 1.0)
-corner_radius_top_left = 8
-corner_radius_bottom_left = 8
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_Poll_Track"]
+texture = ExtResource("tex_red_btn")
+texture_margin_left = 6.0
+texture_margin_top = 6.0
+texture_margin_right = 6.0
+texture_margin_bottom = 6.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Soft_Poll_Track"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_Poll_Fill"]
+texture = ExtResource("tex_blue_btn")
+texture_margin_left = 6.0
+texture_margin_top = 6.0
+texture_margin_right = 6.0
+texture_margin_bottom = 6.0
 bg_color = Color(0.95, 0.32, 0.32, 1.0)
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
@@ -737,17 +733,17 @@ mouse_filter = 2
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -480.0
-offset_top = 10.0
-offset_right = 480.0
-offset_bottom = 58.0
+offset_left = -490.0
+offset_top = 8.0
+offset_right = 490.0
+offset_bottom = 62.0
 grow_horizontal = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_Soft_TopHeader")
+theme_override_styles/panel = SubResource("StyleBoxTexture_TopHeader")
 
 [node name="Margin" type="MarginContainer" parent="TopBarHUD/TopHeader" unique_id=1827395]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_right = 12
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_right = 14
 
 [node name="HBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin" unique_id=1827396]
 layout_mode = 2
@@ -760,18 +756,18 @@ theme_override_constants/separation = 8
 
 [node name="TimerBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox" unique_id=1827398]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_Soft_Pill_Yellow")
+theme_override_styles/panel = SubResource("StyleBoxTexture_TimerBadge")
 
 [node name="TimerLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox/TimerBadge" unique_id=3847291]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.15, 0.12, 0.05, 1)
+theme_override_colors/font_color = Color(0.2, 0.15, 0.05, 1)
 theme_override_font_sizes/font_size = 13
 text = " ⏱️ 03:00 "
 vertical_alignment = 1
 
 [node name="RoleBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox" unique_id=1827399]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_Soft_Pill_Blue")
+theme_override_styles/panel = SubResource("StyleBoxTexture_RoleBadge")
 
 [node name="RoleLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox/RoleBadge" unique_id=1827400]
 layout_mode = 2
@@ -783,39 +779,39 @@ vertical_alignment = 1
 [node name="CenterPollBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox" unique_id=1827401]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 alignment = 1
 
 [node name="PresVoteLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox" unique_id=9871236]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
+theme_override_colors/font_color = Color(0.12, 0.45, 0.9, 1)
 theme_override_font_sizes/font_size = 13
 text = "🏛️ BAŞKAN %46.0"
 vertical_alignment = 1
 
 [node name="VoteProgressBar" type="ProgressBar" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox" unique_id=9871237]
-custom_minimum_size = Vector2(160, 16)
+custom_minimum_size = Vector2(170, 18)
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_styles/background = SubResource("StyleBoxFlat_Soft_Poll_Track")
-theme_override_styles/fill = SubResource("StyleBoxFlat_Soft_Poll_Fill")
+theme_override_styles/background = SubResource("StyleBoxTexture_Poll_Track")
+theme_override_styles/fill = SubResource("StyleBoxTexture_Poll_Fill")
 value = 46.0
 show_percentage = false
 
 [node name="OppVoteLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox" unique_id=9871238]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.45, 0.45, 1)
+theme_override_colors/font_color = Color(0.85, 0.18, 0.18, 1)
 theme_override_font_sizes/font_size = 13
 text = "🦅 RAKİP %54.0"
 vertical_alignment = 1
 
 [node name="TrendBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox" unique_id=1827402]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_Soft_Pill_Dark")
+theme_override_styles/panel = SubResource("StyleBoxTexture_StatusBadge")
 
 [node name="TrendLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/TrendBadge" unique_id=9871239]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.98, 0.85, 0.35, 1)
+theme_override_colors/font_color = Color(0.2, 0.25, 0.35, 1)
 theme_override_font_sizes/font_size = 12
 text = "  📊 Canlı Anket  "
 vertical_alignment = 1
@@ -826,11 +822,11 @@ theme_override_constants/separation = 8
 
 [node name="StatusBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/RightBox" unique_id=1827404]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_Soft_Pill_Dark")
+theme_override_styles/panel = SubResource("StyleBoxTexture_StatusBadge")
 
 [node name="StatusLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/RightBox/StatusBadge" unique_id=9283741]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.92, 1, 1)
+theme_override_colors/font_color = Color(0.2, 0.25, 0.35, 1)
 theme_override_font_sizes/font_size = 12
 text = " 👥 Miting Meydanı (65 Kişi) "
 vertical_alignment = 1
@@ -975,29 +971,54 @@ surface_material_override/0 = SubResource("Mat_Large_Leaves")
 [node name="Col" type="CollisionShape3D" parent="PlazaTree_7" unique_id=8837]
 shape = SubResource("CylinderShape3D_large_tree")
 
-# --- 🏙️ TATLI ÇİZGİ FİLM ŞEHİR SOKAKLARI (SOL CADDE) ---
-[node name="Building_L1" parent="." instance=ExtResource("bld_a")]
-transform = Transform3D(-1.96701e-07, 0, 4.5, 0, 4.5, 0, -4.5, 0, -1.96701e-07, -35.0, 0.0, -22.0)
+# --- 🏛️ MİTİNG SAHNESİ & MODEL KÜRSÜ ---
+[node name="StageBase" parent="." instance=ExtResource("stage_platform")]
+transform = Transform3D(10.0, 0, 0, 0, 1.4, 0, 0, 0, 6.0, 0.0, 0.0, -32.0)
 
-[node name="Building_L2" parent="." instance=ExtResource("bld_b")]
-transform = Transform3D(-1.96701e-07, 0, 4.5, 0, 4.5, 0, -4.5, 0, -1.96701e-07, -35.0, 0.0, -2.0)
+[node name="StagePodiumDesk" parent="." instance=ExtResource("crate_box")]
+transform = Transform3D(1.8, 0, 0, 0, 1.6, 0, 0, 0, 1.4, 0.0, 1.4, -30.5)
 
-[node name="Building_L3" parent="." instance=ExtResource("bld_c")]
-transform = Transform3D(-1.96701e-07, 0, 4.5, 0, 4.5, 0, -4.5, 0, -1.96701e-07, -35.0, 0.0, 18.0)
+[node name="RallyFlag_Left" parent="." instance=ExtResource("rally_flag")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -12.0, 1.4, -30.0)
 
-# --- 🏙️ TATLI ÇİZGİ FİLM ŞEHİR SOKAKLARI (SAĞ CADDE) ---
-[node name="Building_R1" parent="." instance=ExtResource("bld_d")]
-transform = Transform3D(1.96701e-07, 0, -4.5, 0, 4.5, 0, 4.5, 0, 1.96701e-07, 35.0, 0.0, -22.0)
+[node name="RallyFlag_Right" parent="." instance=ExtResource("rally_flag")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 12.0, 1.4, -30.0)
 
-[node name="Building_R2" parent="." instance=ExtResource("bld_e")]
-transform = Transform3D(1.96701e-07, 0, -4.5, 0, 4.5, 0, 4.5, 0, 1.96701e-07, 35.0, 0.0, -2.0)
+# --- 🏢 SOL CADDE ÇOK KATLI APARTMANLAR & ÇATI GÖZCÜLERİ ---
+[node name="Apt_L1_Base" parent="." instance=ExtResource("bld_a")]
+transform = Transform3D(-1.96701e-07, 0, 4.5, 0, 4.5, 0, -4.5, 0, -1.96701e-07, -35.0, 0.0, -25.0)
 
-[node name="Building_R3" parent="." instance=ExtResource("bld_f")]
-transform = Transform3D(1.96701e-07, 0, -4.5, 0, 4.5, 0, 4.5, 0, 1.96701e-07, 35.0, 0.0, 18.0)
+[node name="Apt_L1_Floor2" parent="." instance=ExtResource("bld_b")]
+transform = Transform3D(-1.96701e-07, 0, 4.5, 0, 4.5, 0, -4.5, 0, -1.96701e-07, -35.0, 7.5, -25.0)
+
+[node name="RooftopSpotter_L" parent="." instance=ExtResource("water_tower")]
+transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -35.0, 15.0, -25.0)
+
+[node name="Apt_L2" parent="." instance=ExtResource("bld_c")]
+transform = Transform3D(-1.96701e-07, 0, 4.5, 0, 4.5, 0, -4.5, 0, -1.96701e-07, -35.0, 0.0, -5.0)
+
+[node name="Apt_L3" parent="." instance=ExtResource("bld_d")]
+transform = Transform3D(-1.96701e-07, 0, 4.5, 0, 4.5, 0, -4.5, 0, -1.96701e-07, -35.0, 0.0, 15.0)
+
+# --- 🏢 SAĞ CADDE ÇOK KATLI APARTMANLAR & ÇATI GÖZCÜLERİ ---
+[node name="Apt_R1_Base" parent="." instance=ExtResource("bld_e")]
+transform = Transform3D(1.96701e-07, 0, -4.5, 0, 4.5, 0, 4.5, 0, 1.96701e-07, 35.0, 0.0, -25.0)
+
+[node name="Apt_R1_Floor2" parent="." instance=ExtResource("bld_f")]
+transform = Transform3D(1.96701e-07, 0, -4.5, 0, 4.5, 0, 4.5, 0, 1.96701e-07, 35.0, 7.5, -25.0)
+
+[node name="RooftopSpotter_R" parent="." instance=ExtResource("water_tower")]
+transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 35.0, 15.0, -25.0)
+
+[node name="Apt_R2" parent="." instance=ExtResource("bld_g")]
+transform = Transform3D(1.96701e-07, 0, -4.5, 0, 4.5, 0, 4.5, 0, 1.96701e-07, 35.0, 0.0, -5.0)
+
+[node name="Apt_R3" parent="." instance=ExtResource("bld_h")]
+transform = Transform3D(1.96701e-07, 0, -4.5, 0, 4.5, 0, 4.5, 0, 1.96701e-07, 35.0, 0.0, 15.0)
 
 # --- ⛲ MİTİNG MEYDANI SÜS HAVUZU ---
 [node name="CentralFountain" parent="." instance=ExtResource("fountain")]
-transform = Transform3D(3.0, 0, 0, 0, 3.0, 0, 0, 0, 3.0, 0.0, 0.0, 10.0)
+transform = Transform3D(3.0, 0, 0, 0, 3.0, 0, 0, 0, 3.0, 0.0, 0.0, 8.0)
 
 # --- 🚓 MEYDAN GİRİŞİ PARKLARI ---
 [node name="PoliceCar" parent="." instance=ExtResource("car_pol")]
@@ -1018,19 +1039,6 @@ transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, -14.0, 0.0, 0.0)
 
 [node name="PlazaBench_2" parent="." instance=ExtResource("plaza_bench")]
 transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, 14.0, 0.0, 0.0)
-
-# --- 🚩 SAHNE YANI GÖZCÜ KULELERİ VE BAYRAKLAR ---
-[node name="RallyFlag_Left" parent="." instance=ExtResource("rally_flag")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -13.5, 1.4, -30.0)
-
-[node name="RallyFlag_Right" parent="." instance=ExtResource("rally_flag")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 13.5, 1.4, -30.0)
-
-[node name="WatchTower_L" parent="." instance=ExtResource("water_tower")]
-transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -26.0, 0.0, -32.0)
-
-[node name="WatchTower_R" parent="." instance=ExtResource("water_tower")]
-transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 26.0, 0.0, -32.0)
 
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=997947994]

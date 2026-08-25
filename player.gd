@@ -451,32 +451,27 @@ func _update_weapon_hud():
 	if not weapon_panel or not slot1_panel or not slot2_panel or not slot3_panel: return
 	weapon_panel.show()
 	
-	# Yumuşak Çizgi Film / Parti Oyunu Yuva Stili
+	# Kenney UI Dokulu Yuva Stili
 	var _set_slot = func(panel: PanelContainer, label: Label, text: String, is_active: bool, is_disabled: bool = false):
 		if not panel or not label: return
 		panel.show()
 		label.text = text
-		var sb = StyleBoxFlat.new()
-		sb.corner_radius_top_left = 12
-		sb.corner_radius_top_right = 12
-		sb.corner_radius_bottom_right = 12
-		sb.corner_radius_bottom_left = 12
+		var sb = StyleBoxTexture.new()
+		sb.texture_margin_left = 8.0
+		sb.texture_margin_top = 6.0
+		sb.texture_margin_right = 8.0
+		sb.texture_margin_bottom = 8.0
 		
 		if is_active:
-			sb.bg_color = Color(0.2, 0.55, 0.95, 0.95) # Canlı Tatlı Mavi
-			sb.border_color = Color(1.0, 0.9, 0.3, 1.0) # Sıcak Sarı Çerçeve
-			sb.set_border_width_all(3)
+			sb.texture = load("res://ui_kenney/blue_button00.png")
 			label.add_theme_color_override("font_color", Color(1, 1, 1))
 		elif is_disabled:
-			sb.bg_color = Color(0.18, 0.2, 0.26, 0.6)
-			sb.border_color = Color(0.3, 0.35, 0.42, 0.4)
-			sb.set_border_width_all(2)
-			label.add_theme_color_override("font_color", Color(0.55, 0.6, 0.68))
+			sb.texture = load("res://ui_kenney/grey_button00.png")
+			sb.modulate_color = Color(0.6, 0.6, 0.6, 0.6)
+			label.add_theme_color_override("font_color", Color(0.45, 0.45, 0.45))
 		else:
-			sb.bg_color = Color(0.12, 0.15, 0.24, 0.85) # Yumuşak Koyu Lacivert
-			sb.border_color = Color(0.28, 0.38, 0.52, 0.8)
-			sb.set_border_width_all(2)
-			label.add_theme_color_override("font_color", Color(0.9, 0.95, 1.0))
+			sb.texture = load("res://ui_kenney/yellow_button00.png")
+			label.add_theme_color_override("font_color", Color(0.18, 0.15, 0.05))
 		panel.add_theme_stylebox_override("panel", sb)
 
 	if current_role == "ASSASSIN":
@@ -1459,4 +1454,3 @@ func defend_against_bullet() -> bool:
 		_update_weapon_hud()
 		return true
 	return false
-

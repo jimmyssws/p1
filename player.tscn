@@ -3,6 +3,14 @@
 [ext_resource type="Script" uid="uid://b5kvqbk70883r" path="res://player.gd" id="1_4flbx"]
 [ext_resource type="Script" path="res://minimap.gd" id="minimap_script"]
 [ext_resource type="PackedScene" path="res://models_animated/character_animated.glb" id="3_anim_char"]
+[ext_resource type="Texture2D" path="res://ui_kenney/grey_panel.png" id="tex_grey_panel"]
+[ext_resource type="Texture2D" path="res://ui_kenney/blue_panel.png" id="tex_blue_panel"]
+[ext_resource type="Texture2D" path="res://ui_kenney/yellow_panel.png" id="tex_yellow_panel"]
+[ext_resource type="Texture2D" path="res://ui_kenney/blue_button00.png" id="tex_blue_btn"]
+[ext_resource type="Texture2D" path="res://ui_kenney/yellow_button00.png" id="tex_yellow_btn"]
+[ext_resource type="Texture2D" path="res://ui_kenney/red_button00.png" id="tex_red_btn"]
+[ext_resource type="Texture2D" path="res://ui_kenney/green_button00.png" id="tex_green_btn"]
+[ext_resource type="Texture2D" path="res://ui_kenney/grey_button00.png" id="tex_grey_btn"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fglp6"]
 radius = 0.4
@@ -153,33 +161,27 @@ albedo_color = Color(0.85, 0.88, 0.9, 1)
 metallic = 0.9
 roughness = 0.2
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Soft_Weapon_Holster"]
-bg_color = Color(0.1, 0.13, 0.2, 0.9)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.28, 0.36, 0.5, 0.85)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-shadow_color = Color(0, 0, 0, 0.35)
-shadow_size = 6
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_Weapon_Panel"]
+texture = ExtResource("tex_grey_panel")
+texture_margin_left = 12.0
+texture_margin_top = 10.0
+texture_margin_right = 12.0
+texture_margin_bottom = 10.0
+modulate_color = Color(0.95, 0.97, 1.0, 0.95)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Tactical_Slot_Inactive"]
-bg_color = Color(0.12, 0.15, 0.24, 0.85)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.28, 0.38, 0.52, 0.8)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_Slot_Inactive"]
+texture = ExtResource("tex_grey_btn")
+texture_margin_left = 8.0
+texture_margin_top = 6.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Tactical_Slot_Active"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_Slot_Active"]
+texture = ExtResource("tex_blue_btn")
+texture_margin_left = 8.0
+texture_margin_top = 6.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
 bg_color = Color(0.2, 0.55, 0.95, 0.95)
 border_width_left = 3
 border_width_top = 3
@@ -379,7 +381,7 @@ offset_right = -16.0
 offset_bottom = -16.0
 grow_horizontal = 0
 grow_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_Soft_Weapon_Holster")
+theme_override_styles/panel = SubResource("StyleBoxTexture_Weapon_Panel")
 
 [node name="Margin" type="MarginContainer" parent="HUD/WeaponPanel" unique_id=9827105]
 layout_mode = 2
@@ -407,7 +409,7 @@ theme_override_constants/separation = 6
 [node name="Slot1" type="PanelContainer" parent="HUD/WeaponPanel/Margin/VBox/SlotRow" unique_id=9827109]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_Tactical_Slot_Inactive")
+theme_override_styles/panel = SubResource("StyleBoxTexture_Slot_Inactive")
 
 [node name="Label" type="Label" parent="HUD/WeaponPanel/Margin/VBox/SlotRow/Slot1" unique_id=9827110]
 layout_mode = 2
@@ -419,7 +421,7 @@ vertical_alignment = 1
 [node name="Slot2" type="PanelContainer" parent="HUD/WeaponPanel/Margin/VBox/SlotRow" unique_id=9827111]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_Tactical_Slot_Inactive")
+theme_override_styles/panel = SubResource("StyleBoxTexture_Slot_Inactive")
 
 [node name="Label" type="Label" parent="HUD/WeaponPanel/Margin/VBox/SlotRow/Slot2" unique_id=9827112]
 layout_mode = 2
@@ -431,7 +433,7 @@ vertical_alignment = 1
 [node name="Slot3" type="PanelContainer" parent="HUD/WeaponPanel/Margin/VBox/SlotRow" unique_id=9827113]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_Tactical_Slot_Inactive")
+theme_override_styles/panel = SubResource("StyleBoxTexture_Slot_Inactive")
 
 [node name="Label" type="Label" parent="HUD/WeaponPanel/Margin/VBox/SlotRow/Slot3" unique_id=9827114]
 layout_mode = 2
@@ -444,7 +446,7 @@ vertical_alignment = 1
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_Tactical_Slot_Inactive")
+theme_override_styles/panel = SubResource("StyleBoxTexture_Slot_Inactive")
 
 [node name="Label" type="Label" parent="HUD/WeaponPanel/Margin/VBox/SlotRow/Slot4" unique_id=9827116]
 layout_mode = 2
@@ -578,7 +580,7 @@ offset_top = 62.0
 offset_right = -20.0
 offset_bottom = 96.0
 grow_horizontal = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_Tactical_Slot_Inactive")
+theme_override_styles/panel = SubResource("StyleBoxTexture_Slot_Inactive")
 
 [node name="MissionLabel" type="Label" parent="HUD/MissionPanel" unique_id=7654322]
 layout_mode = 2
