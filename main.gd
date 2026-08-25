@@ -7,6 +7,13 @@ var connected_players = []
 
 var match_seconds: int = 180
 var match_timer_active: bool = false
+var president_poll_pct: float = 46.0
+var _trend_clear_timer: float = 0.0
+
+@onready var pres_vote_label = $TopBarHUD/TopPanel/PollPanel/HBox/PresVoteLabel if has_node("TopBarHUD/TopPanel/PollPanel/HBox/PresVoteLabel") else null
+@onready var opp_vote_label = $TopBarHUD/TopPanel/PollPanel/HBox/OppVoteLabel if has_node("TopBarHUD/TopPanel/PollPanel/HBox/OppVoteLabel") else null
+@onready var vote_progress_bar = $TopBarHUD/TopPanel/PollPanel/HBox/VoteProgressBar if has_node("TopBarHUD/TopPanel/PollPanel/HBox/VoteProgressBar") else null
+@onready var poll_trend_label = $TopBarHUD/TopPanel/PollPanel/HBox/TrendLabel if has_node("TopBarHUD/TopPanel/PollPanel/HBox/TrendLabel") else null
 
 var sfx_crowd_ambient: AudioStreamPlayer = null
 var sfx_crowd_panic: AudioStreamPlayer = null
@@ -124,12 +131,41 @@ func _run_timer_loop():
 	while match_timer_active and match_seconds > 0:
 		await get_tree().create_timer(1.0).timeout
 		match_seconds -= 1
+		
+		# Başkan kürsüde değilse pasiflikten oy yavaşça erir (-0.2% / sn)
+		var pres_active = false
+		for p in get_tree().get_nodes_in_group("players"):
+			if p and is_instance_valid(p) and p.get("current_role") == "PRESIDENT":
+				if p.get("is_in_task"):
+					pres_active = true
+				break
+		
+		if not pres_active:
+			president_poll_pct = max(15.0, president_poll_pct - 0.20)
+			
+		rpc("sync_poll_score", president_poll_pct, "")
 		rpc("sync_timer", match_seconds)
 		
 		if match_seconds <= 0:
 			match_timer_active = false
-			rpc("net_game_over", "SÜRE DOLDU! MİTİNG GÜVENLE TAMAMLANDI!
-🏛️ BAŞKAN VE KORUMALAR KAZANDI!")
+			_evaluate_time_up_winner()
+
+func _evaluate_time_up_winner():
+	if not multiplayer.is_server(): return
+	if president_poll_pct >= 50.0:
+		rpc("net_game_over", "🏛️ SEÇİM ZAFERİ!
+Başkan %" + str(snapped(president_poll_pct, 0.1)) + " Oyla Yeniden Seçildi!
+👑 BAŞKAN VE KORUMALAR KAZANDI!")
+	else:
+		rpc("net_game_over", "🤡 KORKAK BAŞKAN SEÇİMİ KAYBETTİ!
+Rakip Aday %" + str(snapped(100.0 - president_poll_pct, 0.1)) + " Oyla Zafer Kazandı!
+📢 PROVOKATÖR & MUHALEFET KAZANDI!")
+
+@rpc("any_peer", "call_local")
+func adjust_poll_score(delta_pct: float, reason: String):
+	if not multiplayer.is_server(): return
+	president_poll_pct = clamp(president_poll_pct + delta_pct, 5.0, 95.0)
+	rpc("sync_poll_score", president_poll_pct, reason)
 
 @rpc("any_peer", "call_local")
 func sync_timer(seconds_left: int):
@@ -139,6 +175,20 @@ func sync_timer(seconds_left: int):
 		timer_label.text = "⏱️ %02d:%02d" % [mins, secs]
 		if seconds_left <= 20:
 			timer_label.modulate = Color(1, 0.2, 0.2)
+
+@rpc("any_peer", "call_local")
+func sync_poll_score(score: float, reason: String):
+	president_poll_pct = score
+	var opp_score = 100.0 - score
+	if pres_vote_label:
+		pres_vote_label.text = "🏛️ BAŞKAN %%%.1f" % score
+	if opp_vote_label:
+		opp_vote_label.text = "🦅 RAKİP %%%.1f" % opp_score
+	if vote_progress_bar:
+		vote_progress_bar.value = score
+	if poll_trend_label and reason != "":
+		poll_trend_label.text = reason
+		_trend_clear_timer = 3.5
 
 func _add_player(id):
 	connected_players.append(id)

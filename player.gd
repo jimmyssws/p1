@@ -145,6 +145,12 @@ var sfx_task_complete: AudioStreamPlayer = null
 var sfx_footstep: AudioStreamPlayer = null
 var sfx_heartbeat: AudioStreamPlayer = null
 var sfx_hit_impact: AudioStreamPlayer = null
+var sfx_clang: AudioStreamPlayer = null
+var sfx_warning: AudioStreamPlayer = null
+var _warning_overlay_node: ColorRect = null
+var _warning_timer: float = 0.0
+var _aim_check_timer: float = 0.0
+
 
 # 💥 Geri Bildirim Sistemi
 var _shake_intensity: float = 0.0
@@ -344,7 +350,28 @@ func _setup_sounds():
 	sfx_hit_impact.volume_db = 2.0
 	add_child(sfx_hit_impact)
 
+	sfx_clang = AudioStreamPlayer.new()
+	sfx_clang.stream = load("res://sounds/metal_clang.wav")
+	sfx_clang.volume_db = 4.0
+	add_child(sfx_clang)
+
+	sfx_warning = AudioStreamPlayer.new()
+	sfx_warning.stream = load("res://sounds/sniper_warning.wav")
+	sfx_warning.volume_db = 2.0
+	add_child(sfx_warning)
+
+	_setup_warning_overlay()
 	_setup_feedback()
+
+func _setup_warning_overlay():
+	_warning_overlay_node = ColorRect.new()
+	_warning_overlay_node.color = Color(1, 0.1, 0.1, 0)
+	_warning_overlay_node.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_warning_overlay_node.anchors_preset = Control.PRESET_FULL_RECT
+	var hud = get_node_or_null("HUD")
+	if hud:
+		hud.add_child(_warning_overlay_node)
+		_warning_overlay_node.hide()
 
 func _setup_feedback():
 	_hit_flash_node = ColorRect.new()
@@ -822,6 +849,9 @@ func _execute_assassin_pistol():
 		if target is CharacterBody3D:
 			if "current_role" in target:
 				if target.current_role == "PRESIDENT":
+					if target.has_method("defend_against_bullet") and target.defend_against_bullet():
+						_show_temp_prompt("💥 MERMİ BAŞKANIN ÇELİK ÇANTASINA ÇARPTI VE SEKTİ! [G] ile Kaç!")
+						return
 					if mn and mn.has_method("net_game_over"):
 						mn.rpc("net_game_over", "BAŞKAN UZAKTAN VURULDU!\n🔫 SUİKASTÇI KAZANDI!")
 				elif target.current_role == "GUARD":
@@ -1122,6 +1152,7 @@ func _physics_process(delta):
 
 	# --- 🏛️ 3 AŞAMALI BAŞKAN GÖREV SİSTEMİ ---
 	_handle_president_task(delta)
+	_process_sniper_aiming(delta)
 
 func _trigger_campaign_anthem():
 	if anthem_cooldown > 0.0:
@@ -1361,3 +1392,45 @@ func _update_player_animation():
 		if anim_player.current_animation != "idle":
 			anim_player.play("idle")
 		anim_player.speed_scale = 1.0
+
+func _process_sniper_aiming(delta: float):
+	if not is_multiplayer_authority(): return
+	
+	if current_role == "ASSASSIN" and selected_slot == 2 and pistol_ammo > 0:
+		_aim_check_timer -= delta
+		if _aim_check_timer <= 0.0:
+			_aim_check_timer = 0.18
+			if raycast and raycast.is_colliding():
+				var col = raycast.get_collider()
+				if col and is_instance_valid(col) and col.get("current_role") == "PRESIDENT":
+					col.rpc("on_sniper_aim_detected", global_position)
+					
+	if _warning_timer > 0.0:
+		_warning_timer -= delta
+		if _warning_overlay_node:
+			var pulse = (sin(Time.get_ticks_msec() * 0.025) + 1.0) * 0.5
+			_warning_overlay_node.color = Color(1.0, 0.2, 0.1, pulse * 0.45)
+			_warning_overlay_node.show()
+		if _warning_timer <= 0.0:
+			if _warning_overlay_node: _warning_overlay_node.hide()
+
+@rpc("any_peer", "call_local")
+func on_sniper_aim_detected(from_pos: Vector3):
+	if not is_multiplayer_authority() or current_role != "PRESIDENT": return
+	_warning_timer = 1.8
+	if sfx_warning and not sfx_warning.playing:
+		sfx_warning.play()
+	_show_temp_prompt("🚨 DİKKAT! SANA NİŞAN ALINIYOR! [3] ÇELİK ÇANTAYI KALDIR!")
+
+func defend_against_bullet() -> bool:
+	if selected_slot == 3 or has_briefcase_shield:
+		has_briefcase_shield = false
+		if sfx_clang: sfx_clang.play()
+		trigger_camera_shake(0.9, 0.45)
+		_show_temp_prompt("🛡️ ÇELİK ÇANTA MERMİYİ ENGELLEDİ! ZIRH KIRILDI!")
+		var mn = get_node_or_null("/root/main")
+		if mn and mn.has_method("adjust_poll_score"):
+			mn.rpc("adjust_poll_score", 4.5, "🛡️ Çelik Çanta Savunması (+4.5%)")
+		_update_weapon_hud()
+		return true
+	return false

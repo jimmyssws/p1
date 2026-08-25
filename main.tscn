@@ -2,6 +2,32 @@
 
 [ext_resource type="Script" uid="uid://7yprv15pyl1e" path="res://main.gd" id="1_ig7tw"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Poll_BG"]
+bg_color = Color(0.06, 0.08, 0.14, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.35, 0.6, 0.6)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Poll_Fill"]
+bg_color = Color(0.18, 0.55, 0.95, 0.9)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Poll_Track"]
+bg_color = Color(0.85, 0.25, 0.25, 0.85)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_News_Ticker"]
 bg_color = Color(0.75, 0.12, 0.15, 0.9)
 corner_radius_top_left = 4
@@ -669,6 +695,57 @@ offset_right = 110.0
 offset_bottom = 14.0
 grow_vertical = 2
 text = "⏱️ 03:00"
+vertical_alignment = 1
+
+
+[node name="PollPanel" type="PanelContainer" parent="TopBarHUD/TopPanel" unique_id=9871234]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -18.0
+offset_right = 210.0
+offset_bottom = 18.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_Poll_BG")
+
+[node name="HBox" type="HBoxContainer" parent="TopBarHUD/TopPanel/PollPanel" unique_id=9871235]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="PresVoteLabel" type="Label" parent="TopBarHUD/TopPanel/PollPanel/HBox" unique_id=9871236]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.75, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "🏛️ BAŞKAN %46.0"
+vertical_alignment = 1
+
+[node name="VoteProgressBar" type="ProgressBar" parent="TopBarHUD/TopPanel/PollPanel/HBox" unique_id=9871237]
+custom_minimum_size = Vector2(140, 14)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_Poll_Track")
+theme_override_styles/fill = SubResource("StyleBoxFlat_Poll_Fill")
+value = 46.0
+show_percentage = false
+
+[node name="OppVoteLabel" type="Label" parent="TopBarHUD/TopPanel/PollPanel/HBox" unique_id=9871238]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.45, 0.45, 1)
+theme_override_font_sizes/font_size = 13
+text = "🦅 RAKİP %54.0"
+vertical_alignment = 1
+
+[node name="TrendLabel" type="Label" parent="TopBarHUD/TopPanel/PollPanel/HBox" unique_id=9871239]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 11
+text = "📊 Canlı Anket"
 vertical_alignment = 1
 
 [node name="StatusLabel" type="Label" parent="TopBarHUD/TopPanel" unique_id=9283741]
