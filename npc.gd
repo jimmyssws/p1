@@ -11,7 +11,7 @@ var state_timer = 0.0
 var panic_source = Vector3.ZERO
 
 @onready var char_model = $CharacterModel if has_node("CharacterModel") else null
-@onready var body_mesh = $CharacterModel/Body if has_node("CharacterModel/Body") else null
+@onready var anim_player = $CharacterModel/AnimMesh/AnimationPlayer if has_node("CharacterModel/AnimMesh/AnimationPlayer") else null
 
 const CIVILIAN_COLORS = [
 	Color(0.2, 0.2, 0.25),  # Koyu Füme
@@ -51,14 +51,28 @@ func _play_random_gibberish():
 
 func _ready():
 	_setup_npc_voice()
-	if body_mesh:
-		var mat = StandardMaterial3D.new()
-		mat.albedo_color = CIVILIAN_COLORS[randi() % CIVILIAN_COLORS.size()]
-		mat.roughness = 0.7
-		body_mesh.set_surface_override_material(0, mat)
-		
+	_setup_npc_materials()
 	_decide_next_behavior()
 
+func _setup_npc_materials():
+	var torso = get_node_or_null("CharacterModel/AnimMesh/character/root/torso")
+	var leg_l = get_node_or_null("CharacterModel/AnimMesh/character/root/leg-left")
+	var leg_r = get_node_or_null("CharacterModel/AnimMesh/character/root/leg-right")
+	
+	var shirt_color = CIVILIAN_COLORS[randi() % CIVILIAN_COLORS.size()]
+	var pants_color = CIVILIAN_COLORS[randi() % CIVILIAN_COLORS.size()]
+	
+	var shirt_mat = StandardMaterial3D.new()
+	shirt_mat.albedo_color = shirt_color
+	shirt_mat.roughness = 0.7
+	
+	var pants_mat = StandardMaterial3D.new()
+	pants_mat.albedo_color = pants_color
+	pants_mat.roughness = 0.8
+	
+	if torso: torso.set_surface_override_material(0, shirt_mat)
+	if leg_l: leg_l.set_surface_override_material(0, pants_mat)
+	if leg_r: leg_r.set_surface_override_material(0, pants_mat)
 func _physics_process(delta):
 	if is_stunned:
 		stun_time_left -= delta
@@ -79,6 +93,18 @@ func _physics_process(delta):
 		else:
 			velocity.y = 0.0
 		move_and_slide()
+	# 🕺 3D Animasyon Kontrolü
+	if anim_player:
+		var horiz_speed = Vector3(velocity.x, 0, velocity.z).length()
+		if horiz_speed > 0.15:
+			if anim_player.current_animation != "walk":
+				anim_player.play("walk")
+			anim_player.speed_scale = clamp(horiz_speed / 2.0, 0.8, 2.2)
+		else:
+			if anim_player.current_animation != "idle":
+				anim_player.play("idle")
+			anim_player.speed_scale = 1.0
+
 		if freeze_timer <= 0.0:
 			is_police_frozen = false
 			_decide_next_behavior()
@@ -132,6 +158,18 @@ func _physics_process(delta):
 			var target_angle = atan2(avoid_dir.x, avoid_dir.z)
 			char_model.rotation.y = lerp_angle(char_model.rotation.y, target_angle, 15.0 * delta)
 		move_and_slide()
+	# 🕺 3D Animasyon Kontrolü
+	if anim_player:
+		var horiz_speed = Vector3(velocity.x, 0, velocity.z).length()
+		if horiz_speed > 0.15:
+			if anim_player.current_animation != "walk":
+				anim_player.play("walk")
+			anim_player.speed_scale = clamp(horiz_speed / 2.0, 0.8, 2.2)
+		else:
+			if anim_player.current_animation != "idle":
+				anim_player.play("idle")
+			anim_player.speed_scale = 1.0
+
 	elif direction != Vector3.ZERO:
 		velocity.x = direction.x * speed
 		velocity.z = direction.z * speed
@@ -139,11 +177,35 @@ func _physics_process(delta):
 			var target_angle = atan2(direction.x, direction.z)
 			char_model.rotation.y = lerp_angle(char_model.rotation.y, target_angle, 10.0 * delta)
 		move_and_slide()
+	# 🕺 3D Animasyon Kontrolü
+	if anim_player:
+		var horiz_speed = Vector3(velocity.x, 0, velocity.z).length()
+		if horiz_speed > 0.15:
+			if anim_player.current_animation != "walk":
+				anim_player.play("walk")
+			anim_player.speed_scale = clamp(horiz_speed / 2.0, 0.8, 2.2)
+		else:
+			if anim_player.current_animation != "idle":
+				anim_player.play("idle")
+			anim_player.speed_scale = 1.0
+
 	else:
 		velocity.x = 0.0
 		velocity.z = 0.0
 		if not is_on_floor():
 			move_and_slide()
+	# 🕺 3D Animasyon Kontrolü
+	if anim_player:
+		var horiz_speed = Vector3(velocity.x, 0, velocity.z).length()
+		if horiz_speed > 0.15:
+			if anim_player.current_animation != "walk":
+				anim_player.play("walk")
+			anim_player.speed_scale = clamp(horiz_speed / 2.0, 0.8, 2.2)
+		else:
+			if anim_player.current_animation != "idle":
+				anim_player.play("idle")
+			anim_player.speed_scale = 1.0
+
 func _decide_next_behavior():
 	if current_state == NpcState.CHAT or randf() < 0.35:
 		_play_random_gibberish()

@@ -1,26 +1,11 @@
 [gd_scene format=3 uid="uid://bbk7uovn5mim2"]
 
 [ext_resource type="Script" uid="uid://dlmvn5hv7686l" path="res://npc.gd" id="1_ideak"]
+[ext_resource type="PackedScene" path="res://models_animated/character_animated.glb" id="2_anim_char"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0xm2m"]
 radius = 0.4
 height = 1.8
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_npc_body"]
-radius = 0.35
-height = 1.2
-
-[sub_resource type="StandardMaterial3D" id="Mat_Npc_Body"]
-albedo_color = Color(0.4, 0.4, 0.45, 1)
-roughness = 0.7
-
-[sub_resource type="SphereMesh" id="SphereMesh_npc_head"]
-radius = 0.26
-height = 0.52
-
-[sub_resource type="StandardMaterial3D" id="Mat_Npc_Skin"]
-albedo_color = Color(0.92, 0.76, 0.65, 1)
-roughness = 0.6
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_v7lw1"]
 properties/0/path = NodePath(".:position")
@@ -39,15 +24,8 @@ shape = SubResource("CapsuleShape3D_0xm2m")
 
 [node name="CharacterModel" type="Node3D" parent="." unique_id=1109809797]
 
-[node name="Body" type="MeshInstance3D" parent="CharacterModel" unique_id=8472910]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
-mesh = SubResource("CapsuleMesh_npc_body")
-surface_material_override/0 = SubResource("Mat_Npc_Body")
-
-[node name="Head" type="MeshInstance3D" parent="CharacterModel" unique_id=2938471]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
-mesh = SubResource("SphereMesh_npc_head")
-surface_material_override/0 = SubResource("Mat_Npc_Skin")
+[node name="AnimMesh" parent="CharacterModel" instance=ExtResource("2_anim_char")]
+transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0, 0, 0)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1339541383]
 replication_config = SubResource("SceneReplicationConfig_v7lw1")

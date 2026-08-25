@@ -25,6 +25,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var scan_title = $HUD/ScanResultPanel/ScanTitle if has_node("HUD/ScanResultPanel/ScanTitle") else null
 @onready var scan_items = $HUD/ScanResultPanel/ScanItems if has_node("HUD/ScanResultPanel/ScanItems") else null
 @onready var char_model = $CharacterModel if has_node("CharacterModel") else null
+@onready var anim_player = $CharacterModel/AnimMesh/AnimationPlayer if has_node("CharacterModel/AnimMesh/AnimationPlayer") else null
 @onready var body_mesh = $CharacterModel/Body if has_node("CharacterModel/Body") else null
 @onready var tie_mesh = $CharacterModel/Tie if has_node("CharacterModel/Tie") else null
 @onready var sunglasses_mesh = $CharacterModel/Sunglasses if has_node("CharacterModel/Sunglasses") else null
@@ -1038,6 +1039,21 @@ func _physics_process(delta):
 			if char_model and to_stage.length_squared() > 0.1:
 				char_model.global_rotation.y = lerp_angle(char_model.global_rotation.y, atan2(to_stage.x, to_stage.z), 8.0 * delta)
 			move_and_slide()
+	# 🕺 3D Animasyon Kontrolü (3. Şahıs Görünüm)
+	if anim_player:
+		var horiz_speed = Vector3(velocity.x, 0, velocity.z).length()
+		if not is_on_floor():
+			if anim_player.current_animation != "jump":
+				anim_player.play("jump")
+		elif horiz_speed > 0.2:
+			if anim_player.current_animation != "walk":
+				anim_player.play("walk")
+			anim_player.speed_scale = clamp(horiz_speed / 2.5, 0.8, 2.5)
+		else:
+			if anim_player.current_animation != "idle":
+				anim_player.play("idle")
+			anim_player.speed_scale = 1.0
+
 			return
 
 	if not is_on_floor():
@@ -1070,6 +1086,21 @@ func _physics_process(delta):
 			char_model.global_rotation.y = lerp_angle(char_model.global_rotation.y, global_rotation.y, 10 * delta)
 
 	move_and_slide()
+	# 🕺 3D Animasyon Kontrolü (3. Şahıs Görünüm)
+	if anim_player:
+		var horiz_speed = Vector3(velocity.x, 0, velocity.z).length()
+		if not is_on_floor():
+			if anim_player.current_animation != "jump":
+				anim_player.play("jump")
+		elif horiz_speed > 0.2:
+			if anim_player.current_animation != "walk":
+				anim_player.play("walk")
+			anim_player.speed_scale = clamp(horiz_speed / 2.5, 0.8, 2.5)
+		else:
+			if anim_player.current_animation != "idle":
+				anim_player.play("idle")
+			anim_player.speed_scale = 1.0
+
 
 	# --- 💥 GERİ BİLDİRİM ---
 	var is_moving = velocity.length() > 0.3
