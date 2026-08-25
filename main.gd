@@ -233,25 +233,74 @@ func _redistribute_roles():
 			class_idx += 1
 			guard_node.rpc("assign_role", "GUARD", g_class)
 
-func _spawn_npcs(count: int = 65):
-	for i in range(count):
+func _spawn_npcs(count: int = 130):
+	# 👥 130 Kişilik Gerçekçi Miting Meydanı Dağılımı:
+	# 1. Sahne Önü Fanatik Kalabalık (72 Kişi)
+	# 2. WC ve Büfe Kuyruğundakiler (20 Kişi)
+	# 3. Banklarda Oturanlar ve Havuz Başı (14 Kişi)
+	# 4. Serbest Dolaşan Masum Siviller (24 Kişi)
+	
+	var total_spawned = 0
+	
+	# --- GRUP 1: SAHNE ÖNÜ COŞKULU DİNLEYİCİLER (~72 Kişi) ---
+	for i in range(72):
 		var npc = npc_scene.instantiate()
-		var pos = Vector3.ZERO
-		var roll = randf()
-		if roll < 0.40:
-			pos = Vector3(randf_range(-14, 14), 0.5, randf_range(-22, -8))
-		elif roll < 0.65:
-			pos = Vector3(randf_range(-24, 24), 0.5, randf_range(-8, 15))
-		elif roll < 0.85:
-			pos = Vector3(randf_range(-28, 28), 0.5, randf_range(15, 38))
-		else:
-			var side = -1.0 if randf() < 0.5 else 1.0
-			pos = Vector3(side * randf_range(18, 26), 0.5, randf_range(-20, 20))
-			
-		npc.name = "NPC_%d" % i
+		npc.name = "NPC_%d" % total_spawned
+		total_spawned += 1
+		# Sahne önü sıkı kalabalık alanı: X: -13 ile 13, Z: -24 ile -10
+		var pos = Vector3(randf_range(-13.0, 13.0), 0.5, randf_range(-24.5, -9.5))
 		npc.position = pos
 		add_child.call_deferred(npc, true)
+		npc.call_deferred("set_archetype", 0) # STAGE_FANATIC
+		
+	# --- GRUP 2: WC VE BÜFE SIRASI BEKLEYENLER (~20 Kişi) ---
+	# Sol WC Kuyruğu (8 Kişi)
+	for i in range(8):
+		var npc = npc_scene.instantiate()
+		npc.name = "NPC_%d" % total_spawned
+		total_spawned += 1
+		var pos = Vector3(-26.0 + randf_range(-0.4, 0.4), 0.5, -16.0 + (i * 1.35))
+		npc.position = pos
+		add_child.call_deferred(npc, true)
+		npc.call_deferred("set_archetype", 1, pos) # WC_QUEUE
+		
+	# Sağ WC Kuyruğu (8 Kişi)
+	for i in range(8):
+		var npc = npc_scene.instantiate()
+		npc.name = "NPC_%d" % total_spawned
+		total_spawned += 1
+		var pos = Vector3(26.0 + randf_range(-0.4, 0.4), 0.5, -16.0 + (i * 1.35))
+		npc.position = pos
+		add_child.call_deferred(npc, true)
+		npc.call_deferred("set_archetype", 1, pos) # WC_QUEUE
 
+	# --- GRUP 3: BANKLAR VE HAVUZ ÇEVRESİ DİNLENENLER (~14 Kişi) ---
+	for i in range(14):
+		var npc = npc_scene.instantiate()
+		npc.name = "NPC_%d" % total_spawned
+		total_spawned += 1
+		var roll = randf()
+		var pos = Vector3.ZERO
+		if roll < 0.35: # Sol Bank
+			pos = Vector3(-12.0 + randf_range(-1.2, 1.2), 0.5, -2.0 + randf_range(-0.6, 0.6))
+		elif roll < 0.70: # Sağ Bank
+			pos = Vector3(12.0 + randf_range(-1.2, 1.2), 0.5, -2.0 + randf_range(-0.6, 0.6))
+		else: # Süs Havuzu Çevresi
+			var angle = randf() * PI * 2
+			pos = Vector3(cos(angle) * 4.5, 0.5, 6.0 + sin(angle) * 4.5)
+		npc.position = pos
+		add_child.call_deferred(npc, true)
+		npc.call_deferred("set_archetype", 2) # BENCH_RELAXER
+
+	# --- GRUP 4: MEYDANDA SERBEST GEZEN SİVİLLER (~24 Kişi) ---
+	for i in range(24):
+		var npc = npc_scene.instantiate()
+		npc.name = "NPC_%d" % total_spawned
+		total_spawned += 1
+		var pos = Vector3(randf_range(-26.0, 26.0), 0.5, randf_range(8.0, 38.0))
+		npc.position = pos
+		add_child.call_deferred(npc, true)
+		npc.call_deferred("set_archetype", 3) # ROAMER
 @rpc("any_peer", "call_local")
 func trigger_crowd_panic(source: Vector3, radius: float):
 	if sfx_crowd_panic and not sfx_crowd_panic.playing:

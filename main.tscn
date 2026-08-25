@@ -1,6 +1,11 @@
 [gd_scene format=3 uid="uid://bonmonio1csdd"]
 
 [ext_resource type="Script" uid="uid://7yprv15pyl1e" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" path="res://models_city/grass-trees-tall.glb" id="tree_tall"]
+[ext_resource type="PackedScene" path="res://models_city/grass-trees.glb" id="tree_round"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/bush.gltf" id="bush_prop"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/trash_A.gltf" id="trash_prop"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/firehydrant.gltf" id="hydrant_prop"]
 [ext_resource type="Texture2D" path="res://ui_kenney/grey_panel.png" id="tex_grey_panel"]
 [ext_resource type="Texture2D" path="res://ui_kenney/blue_panel.png" id="tex_blue_panel"]
 [ext_resource type="Texture2D" path="res://ui_kenney/yellow_panel.png" id="tex_yellow_panel"]
@@ -477,13 +482,23 @@ surface_material_override/0 = SubResource("Mat_Tower")
 shape = SubResource("BoxShape3D_tower")
 
 [node name="Barrier_Left" type="StaticBody3D" parent="." unique_id=5019284]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.0, 0.6, -24.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.0, 0.6, -26.0)
 
 [node name="Mesh" type="MeshInstance3D" parent="Barrier_Left" unique_id=5019285]
 mesh = SubResource("BoxMesh_barrier")
 surface_material_override/0 = SubResource("Mat_Barrier")
 
 [node name="Col" type="CollisionShape3D" parent="Barrier_Left" unique_id=5019286]
+shape = SubResource("BoxShape3D_barrier")
+
+[node name="Barrier_Right" type="StaticBody3D" parent="." unique_id=6019284]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.0, 0.6, -26.0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Barrier_Right" unique_id=6019285]
+mesh = SubResource("BoxMesh_barrier")
+surface_material_override/0 = SubResource("Mat_Barrier")
+
+[node name="Col" type="CollisionShape3D" parent="Barrier_Right" unique_id=6019286]
 shape = SubResource("BoxShape3D_barrier")
 
 [node name="Barrier_Right" type="StaticBody3D" parent="." unique_id=6019284]
@@ -828,7 +843,7 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_StatusBadge")
 layout_mode = 2
 theme_override_colors/font_color = Color(0.2, 0.25, 0.35, 1)
 theme_override_font_sizes/font_size = 12
-text = " 👥 Miting Meydanı (65 Kişi) "
+text = " 👥 Miting Meydanı (130 Kişi) "
 vertical_alignment = 1
 
 
@@ -1046,6 +1061,54 @@ transform = Transform3D(1.4, 0, 0.35, 0, 1.45, 0, -0.35, 0, 1.4, -14.0, 0.0, 42.
 
 [node name="TaxiCar" parent="." instance=ExtResource("car_tax")]
 transform = Transform3D(1.3, 0, -0.65, 0, 1.45, 0, 0.65, 0, 1.3, 14.0, 0.0, 42.0)
+
+
+# --- 🌳 SOKAK VE MEYDAN AĞAÇLARI (Y=0.0 YERE SIFIR MODEL AĞAÇLAR) ---
+[node name="StreetTree_L1" parent="." instance=ExtResource("tree_tall")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -22.0, 0.0, -22.0)
+
+[node name="StreetTree_L2" parent="." instance=ExtResource("tree_round")]
+transform = Transform3D(2.0, 0, 0, 0, 2.0, 0, 0, 0, 2.0, -22.0, 0.0, -6.0)
+
+[node name="StreetTree_L3" parent="." instance=ExtResource("tree_tall")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -22.0, 0.0, 10.0)
+
+[node name="StreetTree_L4" parent="." instance=ExtResource("tree_round")]
+transform = Transform3D(2.0, 0, 0, 0, 2.0, 0, 0, 0, 2.0, -22.0, 0.0, 26.0)
+
+[node name="StreetTree_R1" parent="." instance=ExtResource("tree_tall")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 22.0, 0.0, -22.0)
+
+[node name="StreetTree_R2" parent="." instance=ExtResource("tree_round")]
+transform = Transform3D(2.0, 0, 0, 0, 2.0, 0, 0, 0, 2.0, 22.0, 0.0, -6.0)
+
+[node name="StreetTree_R3" parent="." instance=ExtResource("tree_tall")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 22.0, 0.0, 10.0)
+
+[node name="StreetTree_R4" parent="." instance=ExtResource("tree_round")]
+transform = Transform3D(2.0, 0, 0, 0, 2.0, 0, 0, 0, 2.0, 22.0, 0.0, 26.0)
+
+# --- 🌿 SOKAK ÇALILARI VE ÇEVRE DETAYLARI ---
+[node name="Bush_L1" parent="." instance=ExtResource("bush_prop")]
+transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, -19.0, 0.0, -12.0)
+
+[node name="Bush_L2" parent="." instance=ExtResource("bush_prop")]
+transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, -19.0, 0.0, 4.0)
+
+[node name="Bush_R1" parent="." instance=ExtResource("bush_prop")]
+transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, 19.0, 0.0, -12.0)
+
+[node name="Bush_R2" parent="." instance=ExtResource("bush_prop")]
+transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, 19.0, 0.0, 4.0)
+
+[node name="Trash_1" parent="." instance=ExtResource("trash_prop")]
+transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -14.0, 0.0, -2.0)
+
+[node name="Trash_2" parent="." instance=ExtResource("trash_prop")]
+transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 14.0, 0.0, -2.0)
+
+[node name="Hydrant_1" parent="." instance=ExtResource("hydrant_prop")]
+transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -18.0, 0.0, 32.0)
 
 # --- 💡 SOKAK AYDINLATMALARI VE BANKLAR ---
 [node name="StreetLight_1" parent="." instance=ExtResource("street_light")]
