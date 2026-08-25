@@ -200,7 +200,7 @@ func _physics_process(delta):
 			cheer_jump_timer = randf_range(3.0, 8.0)
 			if randf() < 0.35 and is_on_floor():
 				velocity.y = randf_range(2.5, 4.0)
-		elif current_state == NpcState.ENTER_TURNSTILE:
+	elif current_state == NpcState.ENTER_TURNSTILE:
 		var target_turnstile = Vector3(clamp(global_position.x, -4.5, 4.5), 0.5, 16.0)
 		var to_target = (target_turnstile - global_position)
 		to_target.y = 0
@@ -282,7 +282,7 @@ func _decide_next_behavior():
 	if randf() < 0.06:
 		_play_random_gibberish()
 		
-		if archetype == NpcArchetype.QUEUE_ENTRANCE:
+	if archetype == NpcArchetype.QUEUE_ENTRANCE:
 		if global_position.z > 20.0:
 			current_state = NpcState.ENTER_TURNSTILE
 			state_timer = 25.0
