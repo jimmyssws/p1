@@ -83,7 +83,7 @@ func set_archetype(arch: NpcArchetype, custom_target: Vector3 = Vector3.ZERO):
 			current_state = NpcState.CHAT
 			state_timer = randf_range(5.0, 15.0)
 			direction = Vector3.ZERO
-				NpcArchetype.QUEUE_ENTRANCE:
+		NpcArchetype.QUEUE_ENTRANCE:
 			current_state = NpcState.ENTER_TURNSTILE
 			state_timer = randf_range(15.0, 30.0)
 			direction = Vector3(randf_range(-0.2, 0.2), 0, -1.0).normalized()
