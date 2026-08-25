@@ -425,6 +425,61 @@ grow_horizontal = 2
 grow_vertical = 0
 horizontal_alignment = 1
 
+[node name="SusMeterPanel" type="PanelContainer" parent="HUD" unique_id=73920194]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -160.0
+offset_top = 70.0
+offset_right = 160.0
+offset_bottom = 125.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_Weapon_Panel")
+
+[node name="VBox" type="VBoxContainer" parent="HUD/SusMeterPanel" unique_id=73920195]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Header" type="HBoxContainer" parent="HUD/SusMeterPanel/VBox" unique_id=73920196]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="HUD/SusMeterPanel/VBox/Header" unique_id=73920197]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.9, 0.92, 0.95, 1.0)
+text = "🎭 GİZLİLİK & ŞÜPHE DÜZEYİ"
+
+[node name="SusPctLabel" type="Label" parent="HUD/SusMeterPanel/VBox/Header" unique_id=73920198]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.2, 0.9, 0.4, 1.0)
+text = "%0 (Gizli)"
+
+[node name="SusProgressBar" type="ProgressBar" parent="HUD/SusMeterPanel/VBox" unique_id=73920199]
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+show_percentage = false
+
+[node name="ThreatAlert" type="Label" parent="HUD" unique_id=73920200]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -220.0
+offset_top = 135.0
+offset_right = 220.0
+offset_bottom = 165.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(1.0, 0.25, 0.25, 1.0)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+text = "🚨 DİKKAT: KALABALIKTA ŞÜPHELİ HAREKET!"
+horizontal_alignment = 1
+
 [node name="WeaponPanel" type="PanelContainer" parent="HUD" unique_id=9827104]
 anchors_preset = 3
 anchor_left = 1.0

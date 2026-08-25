@@ -42,6 +42,17 @@ var _hand_def_pos: Vector3 = Vector3(0.32, -0.26, -0.48)
 var _hand_def_rot: Vector3 = Vector3.ZERO
 var _bob_timer: float = 0.0
 var _mouse_sway: Vector2 = Vector2.ZERO
+# 🎭 Suikastçı Gizlenme & Şüphe (Sus) Sistemi
+@onready var sus_panel = $HUD/SusMeterPanel if has_node("HUD/SusMeterPanel") else null
+@onready var sus_bar = $HUD/SusMeterPanel/VBox/SusProgressBar if has_node("HUD/SusMeterPanel/VBox/SusProgressBar") else null
+@onready var sus_pct_label = $HUD/SusMeterPanel/VBox/Header/SusPctLabel if has_node("HUD/SusMeterPanel/VBox/Header/SusPctLabel") else null
+@onready var threat_alert = $HUD/ThreatAlert if has_node("HUD/ThreatAlert") else null
+
+var is_blending_in: bool = false
+var suspicion_level: float = 0.0
+var _last_threat_alert_timer: float = 0.0
+var _threat_broadcast_timer: float = 0.0
+
 
 @onready var vm_knife = $Camera3D/HandAnchor/KnifeModel if has_node("Camera3D/HandAnchor/KnifeModel") else null
 @onready var vm_pistol = $Camera3D/HandAnchor/PistolModel if has_node("Camera3D/HandAnchor/PistolModel") else null
@@ -1071,7 +1082,8 @@ func _show_temp_prompt(msg: String):
 			action_prompt.text = ""
 
 # 🏛️ Başkanın şu anki görevi için E basılı tutma mantığı
-func _handle_president_task(delta):
+func _handle_president_task(delta)
+	_process_assassin_stealth(delta):
 	if current_role != "PRESIDENT" or is_game_over: return
 	
 	var in_zone = false
@@ -1242,6 +1254,7 @@ func _physics_process(delta):
 	# Zıplama
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
+			if current_role == "ASSASSIN": suspicion_level = min(100.0, suspicion_level + 20.0)
 
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
@@ -1288,6 +1301,7 @@ func _physics_process(delta):
 
 	# --- 🏛️ 3 AŞAMALI BAŞKAN GÖREV SİSTEMİ ---
 	_handle_president_task(delta)
+	_process_assassin_stealth(delta)
 	_process_sniper_aiming(delta)
 
 func _trigger_campaign_anthem():
@@ -1725,3 +1739,96 @@ func _spawn_bullet_impact_sparks(impact_pos: Vector3, is_taser: bool = false):
 @rpc("any_peer", "call_remote", "unreliable")
 func net_spawn_bullet_tracer(start_pos: Vector3, target_pos: Vector3, is_taser: bool = false):
 	_spawn_bullet_tracer(start_pos, target_pos, is_taser)
+
+
+# 🎭 Suikastçı Kalabalığa Karışma (NPC Taklidi) & Şüphe Metresi
+func _process_assassin_stealth(delta):
+	if current_role != "ASSASSIN" or is_game_over:
+		if sus_panel and sus_panel.visible: sus_panel.hide()
+		return
+		
+	if sus_panel and not sus_panel.visible:
+		sus_panel.show()
+		
+	# 1. Yakındaki NPC'leri tara
+	var nearby_crowd = 0
+	var main_node = get_node_or_null("/root/main")
+	if main_node:
+		var npcs = main_node.get_children()
+		for n in npcs:
+			if "NpcState" in n or "archetype" in n:
+				if global_position.distance_to(n.global_position) < 3.8:
+					nearby_crowd += 1
+					
+	# 2. Kalabalıkta [E] ile Kamufle Olma / Çıkma
+	if nearby_crowd >= 2:
+		if not is_blending_in and not is_weapon_exposed:
+			if action_prompt and (action_prompt.text == "" or "Kamufle" in action_prompt.text):
+				action_prompt.text = "🎭 [E] Kalabalığa Karış (NPC Taklidi Yap)"
+			if Input.is_action_just_pressed("interact"):
+				is_blending_in = true
+				_show_temp_prompt("🎭 KALABALIĞA KARIŞILDI! (NPC Modu: Korumalar Seni Kolayca Ayırt Edemez)")
+	else:
+		if is_blending_in and velocity.length() > 2.5:
+			is_blending_in = false
+			_show_temp_prompt("🎭 Kalabalıktan Uzaklaştın, Kamuflaj Bozuldu!")
+			
+	if is_blending_in:
+		if Input.is_action_just_pressed("jump") or is_weapon_exposed:
+			is_blending_in = false
+			_show_temp_prompt("🎭 Kamuflaj Bozuldu!")
+			
+	# 3. Şüphe (Sus) Seviyesini Hesapla
+	if is_weapon_exposed:
+		suspicion_level = min(100.0, suspicion_level + 45.0 * delta)
+	elif is_blending_in:
+		suspicion_level = max(0.0, suspicion_level - 30.0 * delta)
+	elif velocity.length() > 4.5: # Depar atıyor
+		suspicion_level = min(100.0, suspicion_level + 16.0 * delta)
+	elif velocity.length() > 0.5: # Normal yürüyor
+		suspicion_level = max(0.0, suspicion_level - 6.0 * delta)
+	else: # Hareketsiz duruyor
+		suspicion_level = max(0.0, suspicion_level - 15.0 * delta)
+		
+	# 4. HUD Güncellemesi (Yeşil -> Sarı -> Kırmızı)
+	if sus_bar:
+		sus_bar.value = suspicion_level
+	if sus_pct_label:
+		if is_blending_in:
+			sus_pct_label.text = "🎭 %%d (KAMUFLE / NPC)" % int(suspicion_level)
+			sus_pct_label.add_theme_color_override("font_color", Color(0.2, 0.9, 0.4))
+		elif suspicion_level < 35.0:
+			sus_pct_label.text = "%%d%% (Gizli)" % int(suspicion_level)
+			sus_pct_label.add_theme_color_override("font_color", Color(0.2, 0.9, 0.4))
+		elif suspicion_level < 75.0:
+			sus_pct_label.text = "%%d%% (ŞÜPHELİ!)" % int(suspicion_level)
+			sus_pct_label.add_theme_color_override("font_color", Color(0.95, 0.8, 0.1))
+		else:
+			sus_pct_label.text = "%%d%% (ALARM - DEŞİFRE OLDUN!)" % int(suspicion_level)
+			sus_pct_label.add_theme_color_override("font_color", Color(1.0, 0.2, 0.2))
+			
+	# 5. Korumalara Ağ Üzerinden Şüphe Bildirimi
+	_threat_broadcast_timer += delta
+	if _threat_broadcast_timer >= 1.5:
+		_threat_broadcast_timer = 0.0
+		if suspicion_level > 65.0:
+			if multiplayer.has_multiplayer_peer():
+				rpc("net_broadcast_guard_threat", global_position, suspicion_level)
+			else:
+				# Tek kişilik testte korumaya bildirim simülasyonu
+				pass
+
+@rpc("any_peer", "call_remote", "unreliable")
+func net_broadcast_guard_threat(threat_pos: Vector3, sus_val: float):
+	if current_role == "GUARD":
+		_show_guard_threat_alert("🚨 DİKKAT: KALABALIKTA ŞÜPHELİ HAREKET TESPİT EDİLDİ! (Şüphe: %%%d)" % int(sus_val))
+
+func _show_guard_threat_alert(msg: String):
+	if threat_alert:
+		threat_alert.text = msg
+		threat_alert.show()
+		var tw = threat_alert.create_tween()
+		tw.tween_property(threat_alert, "modulate:a", 1.0, 0.2)
+		tw.tween_interval(3.0)
+		tw.tween_property(threat_alert, "modulate:a", 0.0, 0.5)
+		tw.tween_callback(threat_alert.hide)
