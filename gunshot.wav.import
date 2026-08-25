@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://yfogbil7tfbb"
-path="res://.godot/imported/metal_clang.wav-2470173a87d0a17d14999edb154a3e06.sample"
+uid="uid://tunvas5yfs5j"
+path="res://.godot/imported/gunshot.wav-0695b62083eed8c2c8c2e79d47d751d9.sample"
 
 [deps]
 
-source_file="res://sounds/metal_clang.wav"
-dest_files=["res://.godot/imported/metal_clang.wav-2470173a87d0a17d14999edb154a3e06.sample"]
+source_file="res://sounds/gunshot.wav"
+dest_files=["res://.godot/imported/gunshot.wav-0695b62083eed8c2c8c2e79d47d751d9.sample"]
 
 [params]
 

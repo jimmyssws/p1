@@ -265,12 +265,7 @@ func _physics_process(delta: float):
 			velocity.x = 0.0
 			velocity.z = 0.0
 			_face_target(Vector3(0, 1.4, -29.5))
-			# Ara sıra zıpla (coşku)
-			cheer_jump_timer -= delta
-			if cheer_jump_timer <= 0.0:
-				cheer_jump_timer = randf_range(3.5, 9.0)
-				if randf() < 0.30 and is_on_floor():
-					velocity.y = randf_range(2.5, 4.0)
+			# Sadece yerde sakin durup dinleme (rastgele zıplama kaldırıldı)
 
 		NpcState.CHEER:
 			velocity.x = 0.0

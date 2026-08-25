@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://yfogbil7tfbb"
-path="res://.godot/imported/metal_clang.wav-2470173a87d0a17d14999edb154a3e06.sample"
+uid="uid://cba6ttgmb0g3p"
+path="res://.godot/imported/npc_murmur.wav-15c51f682a4212fcfb80510385b01eac.sample"
 
 [deps]
 
-source_file="res://sounds/metal_clang.wav"
-dest_files=["res://.godot/imported/metal_clang.wav-2470173a87d0a17d14999edb154a3e06.sample"]
+source_file="res://sounds/npc_murmur.wav"
+dest_files=["res://.godot/imported/npc_murmur.wav-15c51f682a4212fcfb80510385b01eac.sample"]
 
 [params]
 

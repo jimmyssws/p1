@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://yfogbil7tfbb"
-path="res://.godot/imported/metal_clang.wav-2470173a87d0a17d14999edb154a3e06.sample"
+uid="uid://b6s3ajes7p73c"
+path="res://.godot/imported/heartbeat.wav-84e5a7462ae92b20a5c2dcf6baa2f171.sample"
 
 [deps]
 
-source_file="res://sounds/metal_clang.wav"
-dest_files=["res://.godot/imported/metal_clang.wav-2470173a87d0a17d14999edb154a3e06.sample"]
+source_file="res://sounds/heartbeat.wav"
+dest_files=["res://.godot/imported/heartbeat.wav-84e5a7462ae92b20a5c2dcf6baa2f171.sample"]
 
 [params]
 

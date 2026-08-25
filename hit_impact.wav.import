@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://yfogbil7tfbb"
-path="res://.godot/imported/metal_clang.wav-2470173a87d0a17d14999edb154a3e06.sample"
+uid="uid://b615rtllmxwia"
+path="res://.godot/imported/hit_impact.wav-98bb9b1af9e80b9d1ef6dbf158a9ba44.sample"
 
 [deps]
 
-source_file="res://sounds/metal_clang.wav"
-dest_files=["res://.godot/imported/metal_clang.wav-2470173a87d0a17d14999edb154a3e06.sample"]
+source_file="res://sounds/hit_impact.wav"
+dest_files=["res://.godot/imported/hit_impact.wav-98bb9b1af9e80b9d1ef6dbf158a9ba44.sample"]
 
 [params]
 

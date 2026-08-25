@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://yfogbil7tfbb"
-path="res://.godot/imported/metal_clang.wav-2470173a87d0a17d14999edb154a3e06.sample"
+uid="uid://b2kni2n88bdjc"
+path="res://.godot/imported/taser.wav-5f165157cf4b0669b0d5c7016427d2e0.sample"
 
 [deps]
 
-source_file="res://sounds/metal_clang.wav"
-dest_files=["res://.godot/imported/metal_clang.wav-2470173a87d0a17d14999edb154a3e06.sample"]
+source_file="res://sounds/taser.wav"
+dest_files=["res://.godot/imported/taser.wav-5f165157cf4b0669b0d5c7016427d2e0.sample"]
 
 [params]
 

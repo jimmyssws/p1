@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://yfogbil7tfbb"
-path="res://.godot/imported/metal_clang.wav-2470173a87d0a17d14999edb154a3e06.sample"
+uid="uid://by13h50nfybry"
+path="res://.godot/imported/alarm_siren.wav-00f9b6ff4dc97344b19311bd71a042ac.sample"
 
 [deps]
 
-source_file="res://sounds/metal_clang.wav"
-dest_files=["res://.godot/imported/metal_clang.wav-2470173a87d0a17d14999edb154a3e06.sample"]
+source_file="res://sounds/alarm_siren.wav"
+dest_files=["res://.godot/imported/alarm_siren.wav-00f9b6ff4dc97344b19311bd71a042ac.sample"]
 
 [params]
 

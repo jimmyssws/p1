@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://yfogbil7tfbb"
-path="res://.godot/imported/metal_clang.wav-2470173a87d0a17d14999edb154a3e06.sample"
+uid="uid://3ae2l6bmj511"
+path="res://.godot/imported/knife.wav-9ac2723eff9e0cea8a8a4cbdcf6cbf97.sample"
 
 [deps]
 
-source_file="res://sounds/metal_clang.wav"
-dest_files=["res://.godot/imported/metal_clang.wav-2470173a87d0a17d14999edb154a3e06.sample"]
+source_file="res://sounds/knife.wav"
+dest_files=["res://.godot/imported/knife.wav-9ac2723eff9e0cea8a8a4cbdcf6cbf97.sample"]
 
 [params]
 

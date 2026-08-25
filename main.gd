@@ -50,7 +50,9 @@ func _setup_ambient_audio():
 			music_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
 			music_stream.loop_end  = -1
 			sfx_rally_music.stream    = music_stream
-			sfx_rally_music.volume_db = -5.0
+			sfx_rally_music.volume_db = -4.0
+			sfx_rally_music.bus       = "Master"
+			sfx_rally_music.finished.connect(func(): if sfx_rally_music: sfx_rally_music.play())
 			add_child(sfx_rally_music)
 			sfx_rally_music.play()
 
@@ -62,7 +64,9 @@ func _setup_ambient_audio():
 			amb_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
 			amb_stream.loop_end  = -1
 			sfx_crowd_ambient.stream    = amb_stream
-			sfx_crowd_ambient.volume_db = -3.5
+			sfx_crowd_ambient.volume_db = -2.0
+			sfx_crowd_ambient.bus       = "Master"
+			sfx_crowd_ambient.finished.connect(func(): if sfx_crowd_ambient: sfx_crowd_ambient.play())
 			add_child(sfx_crowd_ambient)
 			sfx_crowd_ambient.play()
 
@@ -74,10 +78,11 @@ func _setup_ambient_audio():
 			murmur_stream.loop_mode    = AudioStreamWAV.LOOP_FORWARD
 			murmur_stream.loop_end     = -1
 			ambient_player.stream      = murmur_stream
-			ambient_player.unit_size   = 16.0
-			ambient_player.max_distance = 60.0
-			ambient_player.volume_db   = 5.0
+			ambient_player.unit_size   = 18.0
+			ambient_player.max_distance = 70.0
+			ambient_player.volume_db   = 6.0
 			ambient_player.position    = Vector3(0, 1.2, -8.0)
+			ambient_player.finished.connect(func(): if ambient_player: ambient_player.play())
 			ambient_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_LOGARITHMIC
 			add_child(ambient_player)
 			ambient_player.play()
@@ -97,14 +102,14 @@ func _setup_ambient_audio():
 		var cheer_stream = load("res://sounds/cheer_applause.wav") as AudioStreamWAV
 		if cheer_stream:
 			sfx_cheer.stream    = cheer_stream
-			sfx_cheer.volume_db = 6.0
+			sfx_cheer.volume_db = 7.0
 			add_child(sfx_cheer)
 
 	# 😱 Panik Çığlık Sesi
 	if not sfx_crowd_panic:
 		sfx_crowd_panic = AudioStreamPlayer.new()
 		sfx_crowd_panic.stream = load("res://sounds/crowd_panic.wav")
-		sfx_crowd_panic.volume_db = 3.0
+		sfx_crowd_panic.volume_db = 4.0
 		add_child(sfx_crowd_panic)
 
 
