@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://yfogbil7tfbb"
-path="res://.godot/imported/metal_clang.wav-2470173a87d0a17d14999edb154a3e06.sample"
+path="res://.godot/imported/metal_clang.wav-1e0fc8d10c775c16cbf4cfe48c2ea0c4.sample"
 
 [deps]
 
-source_file="res://sounds/metal_clang.wav"
-dest_files=["res://.godot/imported/metal_clang.wav-2470173a87d0a17d14999edb154a3e06.sample"]
+source_file="res://metal_clang.wav"
+dest_files=["res://.godot/imported/metal_clang.wav-1e0fc8d10c775c16cbf4cfe48c2ea0c4.sample"]
 
 [params]
 

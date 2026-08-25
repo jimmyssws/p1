@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://rally_music_uid_001"
-path="res://.godot/imported/rally_ambient_music.wav-rally001.sample"
+uid="uid://brmxm323cy7v8"
+path="res://.godot/imported/rally_ambient_music.wav-b29dc7ccbecab09fdeab7ce8ff9a44b6.sample"
 
 [deps]
 
 source_file="res://sounds/rally_ambient_music.wav"
-dest_files=["res://.godot/imported/rally_ambient_music.wav-rally001.sample"]
+dest_files=["res://.godot/imported/rally_ambient_music.wav-b29dc7ccbecab09fdeab7ce8ff9a44b6.sample"]
 
 [params]
 
