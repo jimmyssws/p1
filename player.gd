@@ -1819,7 +1819,7 @@ func net_spawn_bullet_tracer(start_pos: Vector3, target_pos: Vector3, is_taser: 
 
 
 # 🎭 Suikastçı Kalabalığa Karışma (NPC Taklidi) & Şüphe Metresi
-func _process_assassin_stealth(delta)
+func _process_assassin_stealth(delta):
 	# 🚨 Turnike Metal Dedektör Geçiş Kontrolü (Z = 22.0)
 	if is_weapon_exposed and abs(global_position.z - 22.0) < 1.2 and abs(global_position.x) < 6.5:
 		if _last_threat_alert_timer <= 0.0:
@@ -1828,7 +1828,6 @@ func _process_assassin_stealth(delta)
 			var mn = get_node_or_null("/root/main")
 			if mn and mn.has_method("trigger_crowd_panic"):
 				mn.rpc("trigger_crowd_panic", global_position, 20.0)
-:
 	if current_role != "ASSASSIN" or is_game_over:
 		if sus_panel and sus_panel.visible: sus_panel.hide()
 		return
