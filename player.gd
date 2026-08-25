@@ -940,6 +940,7 @@ func _execute_president_rally_call():
 		return
 	megaphone_cooldown = 10.0
 	_animate_hand_action()
+	_play_action_sound("res://sounds/megaphone_shout.wav", 5.0)
 	_show_temp_prompt("📢 'SEVGİLİ VATANDAŞLARIM!' (+1.8% Seçim Oyu & Miting Coşkusu)")
 	var mn = get_node_or_null("/root/main")
 	if mn:
@@ -1257,7 +1258,55 @@ func _show_hint_once(msg: String):
 	if action_prompt:
 		action_prompt.text = msg
 
+func _play_action_sound(sound_path: String, vol_db: float = 0.0):
+	var sfx = AudioStreamPlayer.new()
+	var stream = load(sound_path) as AudioStreamWAV
+	if stream:
+		sfx.stream = stream
+		sfx.volume_db = vol_db
+		sfx.bus = "Master"
+		add_child(sfx)
+		sfx.play()
+		sfx.finished.connect(func(): sfx.queue_free())
+
+func _update_all_cooldowns(delta: float):
+	var changed = false
+	if taser_cooldown > 0.0:
+		taser_cooldown = max(0.0, taser_cooldown - delta)
+		changed = true
+	if scan_cooldown > 0.0:
+		scan_cooldown = max(0.0, scan_cooldown - delta)
+		changed = true
+	if radio_cooldown > 0.0:
+		radio_cooldown = max(0.0, radio_cooldown - delta)
+		changed = true
+	if sprint_cooldown > 0.0:
+		sprint_cooldown = max(0.0, sprint_cooldown - delta)
+		changed = true
+	if megaphone_cooldown > 0.0:
+		megaphone_cooldown = max(0.0, megaphone_cooldown - delta)
+		changed = true
+	if tea_cooldown > 0.0:
+		tea_cooldown = max(0.0, tea_cooldown - delta)
+		changed = true
+	if disguise_cooldown > 0.0:
+		disguise_cooldown = max(0.0, disguise_cooldown - delta)
+		changed = true
+	if stampede_cooldown > 0.0:
+		stampede_cooldown = max(0.0, stampede_cooldown - delta)
+		changed = true
+	if anthem_cooldown > 0.0:
+		anthem_cooldown = max(0.0, anthem_cooldown - delta)
+		changed = true
+	if penalty_slow_timer > 0.0:
+		penalty_slow_timer = max(0.0, penalty_slow_timer - delta)
+	if _hint_cooldown > 0.0:
+		_hint_cooldown = max(0.0, _hint_cooldown - delta)
+	if changed:
+		_update_weapon_hud()
+
 func _physics_process(delta):
+	_update_all_cooldowns(delta)
 	if multiplayer.has_multiplayer_peer() and not is_multiplayer_authority(): return
 
 	if is_downed:
@@ -1472,6 +1521,7 @@ func _execute_president_throw_tea():
 	tea_cooldown = 6.0
 	_show_temp_prompt("🍵 KEYİF ÇAYI FIRLATILDI! (+2.5% Seçim Oyu!)")
 	_animate_hand_action()
+	_play_action_sound("res://sounds/tea_throw.wav", 4.0)
 	trigger_camera_shake(0.2, 0.12)
 	
 	var throw_dir = -camera.global_transform.basis.z.normalized() if camera else Vector3(0, 0, -1)
@@ -1479,8 +1529,6 @@ func _execute_president_throw_tea():
 	if mn:
 		if mn.has_method("adjust_poll_score"):
 			mn.adjust_poll_score(2.5, "🍵 Keyif Çayı Dağıtıldı (+2.5%)")
-		if mn.has_method("trigger_crowd_cheer"):
-			mn.rpc("trigger_crowd_cheer", global_position, 20.0)
 		if mn.has_method("spawn_flying_tea"):
 			mn.rpc("spawn_flying_tea", global_position + Vector3(0, 1.2, 0), throw_dir)
 	_update_weapon_hud()
