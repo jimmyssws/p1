@@ -32,6 +32,17 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 # 🖐️ Viewmodels (Elde Görünen 3D Silahlar)
 @onready var hand_anchor = $Camera3D/HandAnchor if has_node("Camera3D/HandAnchor") else null
+# 🖐️ FPS Eli & Kolu (Viewmodel Kolu)
+@onready var fps_arm = $Camera3D/HandAnchor/FPSArm if has_node("Camera3D/HandAnchor/FPSArm") else null
+@onready var fps_sleeve = $Camera3D/HandAnchor/FPSArm/Forearm if has_node("Camera3D/HandAnchor/FPSArm/Forearm") else null
+@onready var fps_hand = $Camera3D/HandAnchor/FPSArm/Hand if has_node("Camera3D/HandAnchor/FPSArm/Hand") else null
+@onready var vm_drone_remote = $Camera3D/HandAnchor/DroneRemoteModel if has_node("Camera3D/HandAnchor/DroneRemoteModel") else null
+
+var _hand_def_pos: Vector3 = Vector3(0.32, -0.26, -0.48)
+var _hand_def_rot: Vector3 = Vector3.ZERO
+var _bob_timer: float = 0.0
+var _mouse_sway: Vector2 = Vector2.ZERO
+
 @onready var vm_knife = $Camera3D/HandAnchor/KnifeModel if has_node("Camera3D/HandAnchor/KnifeModel") else null
 @onready var vm_pistol = $Camera3D/HandAnchor/PistolModel if has_node("Camera3D/HandAnchor/PistolModel") else null
 @onready var vm_taser = $Camera3D/HandAnchor/TaserModel if has_node("Camera3D/HandAnchor/TaserModel") else null
@@ -388,6 +399,19 @@ func _setup_feedback():
 	_camera_origin = Vector3.ZERO
 
 func _apply_character_role_visuals(role_name: String):
+	if fps_sleeve:
+		var arm_mat = StandardMaterial3D.new()
+		if role_name == "PRESIDENT":
+			arm_mat.albedo_color = Color(0.08, 0.18, 0.45)
+			arm_mat.roughness = 0.4
+		elif role_name == "GUARD":
+			arm_mat.albedo_color = Color(0.04, 0.04, 0.05)
+			arm_mat.roughness = 0.3
+		else:
+			arm_mat.albedo_color = Color(0.22, 0.24, 0.28)
+			arm_mat.roughness = 0.6
+		fps_sleeve.set_surface_override_material(0, arm_mat)
+
 	var torso = get_node_or_null("CharacterModel/AnimMesh/character/root/torso")
 	var leg_l = get_node_or_null("CharacterModel/AnimMesh/character/root/leg-left")
 	var leg_r = get_node_or_null("CharacterModel/AnimMesh/character/root/leg-right")
@@ -458,6 +482,8 @@ func _update_weapon_hud():
 	if vm_detector: vm_detector.hide()
 	if vm_megaphone: vm_megaphone.hide()
 	if vm_briefcase: vm_briefcase.hide()
+	if vm_drone_remote: vm_drone_remote.hide()
+	if fps_arm: fps_arm.show()
 	
 	if not weapon_panel or not slot1_panel or not slot2_panel or not slot3_panel: return
 	weapon_panel.show()
@@ -507,6 +533,7 @@ func _update_weapon_hud():
 			if slot_category: slot_category.text = "🛡️ KORUMA 2 (DRON OPERATÖRÜ)"
 			var drone_txt = "[2] 🚁 Dron Gönder" if not drone_mode else "[2] 🛑 Dronu İndir"
 			_set_slot.call(slot2_panel, slot2_label, drone_txt, selected_slot == 2 or drone_mode)
+			if selected_slot == 2 and vm_drone_remote: vm_drone_remote.show()
 		elif guard_class == 3:
 			if slot_category: slot_category.text = "🛡️ KORUMA 3 (GÜVENLİK ANONSÇUSU)"
 			var mega_txt = "[2] 📢 'Herkes Dursun!'" if radio_cooldown <= 0 else "[2] ⏳ %.0fs" % radio_cooldown
@@ -828,11 +855,11 @@ func _execute_president_rally_call():
 			mn.rpc("trigger_crowd_panic", Vector3(0, 0, -12), 30.0)
 	_update_weapon_hud()
 
-# 🔪 Suikastçı Bıçak İnfazı
+# 🔪 Suikastçı Bıçak İnfazı & Gelişmiş Savurma Efekti
 func _execute_assassin_knife():
-	_animate_hand_action()
+	_animate_knife_slash()
 	if sfx_knife: sfx_knife.play()
-	trigger_camera_shake(0.25, 0.15)
+	trigger_camera_shake(0.35, 0.18)
 	set_weapon_exposed(true)
 	if raycast.is_colliding():
 		var col = raycast.get_collider()
@@ -846,9 +873,9 @@ func _execute_assassin_knife():
 				if mn and mn.has_method("trigger_crowd_panic"):
 					mn.rpc("trigger_crowd_panic", global_position, 20.0)
 	else:
-		_show_temp_prompt("🗡️ Bıçak Boşa Sallandı! Silahın açığa çıktı! [G] ile Gizle!")
+		_show_temp_prompt("🗡️ Bıçak Savruldu! Silahın açığa çıktı! [G] ile Gizle!")
 
-# 🔫 Suikastçı Tabanca Ateşi
+# 🔫 Suikastçı Tabanca Ateşi & 3D Mermi İzi (Tracer)
 func _execute_assassin_pistol():
 	if pistol_ammo <= 0:
 		_show_temp_prompt("❌ Merminiz bitti! (Tek atımlıktı)")
@@ -856,9 +883,19 @@ func _execute_assassin_pistol():
 		
 	pistol_ammo -= 1
 	_update_weapon_hud()
-	_animate_hand_action()
+	_animate_gun_recoil()
 	if sfx_gunshot: sfx_gunshot.play()
-	trigger_camera_shake(0.7, 0.35)
+	trigger_camera_shake(0.75, 0.35)
+	
+	# Merminin çıkış noktası ve hedef çarpma koordinatı
+	var muzzle_pos = camera.global_position + (-camera.global_basis.z * 0.4) + (camera.global_basis.x * 0.2) + (-camera.global_basis.y * 0.15)
+	var target_pos = camera.global_position + (-camera.global_basis.z * 50.0)
+	if raycast.is_colliding():
+		target_pos = raycast.get_collision_point()
+		
+	_spawn_bullet_tracer(muzzle_pos, target_pos, false)
+	if multiplayer.has_multiplayer_peer():
+		rpc("net_spawn_bullet_tracer", muzzle_pos, target_pos, false)
 	
 	# 🔥 Silahı HEMEN hem yerelde hem ağda açığa çıkar!
 	set_weapon_exposed(true)
@@ -877,9 +914,11 @@ func _execute_assassin_pistol():
 						_show_temp_prompt("💥 MERMİ BAŞKANIN ÇELİK ÇANTASINA ÇARPTI VE SEKTİ! [G] ile Kaç!")
 						return
 					if mn and mn.has_method("net_game_over"):
-						mn.rpc("net_game_over", "BAŞKAN UZAKTAN VURULDU!\n🔫 SUİKASTÇI KAZANDI!")
+						mn.rpc("net_game_over", "BAŞKAN UZAKTAN VURULDU!
+🔫 SUİKASTÇI KAZANDI!")
 				elif target.current_role == "GUARD":
-					target.rpc("apply_stun_effect", 6.0, "MERMİYLE VURULDUNUZ!\n6 Saniye Ağır Yaralısınız!")
+					target.rpc("apply_stun_effect", 6.0, "MERMİYLE VURULDUNUZ!
+6 Saniye Ağır Yaralısınız!")
 			else:
 				if target.has_method("apply_stun"):
 					target.rpc("apply_stun", 12.0)
@@ -900,10 +939,19 @@ func _execute_guard_taser():
 		return
 		
 	taser_cooldown = 4.0
-	_animate_hand_action()
+	_animate_gun_recoil(true)
 	if sfx_taser: sfx_taser.play()
 	trigger_camera_shake(0.3, 0.2)
 	_update_weapon_hud()
+	
+	var muzzle_pos = camera.global_position + (-camera.global_basis.z * 0.4) + (camera.global_basis.x * 0.2) + (-camera.global_basis.y * 0.15)
+	var target_pos = camera.global_position + (-camera.global_basis.z * 8.0)
+	if raycast.is_colliding():
+		target_pos = raycast.get_collision_point()
+		
+	_spawn_bullet_tracer(muzzle_pos, target_pos, true)
+	if multiplayer.has_multiplayer_peer():
+		rpc("net_spawn_bullet_tracer", muzzle_pos, target_pos, true)
 	
 	if not raycast.is_colliding():
 		_show_temp_prompt("⚡ Taser Boşa Ateşlendi!")
@@ -1104,6 +1152,17 @@ func _physics_process(delta):
 		velocity.x = 0.0
 		velocity.z = 0.0
 		move_and_slide()
+	# 🖐️ Eldeki Silah ve Kol için Prosedürel Yürüme Sallantısı (Weapon Bobbing)
+	if hand_anchor and is_on_floor() and velocity.length() > 0.5:
+		_bob_timer += delta * velocity.length()
+		var bob_y = sin(_bob_timer * 1.8) * 0.008
+		var sway_x = cos(_bob_timer * 0.9) * 0.006
+		hand_anchor.position.y = _hand_def_pos.y + bob_y
+		hand_anchor.position.x = _hand_def_pos.x + sway_x
+	elif hand_anchor:
+		hand_anchor.position.y = lerp(hand_anchor.position.y, _hand_def_pos.y, 8.0 * delta)
+		hand_anchor.position.x = lerp(hand_anchor.position.x, _hand_def_pos.x, 8.0 * delta)
+
 		return
 
 	if drone_mode:
@@ -1132,6 +1191,17 @@ func _physics_process(delta):
 			if char_model and to_stage.length_squared() > 0.1:
 				char_model.global_rotation.y = lerp_angle(char_model.global_rotation.y, atan2(to_stage.x, to_stage.z), 8.0 * delta)
 			move_and_slide()
+	# 🖐️ Eldeki Silah ve Kol için Prosedürel Yürüme Sallantısı (Weapon Bobbing)
+	if hand_anchor and is_on_floor() and velocity.length() > 0.5:
+		_bob_timer += delta * velocity.length()
+		var bob_y = sin(_bob_timer * 1.8) * 0.008
+		var sway_x = cos(_bob_timer * 0.9) * 0.006
+		hand_anchor.position.y = _hand_def_pos.y + bob_y
+		hand_anchor.position.x = _hand_def_pos.x + sway_x
+	elif hand_anchor:
+		hand_anchor.position.y = lerp(hand_anchor.position.y, _hand_def_pos.y, 8.0 * delta)
+		hand_anchor.position.x = lerp(hand_anchor.position.x, _hand_def_pos.x, 8.0 * delta)
+
 			_update_player_animation()
 			return
 
@@ -1166,6 +1236,17 @@ func _physics_process(delta):
 			char_model.global_rotation.y = lerp_angle(char_model.global_rotation.y, global_rotation.y, 10 * delta)
 
 	move_and_slide()
+	# 🖐️ Eldeki Silah ve Kol için Prosedürel Yürüme Sallantısı (Weapon Bobbing)
+	if hand_anchor and is_on_floor() and velocity.length() > 0.5:
+		_bob_timer += delta * velocity.length()
+		var bob_y = sin(_bob_timer * 1.8) * 0.008
+		var sway_x = cos(_bob_timer * 0.9) * 0.006
+		hand_anchor.position.y = _hand_def_pos.y + bob_y
+		hand_anchor.position.x = _hand_def_pos.x + sway_x
+	elif hand_anchor:
+		hand_anchor.position.y = lerp(hand_anchor.position.y, _hand_def_pos.y, 8.0 * delta)
+		hand_anchor.position.x = lerp(hand_anchor.position.x, _hand_def_pos.x, 8.0 * delta)
+
 	_update_player_animation()
 
 	# --- 💥 GERİ BİLDİRİM ---
@@ -1471,3 +1552,145 @@ func defend_against_bullet() -> bool:
 		_update_weapon_hud()
 		return true
 	return false
+
+
+# 🔪 Gerçekçi Çok Aşamalı Bıçak Savurma / Kesme Animasyonu
+func _animate_knife_slash():
+	if not hand_anchor: return
+	var tw = create_tween().set_parallel(false)
+	
+	# 1. Hazırlık: Geriye çekilip havaya kalkış (0.04s)
+	tw.tween_property(hand_anchor, "position", Vector3(0.42, -0.12, -0.34), 0.04).set_trans(Tween.TRANS_QUAD)
+	tw.parallel().tween_property(hand_anchor, "rotation_degrees", Vector3(20, 25, -20), 0.04)
+	
+	# 2. Şimşek Hızında Çapraz Kesme / Savurma (0.08s)
+	tw.tween_property(hand_anchor, "position", Vector3(-0.16, -0.36, -0.62), 0.08).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(hand_anchor, "rotation_degrees", Vector3(-40, -55, 45), 0.08)
+	
+	# 3. İleri Saplama / Takip (0.05s)
+	tw.tween_property(hand_anchor, "position", Vector3(0.08, -0.26, -0.58), 0.05).set_trans(Tween.TRANS_SINE)
+	tw.parallel().tween_property(hand_anchor, "rotation_degrees", Vector3(-10, -15, 10), 0.05)
+	
+	# 4. Dinlenme Pozisyonuna Yumuşak Geri Dönüş (0.16s)
+	tw.tween_property(hand_anchor, "position", _hand_def_pos, 0.16).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(hand_anchor, "rotation_degrees", _hand_def_rot, 0.16)
+	
+	_spawn_knife_slash_arc()
+
+# 🌟 Bıçak Kavis İzi Efekti (Slash Arc Ribbon Effect)
+func _spawn_knife_slash_arc():
+	if not camera: return
+	var arc = MeshInstance3D.new()
+	var t_mesh = TorusMesh.new()
+	t_mesh.inner_radius = 0.28
+	t_mesh.outer_radius = 0.42
+	arc.mesh = t_mesh
+	
+	var mat = StandardMaterial3D.new()
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	mat.albedo_color = Color(0.85, 0.95, 1.0, 0.8)
+	mat.emission_enabled = true
+	mat.emission = Color(0.5, 0.85, 1.0)
+	mat.emission_energy_multiplier = 4.0
+	arc.material_override = mat
+	
+	arc.position = Vector3(0.08, -0.15, -0.45)
+	arc.rotation_degrees = Vector3(35, -45, 65)
+	arc.scale = Vector3(0.3, 0.3, 0.3)
+	camera.add_child(arc)
+	
+	var arc_tw = arc.create_tween()
+	arc_tw.tween_property(arc, "scale", Vector3(1.2, 1.2, 1.2), 0.14).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	arc_tw.parallel().tween_property(mat, "albedo_color:a", 0.0, 0.14)
+	arc_tw.tween_callback(arc.queue_free)
+
+# 🔫 Silah Geri Tepme (Recoil) Animasyonu
+func _animate_gun_recoil(is_taser: bool = false):
+	if not hand_anchor: return
+	var tw = create_tween().set_parallel(false)
+	var kick_z = 0.12 if not is_taser else 0.08
+	var kick_rot = -18.0 if not is_taser else -10.0
+	
+	tw.tween_property(hand_anchor, "position:z", _hand_def_pos.z + kick_z, 0.04).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(hand_anchor, "rotation_degrees:x", kick_rot, 0.04)
+	
+	tw.tween_property(hand_anchor, "position:z", _hand_def_pos.z, 0.15).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.parallel().tween_property(hand_anchor, "rotation_degrees:x", _hand_def_rot.x, 0.15)
+
+# 💥 3D Parlayan Mermi Çizgisi & Namlu Alevi (Tracer & Impact)
+func _spawn_bullet_tracer(start_pos: Vector3, target_pos: Vector3, is_taser: bool = false):
+	var root_scene = get_tree().current_scene
+	if not root_scene: return
+	
+	# 1. Namlu Alevi Işığı
+	var flash = OmniLight3D.new()
+	flash.global_position = start_pos
+	flash.light_color = Color(0.1, 0.85, 1.0) if is_taser else Color(1.0, 0.8, 0.3)
+	flash.light_energy = 5.0
+	flash.omni_range = 4.0
+	root_scene.add_child(flash)
+	
+	var flash_tw = flash.create_tween()
+	flash_tw.tween_property(flash, "light_energy", 0.0, 0.05)
+	flash_tw.tween_callback(flash.queue_free)
+	
+	# 2. 3D Parlayan Mermi Modeli
+	var tracer = MeshInstance3D.new()
+	var cap_mesh = CapsuleMesh.new()
+	cap_mesh.radius = 0.03 if not is_taser else 0.045
+	cap_mesh.height = 0.75 if not is_taser else 0.5
+	tracer.mesh = cap_mesh
+	
+	var mat = StandardMaterial3D.new()
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.albedo_color = Color(0.2, 0.9, 1.0) if is_taser else Color(1.0, 0.85, 0.2)
+	mat.emission_enabled = true
+	mat.emission = Color(0.2, 0.9, 1.0) if is_taser else Color(1.0, 0.75, 0.15)
+	mat.emission_energy_multiplier = 6.0
+	tracer.material_override = mat
+	
+	tracer.global_position = start_pos
+	tracer.look_at(target_pos, Vector3.UP)
+	tracer.rotate_object_local(Vector3.RIGHT, deg_to_rad(90))
+	root_scene.add_child(tracer)
+	
+	var dist = start_pos.distance_to(target_pos)
+	var speed = 95.0 if not is_taser else 50.0
+	var travel_time = clamp(dist / speed, 0.03, 0.35)
+	
+	var tw = tracer.create_tween()
+	tw.tween_property(tracer, "global_position", target_pos, travel_time).set_trans(Tween.TRANS_LINEAR)
+	tw.tween_callback(func():
+		_spawn_bullet_impact_sparks(target_pos, is_taser)
+		tracer.queue_free()
+	)
+
+# ⚡ Mermi Çarpma Kıvılcımları & Toz Efekti
+func _spawn_bullet_impact_sparks(impact_pos: Vector3, is_taser: bool = false):
+	var root_scene = get_tree().current_scene
+	if not root_scene: return
+	
+	for i in range(6):
+		var spark = MeshInstance3D.new()
+		var s_box = BoxMesh.new()
+		s_box.size = Vector3(0.04, 0.04, 0.04)
+		spark.mesh = s_box
+		
+		var s_mat = StandardMaterial3D.new()
+		s_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		s_mat.albedo_color = Color(0.1, 0.9, 1.0) if is_taser else Color(1.0, 0.8, 0.2)
+		spark.material_override = s_mat
+		spark.global_position = impact_pos
+		root_scene.add_child(spark)
+		
+		var rand_dir = Vector3(randf_range(-0.6, 0.6), randf_range(0.2, 0.8), randf_range(-0.6, 0.6))
+		var sp_tw = spark.create_tween()
+		sp_tw.tween_property(spark, "global_position", impact_pos + rand_dir, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		sp_tw.parallel().tween_property(spark, "scale", Vector3.ZERO, 0.18)
+		sp_tw.tween_callback(spark.queue_free)
+
+@rpc("any_peer", "call_remote", "unreliable")
+func net_spawn_bullet_tracer(start_pos: Vector3, target_pos: Vector3, is_taser: bool = false):
+	_spawn_bullet_tracer(start_pos, target_pos, is_taser)

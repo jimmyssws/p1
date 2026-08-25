@@ -194,6 +194,53 @@ corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
 
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_forearm"]
+radius = 0.055
+height = 0.36
+
+[sub_resource type="StandardMaterial3D" id="Mat_Arm_Sleeve"]
+albedo_color = Color(0.1, 0.12, 0.15, 1)
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_fps_hand"]
+size = Vector3(0.075, 0.07, 0.095)
+
+[sub_resource type="StandardMaterial3D" id="Mat_FPS_Hand_Skin"]
+albedo_color = Color(0.92, 0.76, 0.65, 1)
+roughness = 0.55
+
+[sub_resource type="BoxMesh" id="BoxMesh_fps_fingers"]
+size = Vector3(0.065, 0.045, 0.07)
+
+[sub_resource type="TorusMesh" id="TorusMesh_slash_arc"]
+inner_radius = 0.32
+outer_radius = 0.44
+
+[sub_resource type="StandardMaterial3D" id="Mat_Slash_Arc"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+albedo_color = Color(0.85, 0.95, 1.0, 0.85)
+emission_enabled = true
+emission = Color(0.6, 0.85, 1.0, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_drone_remote"]
+size = Vector3(0.18, 0.04, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Drone_Remote"]
+albedo_color = Color(0.12, 0.14, 0.16, 1)
+roughness = 0.4
+
+[sub_resource type="BoxMesh" id="BoxMesh_remote_screen"]
+size = Vector3(0.12, 0.01, 0.07)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Remote_Screen"]
+albedo_color = Color(0.05, 0.6, 0.8, 1)
+emission_enabled = true
+emission = Color(0.05, 0.6, 0.8, 1)
+emission_energy_multiplier = 1.8
+
 [node name="Player" type="CharacterBody3D" unique_id=809420733]
 script = ExtResource("1_4flbx")
 
@@ -221,6 +268,37 @@ target_position = Vector3(0, 0, -18)
 
 [node name="HandAnchor" type="Node3D" parent="Camera3D" unique_id=98721345]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32, -0.26, -0.48)
+
+[node name="FPSArm" type="Node3D" parent="Camera3D/HandAnchor" unique_id=74829104]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.258819, 0, -0.258819, 0.9659258, 0, -0.12, 0.18)
+
+[node name="Forearm" type="MeshInstance3D" parent="Camera3D/HandAnchor/FPSArm" unique_id=6482910]
+transform = Transform3D(1, 0, 0, 0, 0.7071068, -0.7071068, 0, 0.7071068, 0.7071068, 0.02, -0.06, 0.12)
+mesh = SubResource("CapsuleMesh_forearm")
+surface_material_override/0 = SubResource("Mat_Arm_Sleeve")
+
+[node name="Hand" type="MeshInstance3D" parent="Camera3D/HandAnchor/FPSArm" unique_id=8472911]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -0.08)
+mesh = SubResource("BoxMesh_fps_hand")
+surface_material_override/0 = SubResource("Mat_FPS_Hand_Skin")
+
+[node name="Fingers" type="MeshInstance3D" parent="Camera3D/HandAnchor/FPSArm" unique_id=9472912]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.258819, 0, 0.258819, 0.9659258, -0.01, 0.07, -0.12)
+mesh = SubResource("BoxMesh_fps_fingers")
+surface_material_override/0 = SubResource("Mat_FPS_Hand_Skin")
+
+[node name="DroneRemoteModel" type="Node3D" parent="Camera3D/HandAnchor" unique_id=95827101]
+visible = false
+
+[node name="Body" type="MeshInstance3D" parent="Camera3D/HandAnchor/DroneRemoteModel" unique_id=8572910]
+transform = Transform3D(1, 0, 0, 0, 0.9396926, 0.3420201, 0, -0.3420201, 0.9396926, 0, -0.02, -0.08)
+mesh = SubResource("BoxMesh_drone_remote")
+surface_material_override/0 = SubResource("Mat_Drone_Remote")
+
+[node name="Screen" type="MeshInstance3D" parent="Camera3D/HandAnchor/DroneRemoteModel" unique_id=8572911]
+transform = Transform3D(1, 0, 0, 0, 0.9396926, 0.3420201, 0, -0.3420201, 0.9396926, 0, 0.005, -0.08)
+mesh = SubResource("BoxMesh_remote_screen")
+surface_material_override/0 = SubResource("Mat_Remote_Screen")
 
 [node name="KnifeModel" type="Node3D" parent="Camera3D/HandAnchor" unique_id=38472910]
 visible = false
