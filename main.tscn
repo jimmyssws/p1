@@ -971,54 +971,74 @@ surface_material_override/0 = SubResource("Mat_Large_Leaves")
 [node name="Col" type="CollisionShape3D" parent="PlazaTree_7" unique_id=8837]
 shape = SubResource("CylinderShape3D_large_tree")
 
-# --- 🏛️ MİTİNG SAHNESİ & MODEL KÜRSÜ ---
-[node name="StageBase" parent="." instance=ExtResource("stage_platform")]
-transform = Transform3D(10.0, 0, 0, 0, 1.4, 0, 0, 0, 6.0, 0.0, 0.0, -32.0)
-
-[node name="StagePodiumDesk" parent="." instance=ExtResource("crate_box")]
-transform = Transform3D(1.8, 0, 0, 0, 1.6, 0, 0, 0, 1.4, 0.0, 1.4, -30.5)
-
+# --- 🏛️ MİTİNG SAHNESİ VE BAYRAKLAR (Y=0.0 ZEMİNE OTURTULMUŞ) ---
 [node name="RallyFlag_Left" parent="." instance=ExtResource("rally_flag")]
 transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -12.0, 1.4, -30.0)
 
 [node name="RallyFlag_Right" parent="." instance=ExtResource("rally_flag")]
 transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 12.0, 1.4, -30.0)
 
-# --- 🏢 SOL CADDE ÇOK KATLI APARTMANLAR & ÇATI GÖZCÜLERİ ---
-[node name="Apt_L1_Base" parent="." instance=ExtResource("bld_a")]
-transform = Transform3D(-1.96701e-07, 0, 4.5, 0, 4.5, 0, -4.5, 0, -1.96701e-07, -35.0, 0.0, -25.0)
+# --- 🏢 SOL CADDE GERÇEK ZEMİNE SIFIR APARTMANLAR (Y=0.0) ---
+[node name="Building_L1" parent="." instance=ExtResource("bld_c")]
+transform = Transform3D(-2.18557e-07, 0, 5, 0, 5, 0, -5, 0, -2.18557e-07, -33.0, 0.0, -28.0)
 
-[node name="Apt_L1_Floor2" parent="." instance=ExtResource("bld_b")]
-transform = Transform3D(-1.96701e-07, 0, 4.5, 0, 4.5, 0, -4.5, 0, -1.96701e-07, -35.0, 7.5, -25.0)
+[node name="Building_L2" parent="." instance=ExtResource("bld_d")]
+transform = Transform3D(-2.18557e-07, 0, 5, 0, 5, 0, -5, 0, -2.18557e-07, -33.0, 0.0, -16.0)
 
-[node name="RooftopSpotter_L" parent="." instance=ExtResource("water_tower")]
-transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -35.0, 15.0, -25.0)
+[node name="Building_L3" parent="." instance=ExtResource("bld_g")]
+transform = Transform3D(-2.18557e-07, 0, 5, 0, 5, 0, -5, 0, -2.18557e-07, -33.0, 0.0, -4.0)
 
-[node name="Apt_L2" parent="." instance=ExtResource("bld_c")]
-transform = Transform3D(-1.96701e-07, 0, 4.5, 0, 4.5, 0, -4.5, 0, -1.96701e-07, -35.0, 0.0, -5.0)
+[node name="Building_L4" parent="." instance=ExtResource("bld_h")]
+transform = Transform3D(-2.18557e-07, 0, 5, 0, 5, 0, -5, 0, -2.18557e-07, -33.0, 0.0, 8.0)
 
-[node name="Apt_L3" parent="." instance=ExtResource("bld_d")]
-transform = Transform3D(-1.96701e-07, 0, 4.5, 0, 4.5, 0, -4.5, 0, -1.96701e-07, -35.0, 0.0, 15.0)
+[node name="Building_L5" parent="." instance=ExtResource("bld_a")]
+transform = Transform3D(-2.18557e-07, 0, 5, 0, 5, 0, -5, 0, -2.18557e-07, -33.0, 0.0, 20.0)
 
-# --- 🏢 SAĞ CADDE ÇOK KATLI APARTMANLAR & ÇATI GÖZCÜLERİ ---
-[node name="Apt_R1_Base" parent="." instance=ExtResource("bld_e")]
-transform = Transform3D(1.96701e-07, 0, -4.5, 0, 4.5, 0, 4.5, 0, 1.96701e-07, 35.0, 0.0, -25.0)
+[node name="Building_L6" parent="." instance=ExtResource("bld_b")]
+transform = Transform3D(-2.18557e-07, 0, 5, 0, 5, 0, -5, 0, -2.18557e-07, -33.0, 0.0, 32.0)
 
-[node name="Apt_R1_Floor2" parent="." instance=ExtResource("bld_f")]
-transform = Transform3D(1.96701e-07, 0, -4.5, 0, 4.5, 0, 4.5, 0, 1.96701e-07, 35.0, 7.5, -25.0)
+# --- 🏢 SAĞ CADDE GERÇEK ZEMİNE SIFIR APARTMANLAR (Y=0.0) ---
+[node name="Building_R1" parent="." instance=ExtResource("bld_c")]
+transform = Transform3D(2.18557e-07, 0, -5, 0, 5, 0, 5, 0, 2.18557e-07, 33.0, 0.0, -28.0)
 
-[node name="RooftopSpotter_R" parent="." instance=ExtResource("water_tower")]
-transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 35.0, 15.0, -25.0)
+[node name="Building_R2" parent="." instance=ExtResource("bld_d")]
+transform = Transform3D(2.18557e-07, 0, -5, 0, 5, 0, 5, 0, 2.18557e-07, 33.0, 0.0, -16.0)
 
-[node name="Apt_R2" parent="." instance=ExtResource("bld_g")]
-transform = Transform3D(1.96701e-07, 0, -4.5, 0, 4.5, 0, 4.5, 0, 1.96701e-07, 35.0, 0.0, -5.0)
+[node name="Building_R3" parent="." instance=ExtResource("bld_g")]
+transform = Transform3D(2.18557e-07, 0, -5, 0, 5, 0, 5, 0, 2.18557e-07, 33.0, 0.0, -4.0)
 
-[node name="Apt_R3" parent="." instance=ExtResource("bld_h")]
-transform = Transform3D(1.96701e-07, 0, -4.5, 0, 4.5, 0, 4.5, 0, 1.96701e-07, 35.0, 0.0, 15.0)
+[node name="Building_R4" parent="." instance=ExtResource("bld_h")]
+transform = Transform3D(2.18557e-07, 0, -5, 0, 5, 0, 5, 0, 2.18557e-07, 33.0, 0.0, 8.0)
+
+[node name="Building_R5" parent="." instance=ExtResource("bld_e")]
+transform = Transform3D(2.18557e-07, 0, -5, 0, 5, 0, 5, 0, 2.18557e-07, 33.0, 0.0, 20.0)
+
+[node name="Building_R6" parent="." instance=ExtResource("bld_f")]
+transform = Transform3D(2.18557e-07, 0, -5, 0, 5, 0, 5, 0, 2.18557e-07, 33.0, 0.0, 32.0)
+
+# --- 🏢 SAHNE ARKASI ŞEHİR DUVARI (Y=0.0 YERE SIFIR) ---
+[node name="Building_Back1" parent="." instance=ExtResource("bld_a")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -20.0, 0.0, -46.0)
+
+[node name="Building_Back2" parent="." instance=ExtResource("bld_b")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -8.0, 0.0, -46.0)
+
+[node name="Building_Back3" parent="." instance=ExtResource("bld_e")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 8.0, 0.0, -46.0)
+
+[node name="Building_Back4" parent="." instance=ExtResource("bld_f")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 20.0, 0.0, -46.0)
+
+# --- 🔭 GÖZCÜ KULELERİ (YERE SIFIR Y=0.0 KAİDE) ---
+[node name="WatchTower_L" parent="." instance=ExtResource("water_tower")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -22.0, 0.0, -32.0)
+
+[node name="WatchTower_R" parent="." instance=ExtResource("water_tower")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 22.0, 0.0, -32.0)
 
 # --- ⛲ MİTİNG MEYDANI SÜS HAVUZU ---
 [node name="CentralFountain" parent="." instance=ExtResource("fountain")]
-transform = Transform3D(3.0, 0, 0, 0, 3.0, 0, 0, 0, 3.0, 0.0, 0.0, 8.0)
+transform = Transform3D(3.0, 0, 0, 0, 3.0, 0, 0, 0, 3.0, 0.0, 0.0, 6.0)
 
 # --- 🚓 MEYDAN GİRİŞİ PARKLARI ---
 [node name="PoliceCar" parent="." instance=ExtResource("car_pol")]
@@ -1029,17 +1049,16 @@ transform = Transform3D(1.3, 0, -0.65, 0, 1.45, 0, 0.65, 0, 1.3, 14.0, 0.0, 42.0
 
 # --- 💡 SOKAK AYDINLATMALARI VE BANKLAR ---
 [node name="StreetLight_1" parent="." instance=ExtResource("street_light")]
-transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, -22.0, 0.0, -10.0)
+transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, -20.0, 0.0, -10.0)
 
 [node name="StreetLight_2" parent="." instance=ExtResource("street_light")]
-transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, 22.0, 0.0, -10.0)
+transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, 20.0, 0.0, -10.0)
 
 [node name="PlazaBench_1" parent="." instance=ExtResource("plaza_bench")]
-transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, -14.0, 0.0, 0.0)
+transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, -12.0, 0.0, -2.0)
 
 [node name="PlazaBench_2" parent="." instance=ExtResource("plaza_bench")]
-transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, 14.0, 0.0, 0.0)
-
+transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, 12.0, 0.0, -2.0)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=997947994]
 _spawnable_scenes = PackedStringArray("uid://bts4blx0hl4nn", "uid://bbk7uovn5mim2")
