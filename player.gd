@@ -706,6 +706,10 @@ func _input(event):
 			if current_role == "PRESIDENT":
 				_execute_president_throw_tea()
 
+		# --- Dron modundayken E tuşunun veya sol tıkın dronu kapatmasını / aksiyon almasını engelle ---
+	if drone_mode:
+		return
+
 	# --- 🏛️ BAŞKAN AKSİYONLARI ---
 	if current_role == "PRESIDENT" and (event.is_action_pressed("interact") or (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed)):
 		var in_task_zone = (mission_state == 0 and raycast and raycast.is_colliding() and ("TaskBox" in raycast.get_collider().name))
