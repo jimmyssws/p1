@@ -1001,106 +1001,78 @@ func _show_hint_once(msg: String):
 
 func _physics_process(delta):
 	if multiplayer.has_multiplayer_peer() and not is_multiplayer_authority(): return
-	
-	if assassin_cooldown > 0: assassin_cooldown = max(0.0, assassin_cooldown - delta)
-	if stampede_cooldown > 0: stampede_cooldown = max(0.0, stampede_cooldown - delta)
-	if taser_cooldown > 0: taser_cooldown = max(0.0, taser_cooldown - delta)
-	if radio_cooldown > 0: radio_cooldown = max(0.0, radio_cooldown - delta)
-	if tea_cooldown > 0: tea_cooldown = max(0.0, tea_cooldown - delta)
-	if disguise_cooldown > 0: disguise_cooldown = max(0.0, disguise_cooldown - delta)
-	if penalty_slow_timer > 0: penalty_slow_timer = max(0.0, penalty_slow_timer - delta)
-	if scan_cooldown > 0: scan_cooldown = max(0.0, scan_cooldown - delta)
-	if sprint_cooldown > 0: sprint_cooldown = max(0.0, sprint_cooldown - delta)
-	if megaphone_cooldown > 0: megaphone_cooldown = max(0.0, megaphone_cooldown - delta)
-	if anthem_cooldown > 0: anthem_cooldown = max(0.0, anthem_cooldown - delta)
-	if _hint_cooldown > 0: _hint_cooldown = max(0.0, _hint_cooldown - delta)
 
-	if not drone_mode and drone_battery < DRONE_BATTERY_MAX:
-		drone_battery = min(DRONE_BATTERY_MAX, drone_battery + delta * 0.5)
-
-	if is_game_over: return
+	if is_downed:
+		if not is_on_floor():
+			velocity.y -= gravity * delta
+		else:
+			velocity.y = 0.0
+		velocity.x = 0.0
+		velocity.z = 0.0
+		move_and_slide()
+		return
 
 	if drone_mode:
 		_process_drone(delta)
 		return
 
-	# 🎭 Sivil Taklidi Modu (C Tuşu): Hareketsiz kalıp sahneyi dinleme pozu
+	if is_paused:
+		return
+
+	# Sivil taklidi yapıyorsa WASD hareketini engelle, sahneye baksın
 	if is_mimic_pose:
-		var raw_input = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
-		if raw_input.length_squared() > 0.05 or Input.is_action_just_pressed("jump"):
+		var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
+		if input_dir.length_squared() > 0.01:
 			is_mimic_pose = false
-			if action_prompt: action_prompt.text = ""
+			_show_temp_prompt("🏃 Yürüyüşe Döndün.")
 		else:
+			if not is_on_floor():
+				velocity.y -= gravity * delta
+			else:
+				velocity.y = 0.0
 			velocity.x = 0.0
 			velocity.z = 0.0
-			# Sahneye doğru doğal vatandaş duruşu
-			var to_stage = Vector3(0, 0, -35.0) - global_position
+			var stage_pos = Vector3(0, 0, -28.0)
+			var to_stage = (stage_pos - global_position).normalized()
 			to_stage.y = 0
 			if char_model and to_stage.length_squared() > 0.1:
 				char_model.global_rotation.y = lerp_angle(char_model.global_rotation.y, atan2(to_stage.x, to_stage.z), 8.0 * delta)
 			move_and_slide()
-	# 🕺 3D Animasyon Kontrolü (3. Şahıs Görünüm)
-	if anim_player:
-		var horiz_speed = Vector3(velocity.x, 0, velocity.z).length()
-		if not is_on_floor():
-			if anim_player.current_animation != "jump":
-				anim_player.play("jump")
-		elif horiz_speed > 0.2:
-			if anim_player.current_animation != "walk":
-				anim_player.play("walk")
-			anim_player.speed_scale = clamp(horiz_speed / 2.5, 0.8, 2.5)
-		else:
-			if anim_player.current_animation != "idle":
-				anim_player.play("idle")
-			anim_player.speed_scale = 1.0
-
+			_update_player_animation()
 			return
 
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		var j_vel = 3.6 if current_role == "PRESIDENT" else 4.8
-		velocity.y = j_vel
+	# Zıplama
+	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
 
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	
-	var base_spd = SPEED
-	if penalty_slow_timer > 0:
-		base_spd = SPEED * 0.5
-	var current_spd = (base_spd * 1.8) if (sprint_active and penalty_slow_timer <= 0) else base_spd
-	
+
+	var current_speed = SPEED
+	if sprint_active:
+		current_speed *= 1.8
+	if penalty_slow_timer > 0.0:
+		current_speed *= 0.45
+
 	if direction:
-		velocity.x = direction.x * current_spd
-		velocity.z = direction.z * current_spd
-		
-		if char_model:
-			var target_angle = atan2(direction.x, direction.z)
-			char_model.global_rotation.y = lerp_angle(char_model.global_rotation.y, target_angle, 15 * delta)
+		velocity.x = direction.x * current_speed
+		velocity.z = direction.z * current_speed
 	else:
-		velocity.x = move_toward(velocity.x, 0, current_spd)
-		velocity.z = move_toward(velocity.z, 0, current_spd)
-		
-		if char_model:
+		velocity.x = move_toward(velocity.x, 0, current_speed)
+		velocity.z = move_toward(velocity.z, 0, current_speed)
+
+	if char_model:
+		if direction.length_squared() > 0.01:
+			var target_rot = atan2(-direction.x, -direction.z)
+			char_model.global_rotation.y = lerp_angle(char_model.global_rotation.y, target_rot, 12 * delta)
+		else:
 			char_model.global_rotation.y = lerp_angle(char_model.global_rotation.y, global_rotation.y, 10 * delta)
 
 	move_and_slide()
-	# 🕺 3D Animasyon Kontrolü (3. Şahıs Görünüm)
-	if anim_player:
-		var horiz_speed = Vector3(velocity.x, 0, velocity.z).length()
-		if not is_on_floor():
-			if anim_player.current_animation != "jump":
-				anim_player.play("jump")
-		elif horiz_speed > 0.2:
-			if anim_player.current_animation != "walk":
-				anim_player.play("walk")
-			anim_player.speed_scale = clamp(horiz_speed / 2.5, 0.8, 2.5)
-		else:
-			if anim_player.current_animation != "idle":
-				anim_player.play("idle")
-			anim_player.speed_scale = 1.0
-
+	_update_player_animation()
 
 	# --- 💥 GERİ BİLDİRİM ---
 	var is_moving = velocity.length() > 0.3
@@ -1333,3 +1305,19 @@ func _process_camera_shake(delta: float):
 		_shake_intensity = 0.0
 		if camera:
 			camera.position = Vector3.ZERO
+
+
+func _update_player_animation():
+	if not anim_player: return
+	var horiz_speed = Vector3(velocity.x, 0, velocity.z).length()
+	if not is_on_floor():
+		if anim_player.current_animation != "jump":
+			anim_player.play("jump")
+	elif horiz_speed > 0.2:
+		if anim_player.current_animation != "walk":
+			anim_player.play("walk")
+		anim_player.speed_scale = clamp(horiz_speed / 2.5, 0.8, 2.5)
+	else:
+		if anim_player.current_animation != "idle":
+			anim_player.play("idle")
+		anim_player.speed_scale = 1.0
