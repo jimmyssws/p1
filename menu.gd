@@ -19,6 +19,7 @@ const MAIN_SERVER_IP = "100.68.81.79"
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	_setup_button_sounds()
 	host_btn.pressed.connect(_on_host_pressed)
 	join_toggle_btn.pressed.connect(_on_join_toggle_pressed)
 	join_confirm_btn.pressed.connect(_on_join_confirm_pressed)
@@ -31,6 +32,24 @@ func _ready():
 	if sens_slider:
 		sens_slider.value_changed.connect(_on_sens_changed)
 	_load_settings()
+
+func _setup_button_sounds():
+	var btns = [host_btn, join_toggle_btn, join_confirm_btn, settings_btn, quit_btn, quick_btn, close_settings_btn]
+	for btn in btns:
+		if btn and is_instance_valid(btn):
+			btn.mouse_entered.connect(func(): _play_ui_sound("res://sounds/rollover1.ogg", -6.0))
+			btn.pressed.connect(func(): _play_ui_sound("res://sounds/mouseclick1.ogg", 0.0))
+
+func _play_ui_sound(path: String, vol: float = 0.0):
+	var sfx = AudioStreamPlayer.new()
+	var st = load(path) as AudioStream
+	if st:
+		sfx.stream = st
+		sfx.volume_db = vol
+		sfx.bus = "Master"
+		add_child(sfx)
+		sfx.play()
+		sfx.finished.connect(func(): sfx.queue_free())
 
 func _on_quick_server_pressed():
 	if get_node_or_null("/root/Global"):

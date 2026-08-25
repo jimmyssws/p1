@@ -236,22 +236,36 @@ func _create_lobby_ui():
 	lobby_ready_btn.custom_minimum_size = Vector2(160, 44)
 	lobby_ready_btn.text = "✅ HAZIR OL"
 	_apply_btn_texture(lobby_ready_btn, "yellow")
-	lobby_ready_btn.pressed.connect(_on_lobby_ready_toggle_pressed)
+	lobby_ready_btn.mouse_entered.connect(func(): _play_ui_sound("res://sounds/rollover1.ogg", -6.0))
+	lobby_ready_btn.pressed.connect(func(): _play_ui_sound("res://sounds/mouseclick1.ogg", 0.0); _on_lobby_ready_toggle_pressed())
 	btn_hbox.add_child(lobby_ready_btn)
 
 	lobby_start_btn = Button.new()
 	lobby_start_btn.custom_minimum_size = Vector2(160, 44)
 	lobby_start_btn.text = "🚀 OYUNU BAŞLAT"
 	_apply_btn_texture(lobby_start_btn, "green")
-	lobby_start_btn.pressed.connect(_on_lobby_start_pressed)
+	lobby_start_btn.mouse_entered.connect(func(): _play_ui_sound("res://sounds/rollover1.ogg", -6.0))
+	lobby_start_btn.pressed.connect(func(): _play_ui_sound("res://sounds/task_complete.wav", 3.0); _on_lobby_start_pressed())
 	btn_hbox.add_child(lobby_start_btn)
 
 	var leave_btn = Button.new()
 	leave_btn.custom_minimum_size = Vector2(120, 44)
 	leave_btn.text = "🚪 MENÜ"
 	_apply_btn_texture(leave_btn, "red")
-	leave_btn.pressed.connect(_on_lobby_leave_pressed)
+	leave_btn.mouse_entered.connect(func(): _play_ui_sound("res://sounds/rollover1.ogg", -6.0))
+	leave_btn.pressed.connect(func(): _play_ui_sound("res://sounds/mouseclick1.ogg", 0.0); _on_lobby_leave_pressed())
 	btn_hbox.add_child(leave_btn)
+
+func _play_ui_sound(path: String, vol: float = 0.0):
+	var sfx = AudioStreamPlayer.new()
+	var st = load(path) as AudioStream
+	if st:
+		sfx.stream = st
+		sfx.volume_db = vol
+		sfx.bus = "Master"
+		add_child(sfx)
+		sfx.play()
+		sfx.finished.connect(func(): sfx.queue_free())
 
 func _apply_btn_texture(btn: Button, color_name: String):
 	var tex = load("res://ui_kenney/%s_button00.png" % color_name)

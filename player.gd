@@ -855,20 +855,24 @@ func _input(event):
 	if event is InputEventKey and event.pressed:
 		if event.keycode == KEY_1:
 			selected_slot = 1
+			_play_action_sound("res://sounds/switch1.ogg", -4.0, 1.05)
 			_update_weapon_hud()
 		elif event.keycode == KEY_2:
 			selected_slot = 2
+			_play_action_sound("res://sounds/switch1.ogg", -4.0, 1.0)
 			_update_weapon_hud()
 			if current_role == "GUARD" and guard_class == 2:
 				if drone_mode: _deactivate_drone()
 				else: _activate_drone()
 		elif event.keycode == KEY_3:
 			selected_slot = 3
+			_play_action_sound("res://sounds/switch1.ogg", -4.0, 0.95)
 			_update_weapon_hud()
 			if current_role == "ASSASSIN":
 				_execute_assassin_stampede()
 		elif event.keycode == KEY_4:
 			selected_slot = 4
+			_play_action_sound("res://sounds/switch1.ogg", -4.0, 0.90)
 			_update_weapon_hud()
 			if current_role == "PRESIDENT":
 				_execute_president_throw_tea()
@@ -940,7 +944,7 @@ func _execute_president_rally_call():
 		return
 	megaphone_cooldown = 10.0
 	_animate_hand_action()
-	_play_action_sound("res://sounds/megaphone_shout.wav", 5.0)
+	_play_action_sound("res://sounds/radio_glitch_megaphone.wav", 6.0)
 	_show_temp_prompt("📢 'SEVGİLİ VATANDAŞLARIM!' (+1.8% Seçim Oyu & Miting Coşkusu)")
 	var mn = get_node_or_null("/root/main")
 	if mn:
@@ -953,7 +957,7 @@ func _execute_president_rally_call():
 # 🔪 Suikastçı Bıçak İnfazı (SADECE 2.4m YAKIN TEMAS)
 func _execute_assassin_knife():
 	_animate_knife_slash()
-	if sfx_knife: sfx_knife.play()
+	_play_action_sound("res://sounds/knifeSlice.ogg", 4.0, randf_range(0.9, 1.15))
 	trigger_camera_shake(0.4, 0.2)
 	set_weapon_exposed(true)
 	
@@ -1120,12 +1124,15 @@ func _show_scan_results(target):
 		if target.current_role == "ASSASSIN":
 			scan_title.text = "🚨 ALARM! TEHLİKELİ METAL BULUNDU!"
 			scan_items.text = "Üzerinde Bulunanlar: 🔫 9mm Ruhsatsız Tabanca, 🔪 Gizli Susturuculu Bıçak, 🪙 1 Lira"
+			_play_action_sound("res://sounds/sniper_warning.wav", 4.0)
 		elif target.current_role == "PRESIDENT":
 			scan_title.text = "👑 DEVLET PROTOKOLÜ TESPİT EDİLDİ"
 			scan_items.text = "Üzerinde Bulunanlar: 🏅 Cumhurbaşkanlığı Mührü, 💳 Altın Kart, 🖊️ Dolma Kalem"
+			_play_action_sound("res://sounds/search_body.ogg", 2.0)
 		elif target.current_role == "GUARD":
 			scan_title.text = "🛡️ KORUMA MESLEKTAŞI TESPİT EDİLDİ"
 			scan_items.text = "Üzerinde Bulunanlar: 📻 Telsiz, ⚡ Yedek Taser Bataryası, 🕶️ Yedek Siyah Gözlük"
+			_play_action_sound("res://sounds/search_body.ogg", 2.0)
 	else:
 		var picked = []
 		var shuffled = SILLY_ITEMS.duplicate()
@@ -1134,6 +1141,7 @@ func _show_scan_results(target):
 			picked.append(shuffled[i])
 		scan_title.text = "✅ SİVİL TARAMASI (Tehlike Yok)"
 		scan_items.text = "Üzerinden Çıkanlar: %s, %s, %s" % [picked[0], picked[1], picked[2]]
+		_play_action_sound("res://sounds/search_body.ogg", 2.0)
 		
 	scan_panel.show()
 	await get_tree().create_timer(4.0).timeout
@@ -1258,12 +1266,13 @@ func _show_hint_once(msg: String):
 	if action_prompt:
 		action_prompt.text = msg
 
-func _play_action_sound(sound_path: String, vol_db: float = 0.0):
+func _play_action_sound(sound_path: String, vol_db: float = 0.0, pitch: float = 1.0):
 	var sfx = AudioStreamPlayer.new()
 	var stream = load(sound_path) as AudioStream
 	if stream:
 		sfx.stream = stream
 		sfx.volume_db = vol_db
+		sfx.pitch_scale = pitch
 		sfx.bus = "Master"
 		add_child(sfx)
 		sfx.play()
@@ -1456,6 +1465,7 @@ func _execute_tactical_radio():
 		return
 	radio_cooldown = 15.0
 	_show_temp_prompt("📻 TELSİZ İHBARI: Miting meydanındaki hareketli şüpheliler tarandı!")
+	_play_action_sound("res://sounds/radio_glitch_megaphone.wav", 4.0)
 	if sfx_scan: sfx_scan.play()
 	
 	# Meydanda koşan veya şüpheli hareket edenleri tespit et
@@ -1474,6 +1484,7 @@ func _execute_guard_freeze_command():
 	radio_cooldown = 18.0
 	_show_temp_prompt("📢 'ŞÜPHELİ HAREKET VAR! HERKES OLDUĞU YERDE DURSUUUN!'")
 	_animate_hand_action()
+	_play_action_sound("res://sounds/radio_glitch_megaphone.wav", 7.0)
 	
 	var mn = get_node_or_null("/root/main")
 	if mn and mn.has_method("net_trigger_guard_freeze"):
@@ -1510,6 +1521,7 @@ func _execute_assassin_disguise():
 		return
 	disguise_cooldown = 20.0
 	_show_temp_prompt("🎭 KILIK DEĞİŞTİRİLDİ! Yeni bir sivil kıyafetine büründün!")
+	_play_action_sound("res://sounds/wc_door.ogg", 4.0)
 	var rand_idx = randi() % 6
 	rpc("net_apply_disguise", rand_idx)
 
@@ -1550,6 +1562,7 @@ func _execute_assassin_drop_weapon():
 	if vm_pistol: vm_pistol.hide()
 	if vm_megaphone: vm_megaphone.hide()
 	suspicion_level = max(0.0, suspicion_level - 35.0)
+	_play_action_sound("res://sounds/metalClick.ogg", -2.0)
 	_show_temp_prompt("🗑️ SİLAHI KILIFA SOKTUN! Elin tamamen boşaldı, sivil gibi gizlendin.")
 	_update_weapon_hud()
 
