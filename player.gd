@@ -420,7 +420,7 @@ func _process_drone(delta):
 
 func _setup_sounds():
 	sfx_knife = AudioStreamPlayer3D.new()
-	sfx_knife.stream = load("res://sounds/knife.wav")
+	sfx_knife.stream = load("res://sounds/knife.ogg")
 	sfx_knife.unit_size = 6.0
 	add_child(sfx_knife)
 
@@ -431,7 +431,7 @@ func _setup_sounds():
 	add_child(sfx_gunshot)
 
 	sfx_taser = AudioStreamPlayer3D.new()
-	sfx_taser.stream = load("res://sounds/taser.wav")
+	sfx_taser.stream = load("res://sounds/taser.ogg")
 	sfx_taser.unit_size = 10.0
 	add_child(sfx_taser)
 
@@ -1260,7 +1260,7 @@ func _show_hint_once(msg: String):
 
 func _play_action_sound(sound_path: String, vol_db: float = 0.0):
 	var sfx = AudioStreamPlayer.new()
-	var stream = load(sound_path) as AudioStreamWAV
+	var stream = load(sound_path) as AudioStream
 	if stream:
 		sfx.stream = stream
 		sfx.volume_db = vol_db
@@ -1521,7 +1521,7 @@ func _execute_president_throw_tea():
 	tea_cooldown = 6.0
 	_show_temp_prompt("🍵 KEYİF ÇAYI FIRLATILDI! (+2.5% Seçim Oyu!)")
 	_animate_hand_action()
-	_play_action_sound("res://sounds/tea_throw.wav", 4.0)
+	_play_action_sound("res://sounds/tea_throw.ogg", 4.0)
 	trigger_camera_shake(0.2, 0.12)
 	
 	var throw_dir = -camera.global_transform.basis.z.normalized() if camera else Vector3(0, 0, -1)

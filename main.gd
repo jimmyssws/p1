@@ -113,7 +113,30 @@ func _setup_ambient_audio():
 		add_child(sfx_crowd_panic)
 
 
+var stage_broadcast_speaker: AudioStreamPlayer3D = null
+
+func _setup_stage_speaker():
+	if stage_broadcast_speaker: return
+	stage_broadcast_speaker = AudioStreamPlayer3D.new()
+	stage_broadcast_speaker.name = "StageBroadcastSpeaker"
+	stage_broadcast_speaker.position = Vector3(0, 3.5, -31.0) # Kürsü üstü dev hoparlör
+	stage_broadcast_speaker.unit_size = 28.0
+	stage_broadcast_speaker.max_distance = 100.0
+	stage_broadcast_speaker.volume_db = 9.0
+	stage_broadcast_speaker.attenuation_model = AudioStreamPlayer3D.ATTENUATION_LOGARITHMIC
+	add_child(stage_broadcast_speaker)
+
+@rpc("any_peer", "call_local")
+func play_stage_announcement(sound_path: String):
+	_setup_stage_speaker()
+	if stage_broadcast_speaker:
+		var stream = load(sound_path) as AudioStream
+		if stream:
+			stage_broadcast_speaker.stream = stream
+			stage_broadcast_speaker.play()
+
 func _ready():
+	_setup_stage_speaker()
 	_setup_ambient_audio()
 	_create_news_ticker_ui()
 	sync_poll_score(46.0, "📊 Canlı Anket Başladı")
@@ -731,6 +754,7 @@ func show_campaign_promise(promise_index: int):
 		
 	if sfx_cheer:
 		sfx_cheer.play()
+	play_stage_announcement("res://sounds/cheer_applause.wav")
 		
 	# Miting alanındaki halkı coştur
 	trigger_crowd_cheer(Vector3(0, 0, -22), 45.0)
