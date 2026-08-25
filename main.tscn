@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bonmonio1csdd"]
 
 [ext_resource type="Script" uid="uid://7yprv15pyl1e" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/building_A_withoutBase.gltf" id="wc_cabin_model"]
 [ext_resource type="PackedScene" path="res://models_city/grass-trees-tall.glb" id="tree_tall"]
 [ext_resource type="PackedScene" path="res://models_city/grass-trees.glb" id="tree_round"]
 [ext_resource type="PackedScene" path="res://models_kaykit/gltf/bush.gltf" id="bush_prop"]
@@ -637,39 +638,7 @@ surface_material_override/0 = SubResource("Mat_Buffet_Yellow")
 [node name="Col" type="CollisionShape3D" parent="Buffet_Right" unique_id=9119286]
 shape = SubResource("BoxShape3D_buffet")
 
-[node name="Tree_1" type="StaticBody3D" parent="." unique_id=9519284]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.0, 0, 15.0)
 
-[node name="Trunk" type="MeshInstance3D" parent="Tree_1" unique_id=9519285]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
-mesh = SubResource("CylinderMesh_tree_trunk")
-surface_material_override/0 = SubResource("Mat_Trunk")
-
-[node name="Leaves" type="MeshInstance3D" parent="Tree_1" unique_id=9519286]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
-mesh = SubResource("SphereMesh_tree_leaves")
-surface_material_override/0 = SubResource("Mat_Leaves")
-
-[node name="Col" type="CollisionShape3D" parent="Tree_1" unique_id=9519287]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
-shape = SubResource("CylinderShape3D_tree")
-
-[node name="Tree_2" type="StaticBody3D" parent="." unique_id=9619284]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.0, 0, 15.0)
-
-[node name="Trunk" type="MeshInstance3D" parent="Tree_2" unique_id=9619285]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
-mesh = SubResource("CylinderMesh_tree_trunk")
-surface_material_override/0 = SubResource("Mat_Trunk")
-
-[node name="Leaves" type="MeshInstance3D" parent="Tree_2" unique_id=9619286]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
-mesh = SubResource("SphereMesh_tree_leaves")
-surface_material_override/0 = SubResource("Mat_Leaves")
-
-[node name="Col" type="CollisionShape3D" parent="Tree_2" unique_id=9619287]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
-shape = SubResource("CylinderShape3D_tree")
 
 [node name="Bench_1" type="StaticBody3D" parent="." unique_id=9719284]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.0, 0.25, 17.5)
@@ -881,110 +850,7 @@ outline_size = 8
 
 
 
-[node name="PlazaTree_1" type="StaticBody3D" parent="." unique_id=8801]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.0, 3.0, -6.0)
 
-[node name="Trunk" type="MeshInstance3D" parent="PlazaTree_1" unique_id=8811]
-mesh = SubResource("CylinderMesh_large_trunk")
-surface_material_override/0 = SubResource("Mat_Large_Trunk")
-
-[node name="Canopy" type="MeshInstance3D" parent="PlazaTree_1" unique_id=8821]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8, 0)
-mesh = SubResource("SphereMesh_large_canopy")
-surface_material_override/0 = SubResource("Mat_Large_Leaves")
-
-[node name="Col" type="CollisionShape3D" parent="PlazaTree_1" unique_id=8831]
-shape = SubResource("CylinderShape3D_large_tree")
-
-[node name="PlazaTree_2" type="StaticBody3D" parent="." unique_id=8802]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.0, 3.0, -6.0)
-
-[node name="Trunk" type="MeshInstance3D" parent="PlazaTree_2" unique_id=8812]
-mesh = SubResource("CylinderMesh_large_trunk")
-surface_material_override/0 = SubResource("Mat_Large_Trunk")
-
-[node name="Canopy" type="MeshInstance3D" parent="PlazaTree_2" unique_id=8822]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8, 0)
-mesh = SubResource("SphereMesh_large_canopy")
-surface_material_override/0 = SubResource("Mat_Large_Leaves")
-
-[node name="Col" type="CollisionShape3D" parent="PlazaTree_2" unique_id=8832]
-shape = SubResource("CylinderShape3D_large_tree")
-
-[node name="PlazaTree_3" type="StaticBody3D" parent="." unique_id=8803]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.0, 3.0, 10.0)
-
-[node name="Trunk" type="MeshInstance3D" parent="PlazaTree_3" unique_id=8813]
-mesh = SubResource("CylinderMesh_large_trunk")
-surface_material_override/0 = SubResource("Mat_Large_Trunk")
-
-[node name="Canopy" type="MeshInstance3D" parent="PlazaTree_3" unique_id=8823]
-transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0, 4.0, 0)
-mesh = SubResource("SphereMesh_large_canopy")
-surface_material_override/0 = SubResource("Mat_Large_Leaves")
-
-[node name="Col" type="CollisionShape3D" parent="PlazaTree_3" unique_id=8833]
-shape = SubResource("CylinderShape3D_large_tree")
-
-[node name="PlazaTree_4" type="StaticBody3D" parent="." unique_id=8804]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.0, 3.0, 10.0)
-
-[node name="Trunk" type="MeshInstance3D" parent="PlazaTree_4" unique_id=8814]
-mesh = SubResource("CylinderMesh_large_trunk")
-surface_material_override/0 = SubResource("Mat_Large_Trunk")
-
-[node name="Canopy" type="MeshInstance3D" parent="PlazaTree_4" unique_id=8824]
-transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0, 4.0, 0)
-mesh = SubResource("SphereMesh_large_canopy")
-surface_material_override/0 = SubResource("Mat_Large_Leaves")
-
-[node name="Col" type="CollisionShape3D" parent="PlazaTree_4" unique_id=8834]
-shape = SubResource("CylinderShape3D_large_tree")
-
-[node name="PlazaTree_5" type="StaticBody3D" parent="." unique_id=8805]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 3.0, 18.0)
-
-[node name="Trunk" type="MeshInstance3D" parent="PlazaTree_5" unique_id=8815]
-mesh = SubResource("CylinderMesh_large_trunk")
-surface_material_override/0 = SubResource("Mat_Large_Trunk")
-
-[node name="Canopy" type="MeshInstance3D" parent="PlazaTree_5" unique_id=8825]
-transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 0, 4.2, 0)
-mesh = SubResource("SphereMesh_large_canopy")
-surface_material_override/0 = SubResource("Mat_Large_Leaves")
-
-[node name="Col" type="CollisionShape3D" parent="PlazaTree_5" unique_id=8835]
-shape = SubResource("CylinderShape3D_large_tree")
-
-[node name="PlazaTree_6" type="StaticBody3D" parent="." unique_id=8806]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.0, 3.0, 20.0)
-
-[node name="Trunk" type="MeshInstance3D" parent="PlazaTree_6" unique_id=8816]
-mesh = SubResource("CylinderMesh_large_trunk")
-surface_material_override/0 = SubResource("Mat_Large_Trunk")
-
-[node name="Canopy" type="MeshInstance3D" parent="PlazaTree_6" unique_id=8826]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8, 0)
-mesh = SubResource("SphereMesh_large_canopy")
-surface_material_override/0 = SubResource("Mat_Large_Leaves")
-
-[node name="Col" type="CollisionShape3D" parent="PlazaTree_6" unique_id=8836]
-shape = SubResource("CylinderShape3D_large_tree")
-
-[node name="PlazaTree_7" type="StaticBody3D" parent="." unique_id=8807]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.0, 3.0, 20.0)
-
-[node name="Trunk" type="MeshInstance3D" parent="PlazaTree_7" unique_id=8817]
-mesh = SubResource("CylinderMesh_large_trunk")
-surface_material_override/0 = SubResource("Mat_Large_Trunk")
-
-[node name="Canopy" type="MeshInstance3D" parent="PlazaTree_7" unique_id=8827]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8, 0)
-mesh = SubResource("SphereMesh_large_canopy")
-surface_material_override/0 = SubResource("Mat_Large_Leaves")
-
-[node name="Col" type="CollisionShape3D" parent="PlazaTree_7" unique_id=8837]
-shape = SubResource("CylinderShape3D_large_tree")
 
 # --- 🏛️ MİTİNG SAHNESİ VE BAYRAKLAR (Y=0.0 ZEMİNE OTURTULMUŞ) ---
 [node name="RallyFlag_Left" parent="." instance=ExtResource("rally_flag")]

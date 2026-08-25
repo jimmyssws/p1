@@ -13,8 +13,8 @@
 [ext_resource type="Texture2D" path="res://ui_kenney/grey_button00.png" id="tex_grey_btn"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fglp6"]
-radius = 0.4
-height = 1.8
+radius = 0.45
+height = 2.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_3rd_gun"]
 size = Vector3(0.08, 0.12, 0.28)
@@ -204,35 +204,13 @@ shape = SubResource("CapsuleShape3D_fglp6")
 [node name="CharacterModel" type="Node3D" parent="." unique_id=1749458065]
 
 [node name="AnimMesh" parent="CharacterModel" instance=ExtResource("3_anim_char")]
-transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0, 0, 0)
-
-[node name="Body" type="MeshInstance3D" parent="CharacterModel" unique_id=580867497]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
-mesh = SubResource("CapsuleMesh_body")
-surface_material_override/0 = SubResource("Mat_Body")
-
-[node name="Head" type="MeshInstance3D" parent="CharacterModel" unique_id=20039182]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
-mesh = SubResource("SphereMesh_head")
-surface_material_override/0 = SubResource("Mat_Skin")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="HandWeapon" type="MeshInstance3D" parent="CharacterModel" unique_id=9876543]
 visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42, 0.48, -0.32)
 mesh = SubResource("BoxMesh_3rd_gun")
 surface_material_override/0 = SubResource("Mat_3rd_Gun")
-
-[node name="Sunglasses" type="MeshInstance3D" parent="CharacterModel" unique_id=49201928]
-visible = false
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.48, -0.22)
-mesh = SubResource("BoxMesh_sunglasses")
-surface_material_override/0 = SubResource("Mat_Sunglasses")
-
-[node name="Tie" type="MeshInstance3D" parent="CharacterModel" unique_id=83720194]
-visible = false
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -0.36)
-mesh = SubResource("BoxMesh_tie")
-surface_material_override/0 = SubResource("Mat_Tie")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1190510335]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, -0.1)

@@ -60,6 +60,7 @@ var anthem_cooldown: float = 0.0
 # 🚁 Drone Sistemi (Koruma)
 var drone_anchor: Node3D = null
 var drone_camera: Camera3D = null
+var drone_mesh: MeshInstance3D = null
 var drone_mode: bool = false
 var drone_battery: float = 45.0
 const DRONE_BATTERY_MAX = 45.0
@@ -239,7 +240,7 @@ func _setup_drone():
 	drone_camera.name = "DroneCamera"
 	drone_anchor.add_child(drone_camera)
 
-	var drone_mesh = MeshInstance3D.new()
+	drone_mesh = MeshInstance3D.new()
 	var bm = BoxMesh.new()
 	bm.size = Vector3(0.35, 0.08, 0.35)
 	drone_mesh.mesh = bm
@@ -258,6 +259,7 @@ func _activate_drone():
 		return
 	drone_mode = true
 	if is_multiplayer_authority() and char_model: char_model.show()
+	if drone_mesh: drone_mesh.show()
 	drone_anchor.global_position = global_position + Vector3(0, 4, 0)
 	drone_anchor.rotation = Vector3.ZERO
 	drone_camera.rotation = Vector3.ZERO
@@ -265,17 +267,18 @@ func _activate_drone():
 	drone_camera.make_current()
 	progress_bar.show()
 	if minimap_ctrl: minimap_ctrl.show_drone = true
-	_show_temp_prompt("🚁 DRONE AKTİF — WASD: Uç, Q: Alçal, E: Yüksel, F: Geri Dön")
+	_show_temp_prompt("🚁 DRONE AKTİF — WASD: Uç, Q: Alçal, E: Yüksel, [F]: Geri Dön, [C]: CCTV Sabitle")
 
 func _deactivate_drone():
 	drone_mode = false
 	if is_multiplayer_authority() and char_model: char_model.hide()
+	if drone_mesh: drone_mesh.hide()
 	drone_camera.clear_current()
 	camera.make_current()
 	progress_bar.hide()
 	task_progress = 0.0
 	if minimap_ctrl: minimap_ctrl.show_drone = false
-	_show_temp_prompt("🚁 Drone sahaya döndü. Batarya: %.0f sn" % drone_battery)
+	_show_temp_prompt("🚁 Drone çağrıldı, sahaya dönüldü. (Batarya: %.0f sn)" % drone_battery)
 
 func _process_drone(delta):
 	drone_battery = max(0.0, drone_battery - delta)
@@ -384,7 +387,40 @@ func _setup_feedback():
 		_hit_flash_node.z_index = 10
 	_camera_origin = Vector3.ZERO
 
-
+func _apply_character_role_visuals(role_name: String):
+	var torso = get_node_or_null("CharacterModel/AnimMesh/character/root/torso")
+	var leg_l = get_node_or_null("CharacterModel/AnimMesh/character/root/leg-left")
+	var leg_r = get_node_or_null("CharacterModel/AnimMesh/character/root/leg-right")
+	var arm_l = get_node_or_null("CharacterModel/AnimMesh/character/root/arm-left")
+	var arm_r = get_node_or_null("CharacterModel/AnimMesh/character/root/arm-right")
+	
+	var shirt_mat = StandardMaterial3D.new()
+	var pants_mat = StandardMaterial3D.new()
+	
+	if role_name == "PRESIDENT":
+		# 👑 Cumhurbaşkanı: Asil Lacivert Takım Elbise & Altın Detay
+		shirt_mat.albedo_color = Color(0.08, 0.18, 0.45)
+		shirt_mat.roughness = 0.4
+		pants_mat.albedo_color = Color(0.06, 0.14, 0.38)
+		pants_mat.roughness = 0.5
+	elif role_name == "GUARD":
+		# 🛡️ Özel Koruma: Simsiyah Taktik Takım Elbise & Siyah Pantolon
+		shirt_mat.albedo_color = Color(0.03, 0.03, 0.04)
+		shirt_mat.roughness = 0.3
+		pants_mat.albedo_color = Color(0.02, 0.02, 0.03)
+		pants_mat.roughness = 0.4
+	elif role_name == "ASSASSIN":
+		# 🗡️ Suikastçı: Kalabalık Arasına Karışan Gri/Füme Sivil Kıyafet
+		shirt_mat.albedo_color = Color(0.35, 0.35, 0.42)
+		shirt_mat.roughness = 0.7
+		pants_mat.albedo_color = Color(0.2, 0.2, 0.25)
+		pants_mat.roughness = 0.8
+		
+	if torso: torso.set_surface_override_material(0, shirt_mat)
+	if arm_l: arm_l.set_surface_override_material(0, shirt_mat)
+	if arm_r: arm_r.set_surface_override_material(0, shirt_mat)
+	if leg_l: leg_l.set_surface_override_material(0, pants_mat)
+	if leg_r: leg_r.set_surface_override_material(0, pants_mat)
 
 @rpc("any_peer", "call_local")
 func assign_role(role_name: String, g_class: int = 0):
@@ -401,32 +437,7 @@ func assign_role(role_name: String, g_class: int = 0):
 	elif current_role == "ASSASSIN":
 		global_position = Vector3(randf_range(-12, 12), 2.0, randf_range(5, 20))
 	
-	if body_mesh:
-		var mat = StandardMaterial3D.new()
-		if current_role == "PRESIDENT":
-			mat.albedo_color = Color(0.1, 0.22, 0.58)
-			if tie_mesh:
-				var tie_mat = StandardMaterial3D.new()
-				tie_mat.albedo_color = Color(0.95, 0.75, 0.1)
-				tie_mesh.set_surface_override_material(0, tie_mat)
-				tie_mesh.show()
-			if sunglasses_mesh: sunglasses_mesh.hide()
-			
-		elif current_role == "GUARD":
-			mat.albedo_color = Color(0.04, 0.04, 0.05)
-			if tie_mesh:
-				var tie_mat = StandardMaterial3D.new()
-				tie_mat.albedo_color = Color(0.15, 0.15, 0.18)
-				tie_mesh.set_surface_override_material(0, tie_mat)
-				tie_mesh.show()
-			if sunglasses_mesh: sunglasses_mesh.show()
-			
-		elif current_role == "ASSASSIN":
-			mat.albedo_color = Color(0.35, 0.35, 0.4)
-			if tie_mesh: tie_mesh.hide()
-			if sunglasses_mesh: sunglasses_mesh.hide()
-			
-		body_mesh.set_surface_override_material(0, mat)
+	_apply_character_role_visuals(role_name)
 
 	if is_multiplayer_authority():
 		if char_model: char_model.hide()
@@ -1246,12 +1257,18 @@ func net_apply_disguise(color_idx: int):
 		Color(0.7, 0.7, 0.75)   # Açık Gri Takım
 	]
 	var selected_col = colors[color_idx % colors.size()]
-	if body_mesh:
-		var mat = StandardMaterial3D.new()
-		mat.albedo_color = selected_col
-		mat.roughness = 0.6
-		body_mesh.set_surface_override_material(0, mat)
-
+	var torso = get_node_or_null("CharacterModel/AnimMesh/character/root/torso")
+	var leg_l = get_node_or_null("CharacterModel/AnimMesh/character/root/leg-left")
+	var leg_r = get_node_or_null("CharacterModel/AnimMesh/character/root/leg-right")
+	var s_mat = StandardMaterial3D.new()
+	s_mat.albedo_color = selected_col
+	s_mat.roughness = 0.7
+	var p_mat = StandardMaterial3D.new()
+	p_mat.albedo_color = selected_col.darkened(0.25)
+	p_mat.roughness = 0.85
+	if torso: torso.set_surface_override_material(0, s_mat)
+	if leg_l: leg_l.set_surface_override_material(0, p_mat)
+	if leg_r: leg_r.set_surface_override_material(0, p_mat)
 func _execute_assassin_disguise():
 	if disguise_cooldown > 0:
 		_show_temp_prompt("⏳ WC Dolu! (%.1f sn bekle)" % disguise_cooldown)
