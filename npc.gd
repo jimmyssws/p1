@@ -1,7 +1,7 @@
 extends CharacterBody3D
 
-enum NpcArchetype { STAGE_FANATIC, WC_QUEUE, BENCH_RELAXER, ROAMER }
-enum NpcState { IDLE_LISTEN, CHEER, WANDER, QUEUE_WAIT, CHAT, PANIC }
+enum NpcArchetype { STAGE_FANATIC, WC_QUEUE, BENCH_RELAXER, ROAMER, QUEUE_ENTRANCE }
+enum NpcState { IDLE_LISTEN, CHEER, WANDER, QUEUE_WAIT, CHAT, PANIC, ENTER_TURNSTILE }
 
 const WALK_SPEED = 2.0
 const RUN_SPEED = 4.8
@@ -83,6 +83,10 @@ func set_archetype(arch: NpcArchetype, custom_target: Vector3 = Vector3.ZERO):
 			current_state = NpcState.CHAT
 			state_timer = randf_range(5.0, 15.0)
 			direction = Vector3.ZERO
+				NpcArchetype.QUEUE_ENTRANCE:
+			current_state = NpcState.ENTER_TURNSTILE
+			state_timer = randf_range(15.0, 30.0)
+			direction = Vector3(randf_range(-0.2, 0.2), 0, -1.0).normalized()
 		NpcArchetype.ROAMER:
 			current_state = NpcState.WANDER
 			_pick_random_wander()
@@ -95,6 +99,7 @@ func _face_target(target: Vector3):
 			char_model.rotation.y = atan2(look_vec.x, look_vec.z)
 
 func _ready():
+	add_to_group("npcs")
 	_setup_npc_voice()
 	_setup_npc_materials()
 
@@ -195,6 +200,21 @@ func _physics_process(delta):
 			cheer_jump_timer = randf_range(3.0, 8.0)
 			if randf() < 0.35 and is_on_floor():
 				velocity.y = randf_range(2.5, 4.0)
+		elif current_state == NpcState.ENTER_TURNSTILE:
+		var target_turnstile = Vector3(clamp(global_position.x, -4.5, 4.5), 0.5, 16.0)
+		var to_target = (target_turnstile - global_position)
+		to_target.y = 0
+		if to_target.length() > 0.5:
+			direction = to_target.normalized()
+			velocity.x = direction.x * speed
+			velocity.z = direction.z * speed
+			if char_model:
+				var target_angle = atan2(direction.x, direction.z)
+				char_model.rotation.y = lerp_angle(char_model.rotation.y, target_angle, 10.0 * delta)
+		else:
+			archetype = NpcArchetype.ROAMER
+			current_state = NpcState.WANDER
+			_pick_random_wander()
 	elif current_state == NpcState.CHEER:
 		velocity.x = 0.0
 		velocity.z = 0.0
@@ -262,6 +282,16 @@ func _decide_next_behavior():
 	if randf() < 0.06:
 		_play_random_gibberish()
 		
+		if archetype == NpcArchetype.QUEUE_ENTRANCE:
+		if global_position.z > 20.0:
+			current_state = NpcState.ENTER_TURNSTILE
+			state_timer = 25.0
+		else:
+			archetype = NpcArchetype.ROAMER
+			current_state = NpcState.WANDER
+			_pick_random_wander()
+		return
+
 	if archetype == NpcArchetype.STAGE_FANATIC:
 		if randf() < 0.30:
 			current_state = NpcState.CHEER
@@ -304,17 +334,22 @@ func on_panic_triggered(source: Vector3, radius: float):
 	if global_position.distance_to(source) <= radius:
 		current_state = NpcState.PANIC
 		panic_source = source
-		direction = (global_position - source).normalized()
+		var away_dir = (global_position - source).normalized()
+		away_dir.x += randf_range(-0.5, 0.5)
+		away_dir.z += randf_range(-0.5, 0.5)
+		direction = away_dir.normalized()
 		direction.y = 0
-		state_timer = randf_range(3.0, 5.5)
+		state_timer = randf_range(6.0, 10.0)
+		_play_random_gibberish()
 
 @rpc("any_peer", "call_local")
 func on_stampede_triggered(start_gate: Vector3, target_area: Vector3):
 	current_state = NpcState.PANIC
-	var rush_target = target_area + Vector3(randf_range(-6, 6), 0, randf_range(-4, 4))
+	var rush_target = target_area + Vector3(randf_range(-12, 12), 0, randf_range(-8, 8))
 	direction = (rush_target - global_position).normalized()
 	direction.y = 0
-	state_timer = randf_range(4.5, 8.0)
+	state_timer = randf_range(7.0, 12.0)
+	_play_random_gibberish()
 
 func trigger_cheer(duration: float):
 	current_state = NpcState.CHEER

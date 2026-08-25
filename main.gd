@@ -304,6 +304,16 @@ func _spawn_npcs(count: int = 130):
 		add_child.call_deferred(npc, true)
 		npc.call_deferred("set_archetype", 2) # BENCH_RELAXER
 
+	# --- GRUP 5: DIŞARIDA TURNİKE SIRASINDA DOĞANLAR (~28 Kişi) ---
+	for i in range(28):
+		var npc = npc_scene.instantiate()
+		npc.name = "NPC_%d" % total_spawned
+		total_spawned += 1
+		var pos = Vector3(randf_range(-7.0, 7.0), 0.5, randf_range(26.0, 42.0))
+		npc.position = pos
+		add_child.call_deferred(npc, true)
+		npc.call_deferred("set_archetype", 4) # QUEUE_ENTRANCE
+
 	# --- GRUP 4: MEYDANDA SERBEST GEZEN SİVİLLER (~24 Kişi) ---
 	for i in range(24):
 		var npc = npc_scene.instantiate()

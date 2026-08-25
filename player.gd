@@ -952,25 +952,47 @@ func _execute_president_rally_call():
 			mn.rpc("trigger_crowd_panic", Vector3(0, 0, -12), 30.0)
 	_update_weapon_hud()
 
-# 🔪 Suikastçı Bıçak İnfazı & Gelişmiş Savurma Efekti
+# 🔪 Suikastçı Bıçak İnfazı (SADECE 2.4m YAKIN TEMAS)
 func _execute_assassin_knife():
 	_animate_knife_slash()
 	if sfx_knife: sfx_knife.play()
-	trigger_camera_shake(0.35, 0.18)
+	trigger_camera_shake(0.4, 0.2)
 	set_weapon_exposed(true)
+	
+	var mn = get_node_or_null("/root/main")
+	var hit_enemy = false
+	
 	if raycast.is_colliding():
 		var col = raycast.get_collider()
-		if col:
-			if col.has_method("die_and_drop"):
-				col.rpc("die_and_drop", "BIÇAK")
-			elif col.has_method("apply_stun"):
-				col.rpc("apply_stun", 10.0)
-				_show_temp_prompt("🔪 SİVİL BIÇAKLANDI! Silahın açığa çıktı! [G] ile Bıçağı Yere At!")
-				var mn = get_node_or_null("/root/main")
-				if mn and mn.has_method("trigger_crowd_panic"):
-					mn.rpc("trigger_crowd_panic", global_position, 20.0)
-	else:
-		_show_temp_prompt("🗡️ Bıçak Savruldu! Silahın açığa çıktı! [G] ile Gizle!")
+		var hit_pos = raycast.get_collision_point()
+		var dist = global_position.distance_to(hit_pos)
+		
+		# ⚔️ SADECE 2.4 METRE VE DAHA YAKINSA İSABET EDER!
+		if col and dist <= 2.4:
+			hit_enemy = true
+			if col is CharacterBody3D:
+				if "current_role" in col:
+					if col.current_role == "PRESIDENT":
+						if col.has_method("block_attack_with_shield") and col.block_attack_with_shield():
+							_show_temp_prompt("💥 BIÇAK BAŞKANIN ÇELİK ÇANTASINA ÇARPTI VE SEKTİ! [G] ile Kaç!")
+							return
+						if mn and mn.has_method("net_game_over"):
+							mn.rpc("net_game_over", "BAŞKAN YAKINDAN BIÇAKLANDI!
+🗡️ SUİKASTÇI KAZANDI!")
+					elif col.current_role == "GUARD":
+						col.rpc("apply_stun_effect", 8.0, "BIÇAKLANDINIZ!
+8 Saniye Ağır Yaralısınız!")
+				else:
+					if col.has_method("die_and_drop"):
+						col.rpc("die_and_drop", "BIÇAK")
+					elif col.has_method("apply_stun"):
+						col.rpc("apply_stun", 10.0)
+					_show_temp_prompt("🔪 SİVİL BIÇAKLANDI! Silahın açığa çıktı! [G] ile Bıçağı Gizle!")
+					if mn and mn.has_method("trigger_crowd_panic"):
+						mn.rpc("trigger_crowd_panic", global_position, 25.0)
+						
+	if not hit_enemy:
+		_show_temp_prompt("🗡️ Bıçak Boşa Savruldu! (Menzil: 2.4m) Silahın açığa çıktı! [G] ile Gizle!")
 
 # 🔫 Suikastçı Tabanca Ateşi & 3D Mermi İzi (Tracer)
 func _execute_assassin_pistol():
@@ -1346,6 +1368,15 @@ func _physics_process(delta):
 	# --- 🏛️ 3 AŞAMALI BAŞKAN GÖREV SİSTEMİ ---
 	_handle_president_task(delta)
 	_process_assassin_stealth(delta)
+	# 🚨 Turnike Metal Dedektör Geçiş Kontrolü (Z = 22.0)
+	if is_weapon_exposed and abs(global_position.z - 22.0) < 1.2 and abs(global_position.x) < 6.5:
+		if _last_threat_alert_timer <= 0.0:
+			_last_threat_alert_timer = 4.0
+			_show_temp_prompt("🚨 GÜVENLİK DEDEKTÖRÜ ÖTTÜ! SİLAHIN AÇIKTA! [G] ile Gizle!")
+			var mn = get_node_or_null("/root/main")
+			if mn and mn.has_method("trigger_crowd_panic"):
+				mn.rpc("trigger_crowd_panic", global_position, 20.0)
+
 	_process_sniper_aiming(delta)
 
 func _trigger_campaign_anthem():
@@ -1477,14 +1508,16 @@ func net_set_weapon_exposed(exposed: bool):
 	if third_person_weapon:
 		third_person_weapon.visible = exposed
 
-# 🗑️ Suikastçı: Silahı Yere Atıp Masum Sivile Dönme (G Tuşu)
+# 🗑️ Suikastçı: Silahı Yere At / Kılıfa Sok (Elin Tamamen Temizlenmesi)
 func _execute_assassin_drop_weapon():
-	if not is_weapon_exposed:
-		_show_temp_prompt("ℹ️ Silahın zaten gizli, açığa çıkmadın.")
-		return
-	rpc("net_set_weapon_exposed", false)
-	pistol_ammo = 0
-	_show_temp_prompt("🗑️ SİLAHI YERE ATTIN! Elin temizlendi, tekrar masum sivil gibi gizlendin.")
+	is_weapon_exposed = false
+	set_weapon_exposed(false)
+	selected_slot = 0 # Boş el / Kılıfta
+	if vm_knife: vm_knife.hide()
+	if vm_pistol: vm_pistol.hide()
+	if vm_megaphone: vm_megaphone.hide()
+	suspicion_level = max(0.0, suspicion_level - 35.0)
+	_show_temp_prompt("🗑️ SİLAHI KILIFA SOKTUN! Elin tamamen boşaldı, sivil gibi gizlendin.")
 	_update_weapon_hud()
 
 
@@ -1786,7 +1819,16 @@ func net_spawn_bullet_tracer(start_pos: Vector3, target_pos: Vector3, is_taser: 
 
 
 # 🎭 Suikastçı Kalabalığa Karışma (NPC Taklidi) & Şüphe Metresi
-func _process_assassin_stealth(delta):
+func _process_assassin_stealth(delta)
+	# 🚨 Turnike Metal Dedektör Geçiş Kontrolü (Z = 22.0)
+	if is_weapon_exposed and abs(global_position.z - 22.0) < 1.2 and abs(global_position.x) < 6.5:
+		if _last_threat_alert_timer <= 0.0:
+			_last_threat_alert_timer = 4.0
+			_show_temp_prompt("🚨 GÜVENLİK DEDEKTÖRÜ ÖTTÜ! SİLAHIN AÇIKTA! [G] ile Gizle!")
+			var mn = get_node_or_null("/root/main")
+			if mn and mn.has_method("trigger_crowd_panic"):
+				mn.rpc("trigger_crowd_panic", global_position, 20.0)
+:
 	if current_role != "ASSASSIN" or is_game_over:
 		if sus_panel and sus_panel.visible: sus_panel.hide()
 		return
@@ -1876,3 +1918,11 @@ func _show_guard_threat_alert(msg: String):
 		tw.tween_interval(3.0)
 		tw.tween_property(threat_alert, "modulate:a", 0.0, 0.5)
 		tw.tween_callback(threat_alert.hide)
+
+# 📢 Suikastçı: İzdiham / Panik Düdüğü (Slot 3)
+func _execute_assassin_panic_whistle():
+	_show_temp_prompt("📢 İZDİHAM ÇIKARILDI! Kalabalık çıldırdı ve kaçışıyor!")
+	trigger_camera_shake(0.5, 0.4)
+	var mn = get_node_or_null("/root/main")
+	if mn and mn.has_method("trigger_crowd_panic"):
+		mn.rpc("trigger_crowd_panic", global_position, 35.0)

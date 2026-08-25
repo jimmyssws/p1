@@ -680,6 +680,83 @@ surface_material_override/0 = SubResource("Mat_WC_Green")
 [node name="Col" type="CollisionShape3D" parent="WC_2" unique_id=9319286]
 shape = SubResource("BoxShape3D_wc")
 
+[node name="SecurityCheckpoint" type="Node3D" parent="." unique_id=9519284]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 22.0)
+
+[node name="Barrier_Left_Wing" type="StaticBody3D" parent="SecurityCheckpoint" unique_id=9519285]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.0, 0.6, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="SecurityCheckpoint/Barrier_Left_Wing" unique_id=9519286]
+mesh = SubResource("BoxMesh_barrier")
+surface_material_override/0 = SubResource("Mat_Barrier")
+
+[node name="Col" type="CollisionShape3D" parent="SecurityCheckpoint/Barrier_Left_Wing" unique_id=9519287]
+shape = SubResource("BoxShape3D_barrier")
+
+[node name="Barrier_Right_Wing" type="StaticBody3D" parent="SecurityCheckpoint" unique_id=9519288]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.0, 0.6, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="SecurityCheckpoint/Barrier_Right_Wing" unique_id=9519289]
+mesh = SubResource("BoxMesh_barrier")
+surface_material_override/0 = SubResource("Mat_Barrier")
+
+[node name="Col" type="CollisionShape3D" parent="SecurityCheckpoint/Barrier_Right_Wing" unique_id=9519290]
+shape = SubResource("BoxShape3D_barrier")
+
+[node name="Turnstile_1" type="StaticBody3D" parent="SecurityCheckpoint" unique_id=9519291]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0.7, 0)
+
+[node name="Post" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_1" unique_id=9519292]
+mesh = SubResource("BoxMesh_turnstile_post")
+surface_material_override/0 = SubResource("Mat_Turnstile_Metal")
+
+[node name="Col" type="CollisionShape3D" parent="SecurityCheckpoint/Turnstile_1" unique_id=9519293]
+shape = SubResource("BoxShape3D_turnstile_col")
+
+[node name="Light" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_1" unique_id=9519294]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+mesh = SubResource("BoxMesh_turnstile_light")
+surface_material_override/0 = SubResource("Mat_Turnstile_Green")
+
+[node name="Turnstile_2" type="StaticBody3D" parent="SecurityCheckpoint" unique_id=9519295]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+
+[node name="Post" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_2" unique_id=9519296]
+mesh = SubResource("BoxMesh_turnstile_post")
+surface_material_override/0 = SubResource("Mat_Turnstile_Metal")
+
+[node name="Col" type="CollisionShape3D" parent="SecurityCheckpoint/Turnstile_2" unique_id=9519297]
+shape = SubResource("BoxShape3D_turnstile_col")
+
+[node name="Light" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_2" unique_id=9519298]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+mesh = SubResource("BoxMesh_turnstile_light")
+surface_material_override/0 = SubResource("Mat_Turnstile_Green")
+
+[node name="Turnstile_3" type="StaticBody3D" parent="SecurityCheckpoint" unique_id=9519299]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.7, 0)
+
+[node name="Post" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_3" unique_id=9519300]
+mesh = SubResource("BoxMesh_turnstile_post")
+surface_material_override/0 = SubResource("Mat_Turnstile_Metal")
+
+[node name="Col" type="CollisionShape3D" parent="SecurityCheckpoint/Turnstile_3" unique_id=9519301]
+shape = SubResource("BoxShape3D_turnstile_col")
+
+[node name="Light" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_3" unique_id=9519302]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+mesh = SubResource("BoxMesh_turnstile_light")
+surface_material_override/0 = SubResource("Mat_Turnstile_Green")
+
+[node name="Infiltration_Crate_Step1" parent="." instance=ExtResource("crate_box")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.5, 0, 23.5)
+
+[node name="Infiltration_Crate_Step2" parent="." instance=ExtResource("crate_box")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.5, 0.8, 22.0)
+
+[node name="Infiltration_Crate_Step3" parent="." instance=ExtResource("crate_box")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.5, 0, 20.5)
+
 [node name="EntranceGate" type="StaticBody3D" parent="." unique_id=9419284]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 45.0)
 
