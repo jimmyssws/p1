@@ -2,41 +2,67 @@
 
 [ext_resource type="Script" uid="uid://7yprv15pyl1e" path="res://main.gd" id="1_ig7tw"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_TopHeader_BG"]
-bg_color = Color(0.05, 0.07, 0.12, 0.88)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_TV_Header_BG"]
+bg_color = Color(0.04, 0.05, 0.08, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.25, 0.32, 0.45, 0.8)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+shadow_color = Color(0, 0, 0, 0.6)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Live_Blinker"]
+bg_color = Color(0.85, 0.12, 0.15, 0.95)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.22, 0.35, 0.55, 0.6)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-shadow_color = Color(0, 0, 0, 0.45)
-shadow_size = 6
+border_color = Color(1, 0.4, 0.4, 0.9)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Pill_Badge"]
-bg_color = Color(0.1, 0.15, 0.25, 0.85)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_TV_Recessed_Badge"]
+bg_color = Color(0.08, 0.1, 0.15, 0.95)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.3, 0.45, 0.7, 0.5)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
+border_color = Color(0.2, 0.28, 0.4, 0.7)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Poll_Fill"]
-bg_color = Color(0.18, 0.58, 0.98, 0.95)
-corner_radius_top_left = 4
-corner_radius_bottom_left = 4
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_TV_Poll_Fill"]
+bg_color = Color(0.12, 0.45, 0.95, 1.0)
+corner_radius_top_left = 1
+corner_radius_bottom_left = 1
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Poll_Track"]
-bg_color = Color(0.9, 0.25, 0.25, 0.95)
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_TV_Poll_Track"]
+bg_color = Color(0.88, 0.18, 0.18, 1.0)
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_News_Badge_Yellow"]
+bg_color = Color(0.98, 0.78, 0.08, 1.0)
+corner_radius_top_left = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_News_Ticker_Red"]
+bg_color = Color(0.65, 0.08, 0.1, 0.96)
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.95, 0.25, 0.25, 0.8)
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_News_Ticker"]
 bg_color = Color(0.75, 0.12, 0.15, 0.9)
@@ -687,104 +713,115 @@ spot_angle = 55.0
 mouse_filter = 2
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 20.0
-offset_top = 10.0
-offset_right = -20.0
+offset_left = 16.0
+offset_top = 8.0
+offset_right = -16.0
 offset_bottom = 54.0
 grow_horizontal = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_TopHeader_BG")
+theme_override_styles/panel = SubResource("StyleBoxFlat_TV_Header_BG")
 
 [node name="Margin" type="MarginContainer" parent="TopBarHUD/TopHeader" unique_id=1827395]
 layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_right = 14
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
 
 [node name="HBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin" unique_id=1827396]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 12
 alignment = 1
 
 [node name="LeftBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox" unique_id=1827397]
 layout_mode = 2
 size_flags_horizontal = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
+
+[node name="LiveBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox" unique_id=1827380]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_Live_Blinker")
+
+[node name="LiveLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox/LiveBadge" unique_id=1827381]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = " ● CANLI "
+vertical_alignment = 1
 
 [node name="TimerBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox" unique_id=1827398]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_Pill_Badge")
+theme_override_styles/panel = SubResource("StyleBoxFlat_TV_Recessed_Badge")
 
 [node name="TimerLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox/TimerBadge" unique_id=3847291]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.35, 1)
-theme_override_font_sizes/font_size = 14
-text = "  ⏱️ 03:00  "
+theme_override_colors/font_color = Color(1, 0.88, 0.3, 1)
+theme_override_font_sizes/font_size = 13
+text = " SÜRE [ 03:00 ] "
 vertical_alignment = 1
 
 [node name="RoleBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox" unique_id=1827399]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_Pill_Badge")
+theme_override_styles/panel = SubResource("StyleBoxFlat_TV_Recessed_Badge")
 
 [node name="RoleLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox/RoleBadge" unique_id=1827400]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.85, 1, 1)
-theme_override_font_sizes/font_size = 13
-text = "  👑 BAŞKAN  "
+theme_override_colors/font_color = Color(0.35, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = " PROTOKOL: BAŞKAN "
 vertical_alignment = 1
 
 [node name="CenterPollBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox" unique_id=1827401]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 alignment = 1
 
 [node name="PresVoteLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox" unique_id=9871236]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.35, 0.75, 1, 1)
+theme_override_colors/font_color = Color(0.4, 0.78, 1, 1)
 theme_override_font_sizes/font_size = 13
-text = "🏛️ BAŞKAN %46.0"
+text = "🏛️ İKTİDAR %46.0"
 vertical_alignment = 1
 
 [node name="VoteProgressBar" type="ProgressBar" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox" unique_id=9871237]
-custom_minimum_size = Vector2(180, 14)
+custom_minimum_size = Vector2(170, 14)
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_styles/background = SubResource("StyleBoxFlat_Poll_Track")
-theme_override_styles/fill = SubResource("StyleBoxFlat_Poll_Fill")
+theme_override_styles/background = SubResource("StyleBoxFlat_TV_Poll_Track")
+theme_override_styles/fill = SubResource("StyleBoxFlat_TV_Poll_Fill")
 value = 46.0
 show_percentage = false
 
 [node name="OppVoteLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox" unique_id=9871238]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.45, 0.45, 1)
+theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
 theme_override_font_sizes/font_size = 13
-text = "🦅 RAKİP %54.0"
+text = "🦅 MUHALEFET %54.0"
 vertical_alignment = 1
 
 [node name="TrendBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox" unique_id=1827402]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_Pill_Badge")
+theme_override_styles/panel = SubResource("StyleBoxFlat_TV_Recessed_Badge")
 
 [node name="TrendLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/TrendBadge" unique_id=9871239]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.85, 0.3, 1)
-theme_override_font_sizes/font_size = 12
-text = "  📊 Canlı Anket  "
+theme_override_colors/font_color = Color(1, 0.9, 0.25, 1)
+theme_override_font_sizes/font_size = 11
+text = " 📊 SANDIK ANKETİ "
 vertical_alignment = 1
 
 [node name="RightBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox" unique_id=1827403]
 layout_mode = 2
 size_flags_horizontal = 8
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="StatusBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/RightBox" unique_id=1827404]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_Pill_Badge")
+theme_override_styles/panel = SubResource("StyleBoxFlat_TV_Recessed_Badge")
 
 [node name="StatusLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/RightBox/StatusBadge" unique_id=9283741]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.85, 0.95, 1)
-theme_override_font_sizes/font_size = 13
-text = "  🏛️ Miting Meydanı (65 Vatandaş)  "
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 12
+text = " GÜNDEM: KÜRSÜ HİTABI "
 vertical_alignment = 1
 
 [node name="NewsTicker" type="PanelContainer" parent="TopBarHUD" unique_id=7482910]
@@ -794,22 +831,26 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 30.0
-offset_top = -58.0
-offset_right = -30.0
+offset_left = 20.0
+offset_top = -54.0
+offset_right = -20.0
 offset_bottom = -14.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_News_Ticker")
+theme_override_styles/panel = SubResource("StyleBoxFlat_News_Ticker_Red")
 
 [node name="HBox" type="HBoxContainer" parent="TopBarHUD/NewsTicker" unique_id=7482911]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 0
 
-[node name="Badge" type="Label" parent="TopBarHUD/NewsTicker/HBox" unique_id=7482912]
+[node name="BadgeBox" type="PanelContainer" parent="TopBarHUD/NewsTicker/HBox" unique_id=7482918]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_styles/panel = SubResource("StyleBoxFlat_News_Badge_Yellow")
+
+[node name="Badge" type="Label" parent="TopBarHUD/NewsTicker/HBox/BadgeBox" unique_id=7482912]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.05, 0.05, 0.05, 1)
+theme_override_font_sizes/font_size = 13
 text = "  🚨 SON DAKİKA  "
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -817,10 +858,12 @@ vertical_alignment = 1
 [node name="Label" type="Label" parent="TopBarHUD/NewsTicker/HBox" unique_id=7482913]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(1, 0.92, 0.45, 1)
-theme_override_font_sizes/font_size = 14
-text = "🔴 BAŞKAN MİTİNG MEYDANINDA TARİHİ VAATLERİNİ AÇIKLIYOR!"
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "   🔴 BAŞKAN MİTİNG MEYDANINDA TARİHİ VAATLERİNİ AÇIKLIYOR!"
 vertical_alignment = 1
+
+
 [node name="PortableWC_1" type="StaticBody3D" parent="." unique_id=7682910]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.0, 1.6, 12.0)
 

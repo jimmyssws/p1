@@ -153,7 +153,21 @@ albedo_color = Color(0.85, 0.88, 0.9, 1)
 metallic = 0.9
 roughness = 0.2
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Slot_Inactive"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Tactical_Holster"]
+bg_color = Color(0.06, 0.07, 0.11, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.25, 0.32, 0.42, 0.8)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Tactical_Slot_Inactive"]
 bg_color = Color(0.06, 0.09, 0.16, 0.8)
 border_width_left = 1
 border_width_top = 1
@@ -165,7 +179,7 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Slot_Active"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Tactical_Slot_Active"]
 bg_color = Color(0.12, 0.3, 0.6, 0.95)
 border_width_left = 2
 border_width_top = 2
@@ -354,89 +368,92 @@ grow_horizontal = 2
 grow_vertical = 0
 horizontal_alignment = 1
 
-[node name="WeaponPanel" type="Control" parent="HUD" unique_id=9827104]
-layout_mode = 3
+[node name="WeaponPanel" type="PanelContainer" parent="HUD" unique_id=9827104]
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -460.0
-offset_top = -75.0
-offset_right = -15.0
-offset_bottom = -15.0
+offset_left = -480.0
+offset_top = -78.0
+offset_right = -16.0
+offset_bottom = -16.0
 grow_horizontal = 0
 grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_Tactical_Holster")
 
-[node name="VBox" type="VBoxContainer" parent="HUD/WeaponPanel" unique_id=9827105]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Margin" type="MarginContainer" parent="HUD/WeaponPanel" unique_id=9827105]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="VBox" type="VBoxContainer" parent="HUD/WeaponPanel/Margin" unique_id=9827106]
+layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="CategoryLabel" type="Label" parent="HUD/WeaponPanel/VBox" unique_id=9827106]
+[node name="CategoryLabel" type="Label" parent="HUD/WeaponPanel/Margin/VBox" unique_id=9827107]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.6, 0.75, 0.95, 0.9)
+theme_override_colors/font_color = Color(0.7, 0.8, 0.92, 1)
 theme_override_font_sizes/font_size = 11
-text = "🎒 EKİPMANLAR & YETENEKLER"
+text = "⚡ VIP PROTOKOL TEÇHİZATI"
 horizontal_alignment = 2
 
-[node name="SlotRow" type="HBoxContainer" parent="HUD/WeaponPanel/VBox" unique_id=9827107]
+[node name="SlotRow" type="HBoxContainer" parent="HUD/WeaponPanel/Margin/VBox" unique_id=9827108]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[node name="Slot1" type="PanelContainer" parent="HUD/WeaponPanel/VBox/SlotRow" unique_id=9827108]
+[node name="Slot1" type="PanelContainer" parent="HUD/WeaponPanel/Margin/VBox/SlotRow" unique_id=9827109]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_Slot_Inactive")
+theme_override_styles/panel = SubResource("StyleBoxFlat_Tactical_Slot_Inactive")
 
-[node name="Label" type="Label" parent="HUD/WeaponPanel/VBox/SlotRow/Slot1" unique_id=9827109]
+[node name="Label" type="Label" parent="HUD/WeaponPanel/Margin/VBox/SlotRow/Slot1" unique_id=9827110]
 layout_mode = 2
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 12
 text = "[1] 🔪 Bıçak"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Slot2" type="PanelContainer" parent="HUD/WeaponPanel/VBox/SlotRow" unique_id=9827110]
+[node name="Slot2" type="PanelContainer" parent="HUD/WeaponPanel/Margin/VBox/SlotRow" unique_id=9827111]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_Slot_Inactive")
+theme_override_styles/panel = SubResource("StyleBoxFlat_Tactical_Slot_Inactive")
 
-[node name="Label" type="Label" parent="HUD/WeaponPanel/VBox/SlotRow/Slot2" unique_id=9827111]
+[node name="Label" type="Label" parent="HUD/WeaponPanel/Margin/VBox/SlotRow/Slot2" unique_id=9827112]
 layout_mode = 2
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 12
 text = "[2] 🔫 Tabanca"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Slot3" type="PanelContainer" parent="HUD/WeaponPanel/VBox/SlotRow" unique_id=9827112]
+[node name="Slot3" type="PanelContainer" parent="HUD/WeaponPanel/Margin/VBox/SlotRow" unique_id=9827113]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_Slot_Inactive")
+theme_override_styles/panel = SubResource("StyleBoxFlat_Tactical_Slot_Inactive")
 
-[node name="Label" type="Label" parent="HUD/WeaponPanel/VBox/SlotRow/Slot3" unique_id=9827113]
+[node name="Label" type="Label" parent="HUD/WeaponPanel/Margin/VBox/SlotRow/Slot3" unique_id=9827114]
 layout_mode = 2
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 12
 text = "[3] 📢 İzdiham"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Slot4" type="PanelContainer" parent="HUD/WeaponPanel/VBox/SlotRow" unique_id=9827114]
+[node name="Slot4" type="PanelContainer" parent="HUD/WeaponPanel/Margin/VBox/SlotRow" unique_id=9827115]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_Slot_Inactive")
+theme_override_styles/panel = SubResource("StyleBoxFlat_Tactical_Slot_Inactive")
 
-[node name="Label" type="Label" parent="HUD/WeaponPanel/VBox/SlotRow/Slot4" unique_id=9827115]
+[node name="Label" type="Label" parent="HUD/WeaponPanel/Margin/VBox/SlotRow/Slot4" unique_id=9827116]
 layout_mode = 2
-theme_override_font_sizes/font_size = 13
-text = "[4] 🕺 Şarkı"
+theme_override_font_sizes/font_size = 12
+text = "[4] 🍵 Çay Fırlat"
 horizontal_alignment = 1
 vertical_alignment = 1
+
 
 [node name="ScanResultPanel" type="Panel" parent="HUD" unique_id=4829104]
 visible = false
@@ -562,7 +579,7 @@ offset_top = 62.0
 offset_right = -20.0
 offset_bottom = 96.0
 grow_horizontal = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_Slot_Inactive")
+theme_override_styles/panel = SubResource("StyleBoxFlat_Tactical_Slot_Inactive")
 
 [node name="MissionLabel" type="Label" parent="HUD/MissionPanel" unique_id=7654322]
 layout_mode = 2
