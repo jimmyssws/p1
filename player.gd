@@ -1137,8 +1137,7 @@ func _show_temp_prompt(msg: String):
 			action_prompt.text = ""
 
 # 🏛️ Başkanın şu anki görevi için E basılı tutma mantığı
-func _handle_president_task(delta)
-	_process_assassin_stealth(delta):
+func _handle_president_task(delta):
 	if current_role != "PRESIDENT" or is_game_over: return
 	
 	var in_zone = false
@@ -1289,17 +1288,6 @@ func _physics_process(delta):
 			if char_model and to_stage.length_squared() > 0.1:
 				char_model.global_rotation.y = lerp_angle(char_model.global_rotation.y, atan2(to_stage.x, to_stage.z), 8.0 * delta)
 			move_and_slide()
-	# 🖐️ Eldeki Silah ve Kol için Prosedürel Yürüme Sallantısı (Weapon Bobbing)
-	if hand_anchor and is_on_floor() and velocity.length() > 0.5:
-		_bob_timer += delta * velocity.length()
-		var bob_y = sin(_bob_timer * 1.8) * 0.008
-		var sway_x = cos(_bob_timer * 0.9) * 0.006
-		hand_anchor.position.y = _hand_def_pos.y + bob_y
-		hand_anchor.position.x = _hand_def_pos.x + sway_x
-	elif hand_anchor:
-		hand_anchor.position.y = lerp(hand_anchor.position.y, _hand_def_pos.y, 8.0 * delta)
-		hand_anchor.position.x = lerp(hand_anchor.position.x, _hand_def_pos.x, 8.0 * delta)
-
 			_update_player_animation()
 			return
 
@@ -1309,7 +1297,8 @@ func _physics_process(delta):
 	# Zıplama
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
-			if current_role == "ASSASSIN": suspicion_level = min(100.0, suspicion_level + 20.0)
+		if current_role == "ASSASSIN":
+			suspicion_level = min(100.0, suspicion_level + 20.0)
 
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
