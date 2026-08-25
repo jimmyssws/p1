@@ -366,7 +366,7 @@ func assign_role(role_name: String, g_class: int = 0):
 		guard_class = g_class
 	
 	if current_role == "PRESIDENT":
-		global_position = Vector3(0, 2.5, -28.0)
+		global_position = Vector3(0, 2.8, -32.0)
 		mission_state = 0
 		mission_done = [false, false, false]
 	elif current_role == "GUARD":
@@ -1289,22 +1289,22 @@ func _update_footsteps(delta: float, is_moving: bool):
 			sfx_footstep.pitch_scale = randf_range(0.88, 1.12)
 			sfx_footstep.play()
 
+const CAMERA_BASE_POS = Vector3(0, 1.55, -0.1)
+
 # 🎥 Kamera Titremesi İşleme (_physics_process'te çağrılır)
 func _process_camera_shake(delta: float):
-	if not is_multiplayer_authority(): return
+	if not is_multiplayer_authority() or not camera: return
 	if _shake_timer > 0:
 		_shake_timer -= delta
 		var shake = _shake_intensity * (_shake_timer / 0.3)
-		if camera:
-			camera.position = Vector3(
-				randf_range(-shake, shake) * 0.06,
-				randf_range(-shake, shake) * 0.06,
-				0.0
-			)
+		camera.position = CAMERA_BASE_POS + Vector3(
+			randf_range(-shake, shake) * 0.06,
+			randf_range(-shake, shake) * 0.06,
+			0.0
+		)
 	else:
 		_shake_intensity = 0.0
-		if camera:
-			camera.position = Vector3.ZERO
+		camera.position = CAMERA_BASE_POS
 
 
 func _update_player_animation():
