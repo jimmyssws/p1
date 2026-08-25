@@ -38,6 +38,8 @@ var ambient_player: AudioStreamPlayer3D = null
 var sfx_alarm: AudioStreamPlayer = null
 var sfx_cheer: AudioStreamPlayer = null
 var sfx_rally_music: AudioStreamPlayer = null
+var sfx_crowd_ambient: AudioStreamPlayer = null
+var sfx_crowd_panic: AudioStreamPlayer = null
 
 func _setup_ambient_audio():
 	# 🎵 Miting Arka Plan Marş & Müziği
@@ -314,7 +316,7 @@ func _update_lobby_display():
 		card.add_theme_stylebox_override("panel", card_style)
 		
 		var hbox = HBoxContainer.new()
-		hbox.theme_override_constants["separation"] = 12
+		hbox.add_theme_constant_override("separation", 12)
 		card.add_child(hbox)
 		
 		var name_lbl = Label.new()
@@ -663,3 +665,37 @@ func restart_match():
 	sync_poll_score(46.0, "📊 Yeni Miting Başladı")
 	sync_timer(180)
 	_redistribute_roles()
+
+func _process(delta):
+	if _trend_clear_timer > 0.0:
+		_trend_clear_timer -= delta
+		if _trend_clear_timer <= 0.0 and poll_trend_label:
+			poll_trend_label.text = ""
+
+@rpc("any_peer", "call_local")
+func sync_poll_score(score: float, trend_msg: String = ""):
+	president_poll_pct = clamp(score, 0.0, 100.0)
+	var opp_score = 100.0 - president_poll_pct
+	if pres_vote_label:
+		pres_vote_label.text = "👑 BAŞKAN: %" + str(snapped(president_poll_pct, 0.1))
+	if opp_vote_label:
+		opp_vote_label.text = "⚔️ MUHALEFET: %" + str(snapped(opp_score, 0.1))
+	if vote_progress_bar:
+		vote_progress_bar.value = president_poll_pct
+	if poll_trend_label and trend_msg != "":
+		poll_trend_label.text = trend_msg
+		_trend_clear_timer = 4.0
+
+func adjust_poll_score(delta_pct: float, reason: String = ""):
+	president_poll_pct = clamp(president_poll_pct + delta_pct, 0.0, 100.0)
+	sync_poll_score(president_poll_pct, reason)
+	if multiplayer.has_multiplayer_peer() and multiplayer.is_server():
+		rpc("sync_poll_score", president_poll_pct, reason)
+
+@rpc("any_peer", "call_local")
+func sync_timer(seconds: int):
+	match_seconds = seconds
+	if timer_label:
+		var mins = seconds / 60
+		var secs = seconds % 60
+		timer_label.text = "%02d:%02d" % [mins, secs]
