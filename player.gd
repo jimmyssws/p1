@@ -52,6 +52,13 @@ var is_blending_in: bool = false
 var suspicion_level: float = 0.0
 var _last_threat_alert_timer: float = 0.0
 var _threat_broadcast_timer: float = 0.0
+# 📹 Dron CCTV & Sabitleme Sistemi (Koruma)
+@onready var cctv_panel = $HUD/CCTVPanel if has_node("HUD/CCTVPanel") else null
+@onready var cctv_status_label = $HUD/CCTVPanel/VBox/StatusLabel if has_node("HUD/CCTVPanel/VBox/StatusLabel") else null
+
+var is_drone_perched: bool = false
+var is_viewing_cctv: bool = false
+
 
 
 @onready var vm_knife = $Camera3D/HandAnchor/KnifeModel if has_node("Camera3D/HandAnchor/KnifeModel") else null
@@ -321,6 +328,54 @@ func _activate_drone():
 	if minimap_ctrl: minimap_ctrl.show_drone = true
 	_show_temp_prompt("🚁 DRONE AKTİF — WASD: Uç, Q: Alçal, E: Yüksel, [F]: Geri Dön, [C]: CCTV Sabitle")
 
+
+# 📹 Dronu Oraya Sabit CCTV Olarak Kilitle
+func _perch_drone_as_cctv():
+	if not drone_mode: return
+	is_drone_perched = true
+	drone_mode = false
+	is_viewing_cctv = false
+	
+	if is_multiplayer_authority() and char_model: char_model.hide()
+	if drone_mesh: drone_mesh.show()
+	
+	drone_camera.clear_current()
+	camera.make_current()
+	progress_bar.hide()
+	
+	if cctv_panel: cctv_panel.show()
+	if minimap_ctrl: minimap_ctrl.show_drone = true
+	
+	_show_temp_prompt("📹 DRON SABİTLENDİ! (CCTV Modu: [C] ile Kameraya Bağlan, [G] ile Geri Çağır)")
+
+# 📹 Canlı CCTV Görüntüsüne Geç / Çık
+func _toggle_cctv_feed():
+	if not is_drone_perched: return
+	is_viewing_cctv = not is_viewing_cctv
+	
+	if is_viewing_cctv:
+		camera.clear_current()
+		drone_camera.make_current()
+		_show_temp_prompt("📹 CANLI CCTV KAMERASI | [C] ile Sahaya Dön | [G] ile Dronu Çağır")
+	else:
+		drone_camera.clear_current()
+		camera.make_current()
+		_show_temp_prompt("🛡️ Sahaya Geri Dönüldü.")
+
+# 🚁 Sabit Dronu Geri Çağır
+func _recall_drone():
+	is_drone_perched = false
+	is_viewing_cctv = false
+	drone_mode = false
+	
+	if drone_mesh: drone_mesh.hide()
+	drone_camera.clear_current()
+	camera.make_current()
+	
+	if cctv_panel: cctv_panel.hide()
+	if minimap_ctrl: minimap_ctrl.show_drone = false
+	_show_temp_prompt("🚁 Dron geri çağrıldı ve çantaya alındı.")
+
 func _deactivate_drone():
 	drone_mode = false
 	if is_multiplayer_authority() and char_model: char_model.hide()
@@ -360,7 +415,7 @@ func _process_drone(delta):
 	drone_anchor.position.y = clamp(drone_anchor.position.y, 2.5, 38.0)
 
 	if action_prompt:
-		action_prompt.text = "🚁 DRON | [WASD] Uç | [Space/E] ⬆️ Yüksel | [Q/Ctrl] ⬇️ Alçal | [Shift] ⚡ Hız | [2/F] İptal | 🔋 %.0f sn" % drone_battery
+		action_prompt.text = "🚁 DRON | [WASD] Uç | [Space/E] ⬆️ | [Q/Ctrl] ⬇️ | [C] 📹 Oraya Sabitle (CCTV) | [F] İptal | 🔋 %.0f sn" % drone_battery
 
 
 func _setup_sounds():

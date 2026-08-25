@@ -480,6 +480,44 @@ theme_override_constants/shadow_offset_y = 1
 text = "🚨 DİKKAT: KALABALIKTA ŞÜPHELİ HAREKET!"
 horizontal_alignment = 1
 
+[node name="CCTVPanel" type="PanelContainer" parent="HUD" unique_id=64829103]
+visible = false
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -230.0
+offset_top = 70.0
+offset_right = -16.0
+offset_bottom = 135.0
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxTexture_Weapon_Panel")
+
+[node name="VBox" type="VBoxContainer" parent="HUD/CCTVPanel" unique_id=64829104]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Header" type="HBoxContainer" parent="HUD/CCTVPanel/VBox" unique_id=64829105]
+layout_mode = 2
+
+[node name="RecDot" type="Label" parent="HUD/CCTVPanel/VBox/Header" unique_id=64829106]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(1.0, 0.2, 0.2, 1.0)
+text = "🔴 REC"
+
+[node name="Title" type="Label" parent="HUD/CCTVPanel/VBox/Header" unique_id=64829107]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.9, 0.95, 1.0, 1.0)
+text = "CCTV-01 (SABİT)"
+
+[node name="StatusLabel" type="Label" parent="HUD/CCTVPanel/VBox" unique_id=64829108]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.2, 0.85, 1.0, 1.0)
+text = "[C] İzle/Çık  •  [G] Çağır"
+
 [node name="WeaponPanel" type="PanelContainer" parent="HUD" unique_id=9827104]
 anchors_preset = 3
 anchor_left = 1.0
