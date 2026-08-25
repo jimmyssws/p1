@@ -1,6 +1,24 @@
 [gd_scene format=3 uid="uid://bonmonio1csdd"]
 
 [ext_resource type="Script" uid="uid://7yprv15pyl1e" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/building_A.gltf" id="bld_a"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/building_B.gltf" id="bld_b"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/building_C.gltf" id="bld_c"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/building_D.gltf" id="bld_d"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/building_E.gltf" id="bld_e"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/building_F.gltf" id="bld_f"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/building_G.gltf" id="bld_g"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/building_H.gltf" id="bld_h"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/car_police.gltf" id="car_pol"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/car_taxi.gltf" id="car_tax"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/car_sedan.gltf" id="car_sed"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/streetlight.gltf" id="street_light"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/bench.gltf" id="plaza_bench"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/trash_A.gltf" id="trash_can"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/box_A.gltf" id="crate_box"]
+[ext_resource type="PackedScene" path="res://models_kaykit/gltf/watertower.gltf" id="water_tower"]
+[ext_resource type="PackedScene" path="res://models_city/pavement-fountain.glb" id="fountain"]
+[ext_resource type="PackedScene" path="res://models_city/flag.glb" id="rally_flag"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_TV_Header_BG"]
 bg_color = Color(0.04, 0.05, 0.08, 0.94)
@@ -1002,6 +1020,87 @@ surface_material_override/0 = SubResource("Mat_Large_Leaves")
 
 [node name="Col" type="CollisionShape3D" parent="PlazaTree_7" unique_id=8837]
 shape = SubResource("CylinderShape3D_large_tree")
+
+# --- 🏙️ TATLI ÇİZGİ FİLM BİNALARI (SOL ŞEHİR SOKAĞI) ---
+[node name="Building_L1" parent="." instance=ExtResource("bld_a")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -34.0, 0.0, -25.0)
+
+[node name="Building_L2" parent="." instance=ExtResource("bld_b")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -34.0, 0.0, -12.0)
+
+[node name="Building_L3" parent="." instance=ExtResource("bld_c")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -34.0, 0.0, 2.0)
+
+[node name="Building_L4" parent="." instance=ExtResource("bld_d")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -34.0, 0.0, 16.0)
+
+# --- 🏙️ TATLI ÇİZGİ FİLM BİNALARI (SAĞ ŞEHİR SOKAĞI) ---
+[node name="Building_R1" parent="." instance=ExtResource("bld_e")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34.0, 0.0, -25.0)
+
+[node name="Building_R2" parent="." instance=ExtResource("bld_f")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34.0, 0.0, -12.0)
+
+[node name="Building_R3" parent="." instance=ExtResource("bld_g")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34.0, 0.0, 2.0)
+
+[node name="Building_R4" parent="." instance=ExtResource("bld_h")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 34.0, 0.0, 16.0)
+
+# --- ⛲ MİTİNG MEYDANI MERKEZ HAVUZU & SÜSLERİ ---
+[node name="CentralFountain" parent="." instance=ExtResource("fountain")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0.0, 0.0, 6.0)
+
+# --- 🚓 GÜVENLİK BARİKATI & ARAÇLAR ---
+[node name="PoliceCar" parent="." instance=ExtResource("car_pol")]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, -14.0, 0.0, 40.0)
+
+[node name="TaxiCar" parent="." instance=ExtResource("car_tax")]
+transform = Transform3D(0.866025, 0, -0.5, 0, 1, 0, 0.5, 0, 0.866025, 14.0, 0.0, 41.0)
+
+[node name="SedanCar" parent="." instance=ExtResource("car_sed")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.0, 0.0, 43.0)
+
+# --- 💡 SOKAK LAMBALARI & PARKE BANKLARI ---
+[node name="StreetLight_1" parent="." instance=ExtResource("street_light")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, -20.0, 0.0, -10.0)
+
+[node name="StreetLight_2" parent="." instance=ExtResource("street_light")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 20.0, 0.0, -10.0)
+
+[node name="StreetLight_3" parent="." instance=ExtResource("street_light")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, -20.0, 0.0, 24.0)
+
+[node name="StreetLight_4" parent="." instance=ExtResource("street_light")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 20.0, 0.0, 24.0)
+
+[node name="PlazaBench_1" parent="." instance=ExtResource("plaza_bench")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -12.0, 0.0, -4.0)
+
+[node name="PlazaBench_2" parent="." instance=ExtResource("plaza_bench")]
+transform = Transform3D(4.37114e-08, 0, -1, 0, 1, 0, 1, 0, 4.37114e-08, 12.0, 0.0, -4.0)
+
+[node name="PlazaBench_3" parent="." instance=ExtResource("plaza_bench")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.0, 14.0)
+
+# --- 🚩 MİTİNG SAHNESİ BAYRAKLARI & GÖZCÜ KULELERİ ---
+[node name="RallyFlag_Left" parent="." instance=ExtResource("rally_flag")]
+transform = Transform3D(2.0, 0, 0, 0, 2.0, 0, 0, 0, 2.0, -13.5, 1.4, -30.0)
+
+[node name="RallyFlag_Right" parent="." instance=ExtResource("rally_flag")]
+transform = Transform3D(2.0, 0, 0, 0, 2.0, 0, 0, 0, 2.0, 13.5, 1.4, -30.0)
+
+[node name="WatchWaterTower_L" parent="." instance=ExtResource("water_tower")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -34.0, 6.0, -25.0)
+
+[node name="WatchWaterTower_R" parent="." instance=ExtResource("water_tower")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 34.0, 6.0, -25.0)
+
+[node name="TrashCan_1" parent="." instance=ExtResource("trash_can")]
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, -18.0, 0.0, 8.0)
+
+[node name="TrashCan_2" parent="." instance=ExtResource("trash_can")]
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 18.0, 0.0, 8.0)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=997947994]
 _spawnable_scenes = PackedStringArray("uid://bts4blx0hl4nn", "uid://bbk7uovn5mim2")
