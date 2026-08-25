@@ -445,10 +445,7 @@ func _setup_sounds():
 	sfx_task_complete.volume_db = 3.0
 	add_child(sfx_task_complete)
 
-	sfx_footstep = AudioStreamPlayer.new()
-	sfx_footstep.stream = load("res://sounds/footstep.wav")
-	sfx_footstep.volume_db = -4.0
-	add_child(sfx_footstep)
+	# sfx_footstep kaldırıldı (adım sesi iptal edildi)
 
 	sfx_heartbeat = AudioStreamPlayer.new()
 	sfx_heartbeat.stream = load("res://sounds/heartbeat.wav")
@@ -1350,7 +1347,6 @@ func _physics_process(delta):
 
 	# --- 💥 GERİ BİLDİRİM ---
 	var is_moving = velocity.length() > 0.3
-	_update_footsteps(delta, is_moving)
 	_update_heartbeat(delta)
 	_process_camera_shake(delta)
 

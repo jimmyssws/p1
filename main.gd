@@ -31,44 +31,48 @@ var sfx_cheer: AudioStreamPlayer = null
 var sfx_rally_music: AudioStreamPlayer = null
 
 func _setup_ambient_audio():
-	# 🎵 Miting Arka Plan Marş & Tezahürat Müziği (Düşük Desibel)
+	# 🎵 Miting Arka Plan Marş & Müziği
 	sfx_rally_music = AudioStreamPlayer.new()
 	var music_stream = load("res://sounds/rally_ambient_music.wav") as AudioStreamWAV
 	if music_stream:
 		music_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
-		music_stream.loop_end = music_stream.data.size() / 2
-		sfx_rally_music.stream = music_stream
-		sfx_rally_music.volume_db = -14.0
+		music_stream.loop_end  = -1  # -1 = tüm dosya boyunca döngü
+		sfx_rally_music.stream    = music_stream
+		sfx_rally_music.volume_db = -16.0
 		add_child(sfx_rally_music)
 		sfx_rally_music.play()
+
+	# 🔊 NPC Kalabalık Uğultusu (3D konumsal)
 	ambient_player = AudioStreamPlayer3D.new()
 	var murmur_stream = load("res://sounds/npc_murmur.wav") as AudioStreamWAV
 	if murmur_stream:
-		murmur_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
-		murmur_stream.loop_end = murmur_stream.data.size() / 2
-		ambient_player.stream = murmur_stream
-		ambient_player.unit_size = 12.0
-		ambient_player.max_distance = 28.0
-		ambient_player.volume_db = 4.0
-		ambient_player.position = Vector3(0, 1.0, -5.0)
+		murmur_stream.loop_mode    = AudioStreamWAV.LOOP_FORWARD
+		murmur_stream.loop_end     = -1
+		ambient_player.stream      = murmur_stream
+		ambient_player.unit_size   = 14.0
+		ambient_player.max_distance = 30.0
+		ambient_player.volume_db   = 3.0
+		ambient_player.position    = Vector3(0, 1.0, -5.0)
 		ambient_player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_LOGARITHMIC
-		ambient_player.autoplay = true
 		add_child(ambient_player)
 		ambient_player.play()
-		
+
+	# 🚨 Alarm sireni
 	sfx_alarm = AudioStreamPlayer.new()
 	var alarm_stream = load("res://sounds/alarm_siren.wav") as AudioStreamWAV
 	if alarm_stream:
-		sfx_alarm.stream = alarm_stream
+		sfx_alarm.stream    = alarm_stream
 		sfx_alarm.volume_db = 6.0
 		add_child(sfx_alarm)
 
+	# 👏 Alkış / coşku sesi
 	sfx_cheer = AudioStreamPlayer.new()
 	var cheer_stream = load("res://sounds/cheer_applause.wav") as AudioStreamWAV
 	if cheer_stream:
-		sfx_cheer.stream = cheer_stream
+		sfx_cheer.stream    = cheer_stream
 		sfx_cheer.volume_db = 5.0
 		add_child(sfx_cheer)
+
 
 func _ready():
 	sync_poll_score(46.0, "📊 Canlı Anket Başladı")
