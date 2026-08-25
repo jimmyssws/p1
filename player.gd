@@ -806,16 +806,21 @@ func _execute_president_sprint():
 	await get_tree().create_timer(3.0).timeout
 	sprint_active = false
 
-# 📢 Başkan Megafon (Kalabalığı Sahne Önüne Toplama)
+# 📢 Başkan Megafon Miting Çağrısı
 func _execute_president_rally_call():
 	if megaphone_cooldown > 0:
 		_show_temp_prompt("⏳ Megafon Dinleniyor! (%.1f sn)" % megaphone_cooldown)
 		return
-	megaphone_cooldown = 15.0
-	_show_temp_prompt("📢 Sevgili Vatandaşlarım! (Miting Sahnesi Önüne Toplanıyorlar)")
+	megaphone_cooldown = 10.0
 	_animate_hand_action()
-	# Sahne önündeki koordinat: (0, 0, -12)
-	get_node("/root/main").rpc("trigger_crowd_panic", Vector3(0, 0, -12), 30.0)
+	_show_temp_prompt("📢 'SEVGİLİ VATANDAŞLARIM!' (+1.8% Seçim Oyu)")
+	var mn = get_node_or_null("/root/main")
+	if mn:
+		if mn.has_method("adjust_poll_score"):
+			mn.adjust_poll_score(1.8, "📢 Miting Coşkusu (+1.8%)")
+		if mn.has_method("trigger_crowd_panic"):
+			mn.rpc("trigger_crowd_panic", Vector3(0, 0, -12), 30.0)
+	_update_weapon_hud()
 
 # 🔪 Suikastçı Bıçak İnfazı
 func _execute_assassin_knife():
@@ -1009,7 +1014,7 @@ func _handle_president_task(delta):
 			task_progress += 8.0 * delta # ~12.5 sn toplam süre
 			progress_bar.value = task_progress
 			if action_prompt:
-				action_prompt.text = "%s ([E] Basılı Tut: %%.0f%%%%)" % [target_label, task_progress]
+				action_prompt.text = "%s ([E] Basılı Tut: %d%%)" % [target_label, int(task_progress)]
 				
 			# 🎙️ Kürsü Konuşması Checkpoint & Vaat Yayınları (%25, %50, %75)
 			if mission_state == 0:
@@ -1261,19 +1266,26 @@ func _execute_assassin_disguise():
 	var rand_idx = randi() % 6
 	rpc("net_apply_disguise", rand_idx)
 
-# 🍵 Başkan: Halka Keyif Çayı Fırlatma (Halk Kalkanı)
+# 🍵 Başkan: Halka Keyif Çayı Fırlatma (Halk Kalkanı & +%2.5 Oy)
 func _execute_president_throw_tea():
 	if tea_cooldown > 0:
 		_show_temp_prompt("⏳ Çay Kolisi Hazırlanıyor! (%.1f sn)" % tea_cooldown)
 		return
-	tea_cooldown = 7.0
-	_show_temp_prompt("🍵 KEYİF ÇAYI FIRLATILDI! Kalabalık çayı kapmak için hücum ediyor!")
+	tea_cooldown = 6.0
+	_show_temp_prompt("🍵 KEYİF ÇAYI FIRLATILDI! (+2.5% Seçim Oyu!)")
 	_animate_hand_action()
+	trigger_camera_shake(0.2, 0.12)
 	
-	var throw_dir = -camera.global_transform.basis.z.normalized()
+	var throw_dir = -camera.global_transform.basis.z.normalized() if camera else Vector3(0, 0, -1)
 	var mn = get_node_or_null("/root/main")
-	if mn and mn.has_method("spawn_flying_tea"):
-		mn.rpc("spawn_flying_tea", global_position + Vector3(0, 1.2, 0), throw_dir)
+	if mn:
+		if mn.has_method("adjust_poll_score"):
+			mn.adjust_poll_score(2.5, "🍵 Keyif Çayı Dağıtıldı (+2.5%)")
+		if mn.has_method("trigger_crowd_cheer"):
+			mn.rpc("trigger_crowd_cheer", global_position, 20.0)
+		if mn.has_method("spawn_flying_tea"):
+			mn.rpc("spawn_flying_tea", global_position + Vector3(0, 1.2, 0), throw_dir)
+	_update_weapon_hud()
 
 
 # 🔫 3. Şahıs Silah Görünürlüğü (Ateş Edince Açığa Çıkma)
@@ -1447,3 +1459,4 @@ func defend_against_bullet() -> bool:
 		_update_weapon_hud()
 		return true
 	return false
+
