@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bonmonio1csdd"]
 
 [ext_resource type="Script" uid="uid://7yprv15pyl1e" path="res://scripts/main.gd" id="1_ig7tw"]
+[ext_resource type="Script" path="res://scripts/weather_controller.gd" id="weather_controller_script"]
 [ext_resource type="PackedScene" path="res://models_kaykit/gltf/building_A_withoutBase.gltf" id="wc_cabin_model"]
 [ext_resource type="PackedScene" path="res://models_city/grass-trees-tall.glb" id="tree_tall"]
 [ext_resource type="PackedScene" path="res://models_city/grass-trees.glb" id="tree_round"]
@@ -367,6 +368,16 @@ tonemap_exposure = 1.05
 glow_enabled = true
 glow_intensity = 0.15
 glow_bloom = 0.05
+fog_enabled = true
+fog_light_color = Color(0.6, 0.7, 0.8, 1)
+fog_density = 0.006
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.035
+volumetric_fog_albedo = Color(0.65, 0.72, 0.85, 1)
+volumetric_fog_emission = Color(0.04, 0.06, 0.1, 1)
+volumetric_fog_emission_energy = 0.5
+volumetric_fog_anisotropy = 0.3
+volumetric_fog_length = 75.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_turnstile_post"]
 size = Vector3(0.35, 1.4, 0.35)
@@ -1183,3 +1194,6 @@ transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 12.0, 0.0, -2.0)
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=997947994]
 _spawnable_scenes = PackedStringArray("uid://bts4blx0hl4nn", "uid://bbk7uovn5mim2")
 spawn_path = NodePath("..")
+
+[node name="WeatherController" type="Node" parent="." unique_id=98712345]
+script = ExtResource("weather_controller_script")
