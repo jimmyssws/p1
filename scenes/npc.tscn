@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bbk7uovn5mim2"]
 
-[ext_resource type="Script" uid="uid://dlmvn5hv7686l" path="res://npc.gd" id="1_ideak"]
+[ext_resource type="Script" uid="uid://dlmvn5hv7686l" path="res://scripts/npc.gd" id="1_ideak"]
 [ext_resource type="PackedScene" path="res://models_animated/character_animated.glb" id="2_anim_char"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0xm2m"]

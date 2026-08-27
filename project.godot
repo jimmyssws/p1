@@ -11,13 +11,13 @@ config_version=5
 [application]
 
 config/name="Suikastci ve Baskan"
-run/main_scene="res://menu.tscn"
+run/main_scene="res://scenes/menu.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-Global="*res://global.gd"
+Global="*res://autoload/global.gd"
 
 [debug]
 

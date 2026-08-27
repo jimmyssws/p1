@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://menu_main_001"]
 
-[ext_resource type="Script" path="res://menu.gd" id="1_menu"]
+[ext_resource type="Script" path="res://scripts/menu.gd" id="1_menu"]
 [ext_resource type="Texture2D" path="res://ui_kenney/grey_panel.png" id="tex_grey_panel"]
 [ext_resource type="Texture2D" path="res://ui_kenney/blue_panel.png" id="tex_blue_panel"]
 [ext_resource type="Texture2D" path="res://ui_kenney/blue_button00.png" id="tex_blue_btn"]

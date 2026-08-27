@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bts4blx0hl4nn"]
 
-[ext_resource type="Script" uid="uid://b5kvqbk70883r" path="res://player.gd" id="1_4flbx"]
-[ext_resource type="Script" path="res://minimap.gd" id="minimap_script"]
+[ext_resource type="Script" uid="uid://b5kvqbk70883r" path="res://scripts/player.gd" id="1_4flbx"]
+[ext_resource type="Script" path="res://scripts/minimap.gd" id="minimap_script"]
 [ext_resource type="PackedScene" path="res://models_animated/character_animated.glb" id="3_anim_char"]
 [ext_resource type="Texture2D" path="res://ui_kenney/grey_panel.png" id="tex_grey_panel"]
 [ext_resource type="Texture2D" path="res://ui_kenney/blue_panel.png" id="tex_blue_panel"]

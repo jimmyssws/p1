@@ -55,12 +55,12 @@ func _on_quick_server_pressed():
 	if get_node_or_null("/root/Global"):
 		Global.server_ip = MAIN_SERVER_IP
 		Global.network_mode = "JOIN"
-	get_tree().change_scene_to_file("res://main.tscn")
+	get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 func _on_host_pressed():
 	if get_node_or_null("/root/Global"):
 		Global.network_mode = "HOST"
-	get_tree().change_scene_to_file("res://main.tscn")
+	get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 func _on_join_toggle_pressed():
 	join_section.visible = not join_section.visible
@@ -74,7 +74,7 @@ func _on_join_confirm_pressed():
 	if get_node_or_null("/root/Global"):
 		Global.server_ip = ip
 		Global.network_mode = "JOIN"
-	get_tree().change_scene_to_file("res://main.tscn")
+	get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 func _on_settings_pressed():
 	settings_panel.show()

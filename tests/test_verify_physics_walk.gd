@@ -2,7 +2,7 @@ extends SceneTree
 
 func _init():
 	print("--- 🧪 TESTING PHYSICS WALK & MOVEMENT ---")
-	var p_scene = load("res://player.tscn")
+	var p_scene = load("res://scenes/player.tscn")
 	var p = p_scene.instantiate()
 	root.add_child(p)
 	p.position = Vector3(0, 3, 0)
@@ -15,7 +15,7 @@ func _init():
 	
 	p.free()
 	
-	var n_scene = load("res://npc.tscn")
+	var n_scene = load("res://scenes/npc.tscn")
 	var npc = n_scene.instantiate()
 	root.add_child(npc)
 	npc.position = Vector3(0, 3, 0)

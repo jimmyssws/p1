@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bonmonio1csdd"]
 
-[ext_resource type="Script" uid="uid://7yprv15pyl1e" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://7yprv15pyl1e" path="res://scripts/main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" path="res://models_kaykit/gltf/building_A_withoutBase.gltf" id="wc_cabin_model"]
 [ext_resource type="PackedScene" path="res://models_city/grass-trees-tall.glb" id="tree_tall"]
 [ext_resource type="PackedScene" path="res://models_city/grass-trees.glb" id="tree_round"]

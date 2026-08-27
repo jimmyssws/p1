@@ -1,8 +1,8 @@
 extends Node3D
 
 var peer = ENetMultiplayerPeer.new()
-var player_scene = preload("res://player.tscn")
-var npc_scene = preload("res://npc.tscn")
+var player_scene = preload("res://scenes/player.tscn")
+var npc_scene = preload("res://scenes/npc.tscn")
 var connected_players = []
 
 var match_seconds: int = 180
@@ -316,7 +316,7 @@ func _on_connected_to_server():
 	rpc_id(1, "register_client_to_lobby", my_id)
 
 func _on_server_disconnected():
-	get_tree().change_scene_to_file("res://menu.tscn")
+	get_tree().change_scene_to_file("res://scenes/menu.tscn")
 
 func _on_peer_connected(id: int):
 	if not multiplayer.is_server(): return
@@ -492,7 +492,7 @@ func _on_lobby_start_pressed():
 func _on_lobby_leave_pressed():
 	if multiplayer.has_multiplayer_peer():
 		multiplayer.multiplayer_peer.close()
-	get_tree().change_scene_to_file("res://menu.tscn")
+	get_tree().change_scene_to_file("res://scenes/menu.tscn")
 
 @rpc("any_peer", "call_local")
 func launch_match_from_lobby():

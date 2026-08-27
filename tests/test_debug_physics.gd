@@ -2,7 +2,7 @@ extends SceneTree
 
 func _init():
 	print("--- 🧪 DEBUGGING PHYSICS & MOVEMENT ---")
-	var main_scene = load("res://main.tscn")
+	var main_scene = load("res://scenes/main.tscn")
 	var main_node = main_scene.instantiate()
 	root.add_child(main_node)
 	

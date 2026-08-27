@@ -287,7 +287,7 @@ func _toggle_pause():
 func _quit_to_menu():
 	if drone_mode: _deactivate_drone()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	get_tree().change_scene_to_file("res://menu.tscn")
+	get_tree().change_scene_to_file("res://scenes/menu.tscn")
 
 func _setup_drone():
 	drone_anchor = Node3D.new()
