@@ -135,9 +135,24 @@ func play_stage_announcement(sound_path: String):
 			stage_broadcast_speaker.stream = stream
 			stage_broadcast_speaker.play()
 
+var weather_controller: Node = null
+
+func _setup_weather_system():
+	if not weather_controller:
+		var weather_script = load("res://scripts/weather_controller.gd")
+		if weather_script:
+			weather_controller = Node.new()
+			weather_controller.name = "WeatherController"
+			weather_controller.set_script(weather_script)
+			if has_node("WorldEnvironment"):
+				weather_controller.fog_environment = $WorldEnvironment
+			add_child(weather_controller)
+			print("🌦️ [WeatherSystem] Dinamik Hava ve Sis Kontrolcüsü oyuna başarıyla bağlandı!")
+
 func _ready():
 	_setup_stage_speaker()
 	_setup_ambient_audio()
+	_setup_weather_system()
 	_create_news_ticker_ui()
 	sync_poll_score(46.0, "📊 Canlı Anket Başladı")
 	sync_timer(180)
