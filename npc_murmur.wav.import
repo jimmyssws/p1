@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://cba6ttgmb0g3p"
-path="res://.godot/imported/npc_murmur.wav-15c51f682a4212fcfb80510385b01eac.sample"
+path="res://.godot/imported/npc_murmur.wav-5f7e1266360029e7adf271133a3bab57.sample"
 
 [deps]
 
-source_file="res://sounds/npc_murmur.wav"
-dest_files=["res://.godot/imported/npc_murmur.wav-15c51f682a4212fcfb80510385b01eac.sample"]
+source_file="res://npc_murmur.wav"
+dest_files=["res://.godot/imported/npc_murmur.wav-5f7e1266360029e7adf271133a3bab57.sample"]
 
 [params]
 

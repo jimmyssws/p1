@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://b6s3ajes7p73c"
-path="res://.godot/imported/heartbeat.wav-84e5a7462ae92b20a5c2dcf6baa2f171.sample"
+path="res://.godot/imported/heartbeat.wav-0c5248f031ba63a1fd5a66e4133ad03c.sample"
 
 [deps]
 
-source_file="res://sounds/heartbeat.wav"
-dest_files=["res://.godot/imported/heartbeat.wav-84e5a7462ae92b20a5c2dcf6baa2f171.sample"]
+source_file="res://heartbeat.wav"
+dest_files=["res://.godot/imported/heartbeat.wav-0c5248f031ba63a1fd5a66e4133ad03c.sample"]
 
 [params]
 

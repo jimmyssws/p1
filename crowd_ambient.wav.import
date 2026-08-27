@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://yw47tet1x8aw"
-path="res://.godot/imported/crowd_ambient.wav-81ea7e89b5ab3142a3b9cb57d987fa29.sample"
+path="res://.godot/imported/crowd_ambient.wav-a8352e3afaa57861d946fa24f4bb981c.sample"
 
 [deps]
 
-source_file="res://sounds/crowd_ambient.wav"
-dest_files=["res://.godot/imported/crowd_ambient.wav-81ea7e89b5ab3142a3b9cb57d987fa29.sample"]
+source_file="res://crowd_ambient.wav"
+dest_files=["res://.godot/imported/crowd_ambient.wav-a8352e3afaa57861d946fa24f4bb981c.sample"]
 
 [params]
 

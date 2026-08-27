@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://by13h50nfybry"
-path="res://.godot/imported/alarm_siren.wav-00f9b6ff4dc97344b19311bd71a042ac.sample"
+path="res://.godot/imported/alarm_siren.wav-d83ce179a72f2278724aae03d786b876.sample"
 
 [deps]
 
-source_file="res://sounds/alarm_siren.wav"
-dest_files=["res://.godot/imported/alarm_siren.wav-00f9b6ff4dc97344b19311bd71a042ac.sample"]
+source_file="res://alarm_siren.wav"
+dest_files=["res://.godot/imported/alarm_siren.wav-d83ce179a72f2278724aae03d786b876.sample"]
 
 [params]
 

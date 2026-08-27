@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://3ae2l6bmj511"
-path="res://.godot/imported/knife.wav-9ac2723eff9e0cea8a8a4cbdcf6cbf97.sample"
+path="res://.godot/imported/knife.wav-a8db59e1ed654d0bfac066d0bdea1da8.sample"
 
 [deps]
 
-source_file="res://sounds/knife.wav"
-dest_files=["res://.godot/imported/knife.wav-9ac2723eff9e0cea8a8a4cbdcf6cbf97.sample"]
+source_file="res://knife.wav"
+dest_files=["res://.godot/imported/knife.wav-a8db59e1ed654d0bfac066d0bdea1da8.sample"]
 
 [params]
 

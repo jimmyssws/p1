@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://b2kni2n88bdjc"
-path="res://.godot/imported/taser.wav-5f165157cf4b0669b0d5c7016427d2e0.sample"
+path="res://.godot/imported/taser.wav-0495be9613ef19050a7a4fbb3c16386e.sample"
 
 [deps]
 
-source_file="res://sounds/taser.wav"
-dest_files=["res://.godot/imported/taser.wav-5f165157cf4b0669b0d5c7016427d2e0.sample"]
+source_file="res://taser.wav"
+dest_files=["res://.godot/imported/taser.wav-0495be9613ef19050a7a4fbb3c16386e.sample"]
 
 [params]
 

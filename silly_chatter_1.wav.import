@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://bvdvwj3eky2yv"
-path="res://.godot/imported/silly_chatter_1.wav-52f6e1ec9f2b1fab71071cf27bd010e9.sample"
+path="res://.godot/imported/silly_chatter_1.wav-813afec58175dd172a72a346f1010365.sample"
 
 [deps]
 
-source_file="res://sounds/silly_chatter_1.wav"
-dest_files=["res://.godot/imported/silly_chatter_1.wav-52f6e1ec9f2b1fab71071cf27bd010e9.sample"]
+source_file="res://silly_chatter_1.wav"
+dest_files=["res://.godot/imported/silly_chatter_1.wav-813afec58175dd172a72a346f1010365.sample"]
 
 [params]
 
