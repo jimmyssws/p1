@@ -118,3 +118,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			else:
 				target_fog_density = 0.08
 			print("🌫️ [Hava Durumu] Hedef Sis Yoğunluğu: ", target_fog_density)
+		elif event.keycode == KEY_T:
+			# T tuşu: Şimşek çaktıran fırtına mekaniği
+			_trigger_lightning_storm()
