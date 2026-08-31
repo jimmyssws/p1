@@ -45,58 +45,94 @@
 [ext_resource type="Material" path="res://assets/materials/furniture_wood.tres" id="mat_furniture"]
 [ext_resource type="Script" path="res://scripts/recursive_material_override.gd" id="recursive_material_script"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_TopHeader"]
-texture = ExtResource("tex_grey_panel")
-texture_margin_left = 12.0
-texture_margin_top = 10.0
-texture_margin_right = 12.0
-texture_margin_bottom = 10.0
-modulate_color = Color(0.92, 0.95, 1.0, 0.96)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_TimerBadge"]
-texture = ExtResource("tex_yellow_btn")
-texture_margin_left = 10.0
-texture_margin_top = 8.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_RoleBadge"]
-texture = ExtResource("tex_blue_btn")
-texture_margin_left = 10.0
-texture_margin_top = 8.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_StatusBadge"]
-texture = ExtResource("tex_grey_btn")
-texture_margin_left = 10.0
-texture_margin_top = 8.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_Poll_Track"]
-texture = ExtResource("tex_red_btn")
-texture_margin_left = 6.0
-texture_margin_top = 6.0
-texture_margin_right = 6.0
-texture_margin_bottom = 6.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_Poll_Fill"]
-texture = ExtResource("tex_blue_btn")
-texture_margin_left = 6.0
-texture_margin_top = 6.0
-texture_margin_right = 6.0
-texture_margin_bottom = 6.0
-bg_color = Color(0.95, 0.32, 0.32, 1.0)
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-bg_color = Color(0.65, 0.08, 0.1, 0.96)
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_TopHeader"]
+content_margin_left = 16.0
+content_margin_top = 6.0
+content_margin_right = 16.0
+content_margin_bottom = 6.0
+bg_color = Color(0.04, 0.07, 0.14, 0.82)
+border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.95, 0.25, 0.25, 0.8)
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
+border_color = Color(0.22, 0.74, 0.97, 0.4)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_TimerBadge"]
+content_margin_left = 10.0
+content_margin_top = 4.0
+content_margin_right = 10.0
+content_margin_bottom = 4.0
+bg_color = Color(0.96, 0.76, 0.17, 0.2)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.96, 0.76, 0.17, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_RoleBadge"]
+content_margin_left = 10.0
+content_margin_top = 4.0
+content_margin_right = 10.0
+content_margin_bottom = 4.0
+bg_color = Color(0.12, 0.45, 0.9, 0.25)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.22, 0.74, 0.97, 0.85)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_StatusBadge"]
+content_margin_left = 10.0
+content_margin_top = 4.0
+content_margin_right = 10.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.15, 0.24, 0.75)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.45, 0.65, 0.4)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_Poll_Track"]
+bg_color = Color(0.75, 0.15, 0.18, 0.85)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.95, 0.35, 0.35, 0.6)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_Poll_Fill"]
+bg_color = Color(0.12, 0.48, 0.95, 0.95)
+corner_radius_top_left = 6
+corner_radius_top_right = 0
+corner_radius_bottom_right = 0
+corner_radius_bottom_left = 6
+border_width_left = 1
+border_width_top = 1
+border_width_bottom = 1
+border_color = Color(0.25, 0.8, 1.0, 0.85)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_News_Ticker"]
 bg_color = Color(0.75, 0.12, 0.15, 0.9)
@@ -343,14 +379,15 @@ size = Vector3(3.0, 16.0, 160.0)
 size = Vector3(160.0, 16.0, 3.0)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_Day"]
-sky_top_color = Color(0.12, 0.16, 0.28, 1)
-sky_horizon_color = Color(0.35, 0.42, 0.55, 1)
-sky_curve = 0.12
-ground_bottom_color = Color(0.08, 0.10, 0.14, 1)
-ground_horizon_color = Color(0.25, 0.30, 0.40, 1)
-ground_curve = 0.08
-sun_angle_max = 25.0
-sun_curve = 0.15
+sky_top_color = Color(0.22, 0.48, 0.82, 1)
+sky_horizon_color = Color(0.92, 0.76, 0.62, 1)
+sky_curve = 0.15
+sky_energy_multiplier = 1.15
+ground_bottom_color = Color(0.22, 0.24, 0.28, 1)
+ground_horizon_color = Color(0.72, 0.62, 0.52, 1)
+ground_curve = 0.1
+sun_angle_max = 30.0
+sun_curve = 0.2
 
 [sub_resource type="Sky" id="Sky_Day"]
 sky_material = SubResource("ProceduralSkyMaterial_Day")
@@ -359,23 +396,19 @@ sky_material = SubResource("ProceduralSkyMaterial_Day")
 background_mode = 2
 sky = SubResource("Sky_Day")
 ambient_light_source = 3
-ambient_light_color = Color(0.40, 0.45, 0.60, 1)
-ambient_light_sky_contribution = 0.35
+ambient_light_color = Color(0.85, 0.88, 0.95, 1)
+ambient_light_sky_contribution = 0.75
+ambient_light_energy = 1.25
 tonemap_mode = 2
-tonemap_exposure = 1.05
+tonemap_exposure = 1.15
 glow_enabled = true
-glow_intensity = 0.25
-glow_bloom = 0.1
+glow_intensity = 0.2
+glow_bloom = 0.08
 fog_enabled = true
-fog_light_color = Color(0.45, 0.52, 0.65, 1)
-fog_density = 0.035
-volumetric_fog_enabled = true
-volumetric_fog_density = 0.05
-volumetric_fog_albedo = Color(0.60, 0.68, 0.85, 1)
-volumetric_fog_emission = Color(0.08, 0.12, 0.20, 1)
-volumetric_fog_emission_energy = 0.8
-volumetric_fog_anisotropy = 0.3
-volumetric_fog_length = 75.0
+fog_light_color = Color(0.88, 0.82, 0.76, 1)
+fog_density = 0.004
+fog_sky_affect = 0.2
+volumetric_fog_enabled = false
 
 [sub_resource type="BoxMesh" id="BoxMesh_turnstile_post"]
 size = Vector3(0.35, 1.4, 0.35)
@@ -506,6 +539,14 @@ surface_material_override/0 = SubResource("Mat_Red_Carpet")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8, -6.6)
 mesh = SubResource("BoxMesh_backdrop")
 surface_material_override/0 = ExtResource("mat_stage_metal")
+
+[node name="StageBannerLabel" type="Label3D" parent="StagePlatform/BackdropMesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0.22)
+text = "🇹🇷 BÜYÜK HALK MİTİNGİ 🇹🇷\n« BİRLİKTE DAHA GÜÇLÜ »"
+font_size = 52
+outline_size = 16
+modulate = Color(1, 0.92, 0.4, 1)
+outline_modulate = Color(0.7, 0.08, 0.1, 1)
 
 [node name="Speaker_L" type="MeshInstance3D" parent="StagePlatform"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 1.8, 4.0)
@@ -864,13 +905,13 @@ shape = SubResource("BoxShape3D_gate")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 30, 0)
-light_color = Color(0.65, 0.75, 0.95, 1)
-light_energy = 0.35
+light_color = Color(1.0, 0.94, 0.84, 1)
+light_energy = 1.85
 shadow_enabled = true
-directional_shadow_max_distance = 65.0
-directional_shadow_split_1 = 0.12
-directional_shadow_split_2 = 0.3
-directional_shadow_split_3 = 0.6
+directional_shadow_max_distance = 110.0
+directional_shadow_split_1 = 0.15
+directional_shadow_split_2 = 0.35
+directional_shadow_split_3 = 0.7
 directional_shadow_blend_splits = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -916,9 +957,9 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_TimerBadge")
 
 [node name="TimerLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox/TimerBadge"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.15, 0.05, 1)
+theme_override_colors/font_color = Color(1.0, 0.88, 0.35, 1)
 theme_override_font_sizes/font_size = 13
-text = " ⏱️ 03:00 "
+text = "⏱️ 03:00"
 vertical_alignment = 1
 
 [node name="RoleBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox"]
@@ -927,9 +968,9 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_RoleBadge")
 
 [node name="RoleLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox/RoleBadge"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.9, 0.96, 1.0, 1)
 theme_override_font_sizes/font_size = 12
-text = " 👑 BAŞKAN "
+text = "👑 BAŞKAN"
 vertical_alignment = 1
 
 [node name="CenterPollBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox"]
@@ -940,13 +981,13 @@ alignment = 1
 
 [node name="PresVoteLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.12, 0.45, 0.9, 1)
+theme_override_colors/font_color = Color(0.35, 0.78, 1.0, 1)
 theme_override_font_sizes/font_size = 13
 text = "🏛️ BAŞKAN %46.0"
 vertical_alignment = 1
 
 [node name="VoteProgressBar" type="ProgressBar" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox"]
-custom_minimum_size = Vector2(170, 18)
+custom_minimum_size = Vector2(170, 16)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxTexture_Poll_Track")
@@ -956,7 +997,7 @@ show_percentage = false
 
 [node name="OppVoteLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.18, 0.18, 1)
+theme_override_colors/font_color = Color(1.0, 0.45, 0.45, 1)
 theme_override_font_sizes/font_size = 13
 text = "🦅 RAKİP %54.0"
 vertical_alignment = 1
@@ -967,9 +1008,9 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_StatusBadge")
 
 [node name="TrendLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/TrendBadge"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.25, 0.35, 1)
+theme_override_colors/font_color = Color(0.75, 0.85, 0.95, 1)
 theme_override_font_sizes/font_size = 12
-text = "  📊 Canlı Anket  "
+text = "📊 Canlı Anket"
 vertical_alignment = 1
 
 [node name="RightBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox"]
@@ -982,9 +1023,9 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_StatusBadge")
 
 [node name="StatusLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/RightBox/StatusBadge"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.25, 0.35, 1)
+theme_override_colors/font_color = Color(0.85, 0.92, 1.0, 1)
 theme_override_font_sizes/font_size = 12
-text = " 👥 Miting Meydanı (130 Kişi) "
+text = "👥 Miting Meydanı (130 Kişi)"
 vertical_alignment = 1
 
 

@@ -210,12 +210,59 @@ corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
-shadow_color = Color(0.22, 0.74, 0.97, 0.3)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_PauseCard"]
+content_margin_left = 24.0
+content_margin_top = 20.0
+content_margin_right = 24.0
+content_margin_bottom = 20.0
+bg_color = Color(0.04, 0.07, 0.14, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.22, 0.74, 0.97, 0.6)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0, 0, 0, 0.65)
+shadow_size = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ResumeBtn"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+bg_color = Color(0.08, 0.38, 0.22, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.85, 0.45, 0.8)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0.08, 0.38, 0.22, 0.3)
 shadow_size = 6
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_QuitBtn"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+bg_color = Color(0.45, 0.1, 0.12, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.95, 0.3, 0.3, 0.8)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0.45, 0.1, 0.12, 0.3)
+shadow_size = 6
 
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_forearm"]
@@ -642,6 +689,7 @@ offset_right = 220.0
 offset_bottom = -80.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_PauseCard")
 
 [node name="ScanTitle" type="Label" parent="HUD/ScanResultPanel" unique_id=9382710]
 layout_mode = 1
@@ -653,6 +701,7 @@ offset_top = 8.0
 offset_right = 200.0
 offset_bottom = 32.0
 grow_horizontal = 2
+theme_override_colors/font_color = Color(0.22, 0.74, 0.97, 1)
 text = "📡 METAL DEDEKTÖRÜ SONUCU"
 horizontal_alignment = 1
 
@@ -682,6 +731,7 @@ offset_top = 20.0
 offset_right = 220.0
 offset_bottom = 100.0
 grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_PauseCard")
 
 [node name="RoleTitle" type="Label" parent="HUD/RoleCardPanel" unique_id=19283745]
 layout_mode = 1
@@ -781,76 +831,92 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0.0, 0.0, 0.05, 0.75)
+color = Color(0.02, 0.04, 0.08, 0.78)
 
-[node name="VBox" type="VBoxContainer" parent="HUD/PausePanel" unique_id=8820002]
+[node name="CenterBox" type="CenterContainer" parent="HUD/PausePanel"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -170.0
-offset_top = -180.0
-offset_right = 170.0
-offset_bottom = 180.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Card" type="PanelContainer" parent="HUD/PausePanel/CenterBox"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_PauseCard")
+
+[node name="VBox" type="VBoxContainer" parent="HUD/PausePanel/CenterBox/Card" unique_id=8820002]
+layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="PauseTitle" type="Label" parent="HUD/PausePanel/VBox" unique_id=8820003]
-theme_override_font_sizes/font_size = 28
+[node name="PauseTitle" type="Label" parent="HUD/PausePanel/CenterBox/Card/VBox" unique_id=8820003]
+theme_override_colors/font_color = Color(1, 0.88, 0.35, 1)
+theme_override_font_sizes/font_size = 24
 text = "⏸️  DURAKLATILDI"
 horizontal_alignment = 1
 
-[node name="HSep" type="HSeparator" parent="HUD/PausePanel/VBox" unique_id=8820004]
+[node name="HSep" type="HSeparator" parent="HUD/PausePanel/CenterBox/Card/VBox" unique_id=8820004]
 
-[node name="ControlsLabel" type="Label" parent="HUD/PausePanel/VBox" unique_id=8820005]
-theme_override_font_sizes/font_size = 13
+[node name="ControlsLabel" type="Label" parent="HUD/PausePanel/CenterBox/Card/VBox" unique_id=8820005]
+theme_override_colors/font_color = Color(0.8, 0.88, 0.96, 1)
+theme_override_font_sizes/font_size = 12
 text = "WASD — Hareket     Boşluk — Zıpla     E — Etkileşim
 1 / 2 — Silah Seç     F1/F2/F3 — Test Rolü"
 horizontal_alignment = 1
 
-[node name="SensContainer" type="VBoxContainer" parent="HUD/PausePanel/VBox" unique_id=8820010]
+[node name="SensContainer" type="VBoxContainer" parent="HUD/PausePanel/CenterBox/Card/VBox" unique_id=8820010]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="SensHeader" type="HBoxContainer" parent="HUD/PausePanel/VBox/SensContainer" unique_id=8820011]
+[node name="SensHeader" type="HBoxContainer" parent="HUD/PausePanel/CenterBox/Card/VBox/SensContainer" unique_id=8820011]
 layout_mode = 2
 
-[node name="SensTitle" type="Label" parent="HUD/PausePanel/VBox/SensContainer/SensHeader" unique_id=8820012]
+[node name="SensTitle" type="Label" parent="HUD/PausePanel/CenterBox/Card/VBox/SensContainer/SensHeader" unique_id=8820012]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 13
 text = "🖱️ Fare Hassasiyeti"
 
-[node name="SensValLabel" type="Label" parent="HUD/PausePanel/VBox/SensContainer/SensHeader" unique_id=8820013]
+[node name="SensValLabel" type="Label" parent="HUD/PausePanel/CenterBox/Card/VBox/SensContainer/SensHeader" unique_id=8820013]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.2, 0.75, 1.0, 1.0)
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.22, 0.74, 0.97, 1)
 text = "1.00x (%100)"
 
-[node name="SensSlider" type="HSlider" parent="HUD/PausePanel/VBox/SensContainer" unique_id=8820014]
-custom_minimum_size = Vector2(0, 28)
+[node name="SensSlider" type="HSlider" parent="HUD/PausePanel/CenterBox/Card/VBox/SensContainer" unique_id=8820014]
+custom_minimum_size = Vector2(0, 24)
 min_value = 0.2
 max_value = 3.0
 step = 0.05
 value = 1.0
 
-[node name="Spacer" type="Control" parent="HUD/PausePanel/VBox" unique_id=8820006]
+[node name="Spacer" type="Control" parent="HUD/PausePanel/CenterBox/Card/VBox" unique_id=8820006]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 10)
+custom_minimum_size = Vector2(0, 6)
 
-[node name="ResumeButton" type="Button" parent="HUD/PausePanel/VBox" unique_id=8820007]
-custom_minimum_size = Vector2(0, 48)
+[node name="ResumeButton" type="Button" parent="HUD/PausePanel/CenterBox/Card/VBox" unique_id=8820007]
+custom_minimum_size = Vector2(0, 44)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_ResumeBtn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ResumeBtn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ResumeBtn")
 text = "▶️  Devam Et"
 
-[node name="QuitButton" type="Button" parent="HUD/PausePanel/VBox" unique_id=8820008]
-custom_minimum_size = Vector2(0, 48)
+[node name="QuitButton" type="Button" parent="HUD/PausePanel/CenterBox/Card/VBox" unique_id=8820008]
+custom_minimum_size = Vector2(0, 44)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_QuitBtn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_QuitBtn")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_QuitBtn")
 text = "🚪  Ana Menüye Dön"
 
-[node name="ControlsLabel2" type="Label" parent="HUD/PausePanel/VBox" unique_id=8820009]
-theme_override_font_sizes/font_size = 12
+[node name="ControlsLabel2" type="Label" parent="HUD/PausePanel/CenterBox/Card/VBox" unique_id=8820009]
+theme_override_colors/font_color = Color(0.6, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 11
 text = "F — Drone Uçur (Koruma)"
 horizontal_alignment = 1
 
