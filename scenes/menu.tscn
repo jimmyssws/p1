@@ -272,6 +272,26 @@ theme_override_colors/font_color = Color(0.1, 0.5, 0.9, 1)
 text = "1.00x"
 horizontal_alignment = 2
 
+[node name="WeatherTitle" type="Label" parent="SettingsPanel/VBox" unique_id=1000045]
+theme_override_colors/font_color = Color(0.2, 0.25, 0.35, 1)
+theme_override_font_sizes/font_size = 14
+text = "🌦️ Hava Durumu Seçeneği"
+
+[node name="WeatherRow" type="HBoxContainer" parent="SettingsPanel/VBox" unique_id=1000046]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="WeatherOption" type="OptionButton" parent="SettingsPanel/VBox/WeatherRow" unique_id=1000047]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+item_count = 2
+popup/item_0/text = "☀️ Güneşli / Açık Hava"
+popup/item_0/id = 0
+popup/item_1/text = "🌧️ Yağmurlu / Sisli Hava"
+popup/item_1/id = 1
+
 [node name="CloseButton" type="Button" parent="SettingsPanel/VBox" unique_id=1000023]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2

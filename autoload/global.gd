@@ -4,6 +4,7 @@ var network_mode: String = "HOST"
 var join_ip: String = "127.0.0.1"
 var master_volume: float = 0.85
 var sfx_volume: float = 0.85
+var weather_type: String = "SUNNY"
 
 func _ready():
 	_apply_master_volume(master_volume)

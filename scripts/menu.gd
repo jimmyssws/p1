@@ -14,6 +14,7 @@ extends Control
 @onready var vol_label = $SettingsPanel/VBox/VolRow/VolValueLabel
 @onready var sens_slider = $SettingsPanel/VBox/SensRow/SensSlider if has_node("SettingsPanel/VBox/SensRow/SensSlider") else null
 @onready var sens_label = $SettingsPanel/VBox/SensRow/SensValLabel if has_node("SettingsPanel/VBox/SensRow/SensValLabel") else null
+@onready var weather_option = $SettingsPanel/VBox/WeatherRow/WeatherOption if has_node("SettingsPanel/VBox/WeatherRow/WeatherOption") else null
 
 const MAIN_SERVER_IP = "100.68.81.79"
 
@@ -31,6 +32,8 @@ func _ready():
 		quick_btn.pressed.connect(_on_quick_server_pressed)
 	if sens_slider:
 		sens_slider.value_changed.connect(_on_sens_changed)
+	if weather_option:
+		weather_option.item_selected.connect(_on_weather_selected)
 	_load_settings()
 
 func _setup_button_sounds():
@@ -92,6 +95,11 @@ func _on_sens_changed(val: float):
 	if sens_label:
 		sens_label.text = "%.2fx" % val
 
+func _on_weather_selected(idx: int):
+	var mode = "SUNNY" if idx == 0 else "RAINY"
+	if get_node_or_null("/root/Global"):
+		Global.weather_type = mode
+
 func _on_quit_pressed():
 	get_tree().quit()
 
@@ -105,6 +113,11 @@ func _load_settings():
 			var sens = cfg.get_value("controls", "mouse_sensitivity", 1.0)
 			sens_slider.value = sens
 			_on_sens_changed(sens)
+		var weather = cfg.get_value("graphics", "weather_type", "SUNNY")
+		if get_node_or_null("/root/Global"):
+			Global.weather_type = weather
+		if weather_option:
+			weather_option.selected = 0 if weather == "SUNNY" else 1
 
 func _save_settings():
 	var cfg = ConfigFile.new()
@@ -112,4 +125,6 @@ func _save_settings():
 	cfg.set_value("audio", "master_volume", volume_slider.value)
 	if sens_slider:
 		cfg.set_value("controls", "mouse_sensitivity", sens_slider.value)
+	if get_node_or_null("/root/Global"):
+		cfg.set_value("graphics", "weather_type", Global.weather_type)
 	cfg.save("user://settings.cfg")

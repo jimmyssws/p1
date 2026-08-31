@@ -3,6 +3,7 @@ extends Node
 # WeatherController for Miting Oyunu
 # Otomatik olarak Volumetric Fog, Procedural 3D Yağmur Partikülleri ve Projektör Işınlarını yönetir.
 
+var fog_environment: WorldEnvironment = null
 var env: Environment = null
 var sky_mat: ProceduralSkyMaterial = null
 
@@ -19,36 +20,85 @@ func _ready() -> void:
 	_setup_environment()
 	_create_rain_particle_system()
 	set_process(true)
+	
+	var initial_mode = "SUNNY"
+	if get_node_or_null("/root/Global") and "weather_type" in Global:
+		initial_mode = Global.weather_type
+	apply_weather_mode(initial_mode)
+
+func apply_weather_mode(mode: String) -> void:
+	var upper_mode = mode.to_upper()
+	if upper_mode == "SUNNY" or upper_mode == "GÜNEŞLİ":
+		is_raining = false
+		target_fog_density = 0.001
+		current_fog_density = 0.001
+		if rain_particles:
+			rain_particles.emitting = false
+		
+		if env:
+			env.volumetric_fog_enabled = false
+			env.fog_enabled = true
+			env.fog_light_color = Color(0.70, 0.82, 0.95, 1.0)
+			env.fog_density = 0.001
+			
+			if sky_mat:
+				sky_mat.sky_top_color = Color(0.25, 0.55, 0.95, 1.0)
+				sky_mat.sky_horizon_color = Color(0.70, 0.82, 0.95, 1.0)
+				sky_mat.ground_bottom_color = Color(0.20, 0.25, 0.20, 1.0)
+				sky_mat.ground_horizon_color = Color(0.55, 0.65, 0.60, 1.0)
+		
+		var sun = get_parent().get_node_or_null("DirectionalLight3D") if get_parent() else null
+		if not sun and get_tree() and get_tree().root:
+			sun = get_tree().root.find_child("DirectionalLight3D", true, false) as DirectionalLight3D
+		if sun:
+			sun.light_color = Color(1.0, 0.95, 0.85, 1.0)
+			sun.light_energy = 1.3
+		
+		print("☀️ [WeatherController] Güneşli / Açık hava modu uygulandı.")
+	else:
+		is_raining = true
+		target_fog_density = 0.035
+		current_fog_density = 0.035
+		if rain_particles:
+			rain_particles.emitting = true
+		
+		if env:
+			env.volumetric_fog_enabled = true
+			env.volumetric_fog_density = current_fog_density
+			env.volumetric_fog_albedo = Color(0.65, 0.72, 0.85, 1.0)
+			env.volumetric_fog_emission = Color(0.05, 0.08, 0.12, 1.0)
+			env.volumetric_fog_emission_energy = 0.4
+			
+			env.fog_enabled = true
+			env.fog_light_color = Color(0.55, 0.65, 0.75, 1.0)
+			env.fog_density = 0.008
+			
+			if sky_mat:
+				sky_mat.sky_top_color = Color(0.08, 0.12, 0.22, 1.0)
+				sky_mat.sky_horizon_color = Color(0.25, 0.30, 0.45, 1.0)
+				sky_mat.ground_bottom_color = Color(0.05, 0.06, 0.09, 1.0)
+				sky_mat.ground_horizon_color = Color(0.20, 0.25, 0.35, 1.0)
+		
+		var sun = get_parent().get_node_or_null("DirectionalLight3D") if get_parent() else null
+		if not sun and get_tree() and get_tree().root:
+			sun = get_tree().root.find_child("DirectionalLight3D", true, false) as DirectionalLight3D
+		if sun:
+			sun.light_color = Color(0.65, 0.75, 0.88, 1.0)
+			sun.light_energy = 0.45
+		
+		print("🌧️ [WeatherController] Yağmurlu / Kötü Hava modu uygulandı.")
 
 func _setup_environment() -> void:
-	# WorldEnvironment'ı sahneden bul
-	var world_env = get_parent().get_node_or_null("WorldEnvironment") as WorldEnvironment
-	if not world_env:
+	var world_env = fog_environment
+	if not world_env and get_parent():
+		world_env = get_parent().get_node_or_null("WorldEnvironment") as WorldEnvironment
+	if not world_env and get_tree() and get_tree().root:
 		world_env = get_tree().root.find_child("WorldEnvironment", true, false) as WorldEnvironment
 
 	if world_env and world_env.environment:
 		env = world_env.environment
-		# Godot 4 Volumetric Fog'u anında ve görünür şekilde aktif et
-		env.volumetric_fog_enabled = true
-		env.volumetric_fog_density = current_fog_density
-		env.volumetric_fog_albedo = Color(0.65, 0.72, 0.85, 1.0)
-		env.volumetric_fog_emission = Color(0.05, 0.08, 0.12, 1.0)
-		env.volumetric_fog_emission_energy = 0.4
-		env.volumetric_fog_anisotropy = 0.3
-		env.volumetric_fog_length = 80.0
-		
-		# Normal Depth Fog'u da hafifçe aç
-		env.fog_enabled = true
-		env.fog_light_color = Color(0.55, 0.65, 0.75, 1.0)
-		env.fog_density = 0.008
-		
 		if env.sky and env.sky.sky_material is ProceduralSkyMaterial:
 			sky_mat = env.sky.sky_material as ProceduralSkyMaterial
-			# Gece mitingi için sinematik atmosfer
-			sky_mat.sky_top_color = Color(0.08, 0.12, 0.22, 1.0)
-			sky_mat.sky_horizon_color = Color(0.25, 0.30, 0.45, 1.0)
-			sky_mat.ground_bottom_color = Color(0.05, 0.06, 0.09, 1.0)
-			sky_mat.ground_horizon_color = Color(0.20, 0.25, 0.35, 1.0)
 		
 		print("🌫️ [WeatherController] Volumetric Fog ve Gece Atmosferi aktif edildi (Yoğunluk: ", current_fog_density, ")")
 
@@ -69,7 +119,7 @@ func _create_rain_particle_system() -> void:
 	rain_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	rain_mat.albedo_color = Color(0.8, 0.9, 1.0, 0.55)
 	rain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	rain_mat.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES_Y
+	rain_mat.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
 	quad_mesh.material = rain_mat
 	rain_particles.draw_pass_1 = quad_mesh
 	
@@ -105,12 +155,11 @@ func _process(delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_R:
-			# R tuşu: Yağmuru aç/kapat
-			is_raining = not is_raining
-			if rain_particles:
-				rain_particles.emitting = is_raining
-			target_fog_density = 0.05 if is_raining else 0.01
-			print("🌦️ [Hava Durumu] Yağmur durumu: ", "YAĞIYOR" if is_raining else "DURDU")
+			# R tuşu: Yağmurlu / Güneşli modları arasında geçiş yap
+			var new_mode = "SUNNY" if is_raining else "RAINY"
+			apply_weather_mode(new_mode)
+			if get_node_or_null("/root/Global"):
+				Global.weather_type = new_mode
 		elif event.keycode == KEY_F:
 			# F tuşu: Yoğun sis modunu aç/kapat
 			if target_fog_density > 0.03:
@@ -121,3 +170,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_T:
 			# T tuşu: Şimşek çaktıran fırtına mekaniği
 			_trigger_lightning_storm()
+
+func _trigger_lightning_storm() -> void:
+	print("⚡ [Hava Durumu] Şimşek çakıyor!")
+	if not env: return
+	var orig_emission = env.volumetric_fog_emission_energy
+	env.volumetric_fog_emission_energy = 2.5
+	var tween = create_tween()
+	tween.tween_property(env, "volumetric_fog_emission_energy", orig_emission, 0.4).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
