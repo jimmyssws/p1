@@ -1,5 +1,7 @@
 extends Control
 
+const MenuVisuals = preload("res://scripts/menu_visuals.gd")
+
 @onready var host_btn = $CenterBox/MainPanel/VBox/Buttons/HostButton
 @onready var solo_btn = $CenterBox/MainPanel/VBox/Buttons/SoloButton if has_node("CenterBox/MainPanel/VBox/Buttons/SoloButton") else null
 @onready var join_toggle_btn = $CenterBox/MainPanel/VBox/Buttons/JoinToggleButton
@@ -38,6 +40,10 @@ func _ready():
 	if weather_option:
 		weather_option.item_selected.connect(_on_weather_selected)
 	_load_settings()
+	call_deferred("_apply_visual_design")
+
+func _apply_visual_design() -> void:
+	MenuVisuals.apply(self)
 
 func _setup_button_sounds():
 	var btns = [solo_btn, host_btn, join_toggle_btn, join_confirm_btn, settings_btn, quit_btn, quick_btn, close_settings_btn]
