@@ -12,10 +12,10 @@ var _trend_clear_timer: float = 0.0
 
 @onready var pres_vote_label = $TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/PresVoteLabel if has_node("TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/PresVoteLabel") else null
 @onready var opp_vote_label = $TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/OppVoteLabel if has_node("TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/OppVoteLabel") else null
-@onready var vote_progress_bar = $TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/VoteProgressBar if has_node("TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/VoteProgressBar") else null
-@onready var poll_trend_label = $TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/TrendBadge/TrendLabel if has_node("TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/TrendBadge/TrendLabel") else null
-@onready var timer_label = $TopBarHUD/TopHeader/Margin/HBox/LeftBox/TimerBadge/TimerLabel if has_node("TopBarHUD/TopHeader/Margin/HBox/LeftBox/TimerBadge/TimerLabel") else null
-@onready var status_label = $TopBarHUD/TopHeader/Margin/HBox/RightBox/StatusBadge/StatusLabel if has_node("TopBarHUD/TopHeader/Margin/HBox/RightBox/StatusBadge/StatusLabel") else null
+@onready var vote_progress_bar: ProgressBar = find_child("VoteProgressBar", true, false) as ProgressBar
+@onready var poll_trend_label: Label = find_child("TrendLabel", true, false) as Label
+@onready var timer_label: Label = find_child("TimerLabel", true, false) as Label
+@onready var status_label: Label = find_child("StatusLabel", true, false) as Label
 
 enum GameState { LOBBY, COUNTDOWN, PLAYING, GAME_OVER }
 var current_game_state: int = GameState.LOBBY

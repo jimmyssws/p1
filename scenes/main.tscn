@@ -530,11 +530,6 @@ surface_material_override/0 = ExtResource("mat_stage_wood")
 [node name="StageCollision" type="CollisionShape3D" parent="StagePlatform"]
 shape = SubResource("BoxShape3D_stage_platform")
 
-[node name="RedCarpet" type="MeshInstance3D" parent="StagePlatform"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.72, 2.0)
-mesh = SubResource("BoxMesh_carpet")
-surface_material_override/0 = SubResource("Mat_Red_Carpet")
-
 [node name="BackdropMesh" type="MeshInstance3D" parent="StagePlatform"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8, -6.6)
 mesh = SubResource("BoxMesh_backdrop")
@@ -930,45 +925,37 @@ mouse_filter = 2
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -490.0
-offset_top = 8.0
-offset_right = 490.0
-offset_bottom = 62.0
+offset_left = -440.0
+offset_top = 10.0
+offset_right = 440.0
+offset_bottom = 54.0
 grow_horizontal = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_TopHeader")
 
 [node name="Margin" type="MarginContainer" parent="TopBarHUD/TopHeader"]
 layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_right = 14
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
 
 [node name="HBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin"]
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="LeftBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox"]
+[node name="TimerLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox" unique_id=9871101]
 layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="TimerBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_TimerBadge")
-
-[node name="TimerLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox/TimerBadge"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1.0, 0.88, 0.35, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 14
 text = "⏱️ 03:00"
 vertical_alignment = 1
 
-[node name="RoleBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox"]
+[node name="RoleBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_RoleBadge")
 
-[node name="RoleLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox/RoleBadge"]
+[node name="RoleLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/RoleBadge"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.96, 1.0, 1)
+theme_override_colors/font_color = Color(0.92, 0.96, 1, 1)
 theme_override_font_sizes/font_size = 12
 text = "👑 BAŞKAN"
 vertical_alignment = 1
@@ -981,13 +968,13 @@ alignment = 1
 
 [node name="PresVoteLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.35, 0.78, 1.0, 1)
+theme_override_colors/font_color = Color(0.35, 0.78, 1, 1)
 theme_override_font_sizes/font_size = 13
 text = "🏛️ BAŞKAN %46.0"
 vertical_alignment = 1
 
 [node name="VoteProgressBar" type="ProgressBar" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox"]
-custom_minimum_size = Vector2(170, 16)
+custom_minimum_size = Vector2(160, 14)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxTexture_Poll_Track")
@@ -997,35 +984,16 @@ show_percentage = false
 
 [node name="OppVoteLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1.0, 0.45, 0.45, 1)
+theme_override_colors/font_color = Color(1, 0.42, 0.42, 1)
 theme_override_font_sizes/font_size = 13
 text = "🦅 RAKİP %54.0"
 vertical_alignment = 1
 
-[node name="TrendBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox"]
+[node name="StatusLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_StatusBadge")
-
-[node name="TrendLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/TrendBadge"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.75, 0.85, 0.95, 1)
-theme_override_font_sizes/font_size = 12
-text = "📊 Canlı Anket"
-vertical_alignment = 1
-
-[node name="RightBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="StatusBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/RightBox"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_StatusBadge")
-
-[node name="StatusLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/RightBox/StatusBadge"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.92, 1.0, 1)
-theme_override_font_sizes/font_size = 12
-text = "👥 Miting Meydanı (130 Kişi)"
+theme_override_colors/font_color = Color(0.8, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "👥 130 Kişi"
 vertical_alignment = 1
 
 

@@ -11,9 +11,9 @@ var sky_mat: ProceduralSkyMaterial = null
 var rain_particles: GPUParticles3D = null
 
 # Ayarlar
-var is_raining: bool = true
-var target_fog_density: float = 0.035
-var current_fog_density: float = 0.035
+var is_raining: bool = false
+var target_fog_density: float = 0.001
+var current_fog_density: float = 0.001
 
 func _ready() -> void:
 	print("🌦️ [WeatherController] Hava durumu sistemi başlatılıyor...")
@@ -23,13 +23,13 @@ func _ready() -> void:
 	
 	var initial_mode = "SUNNY"
 	var global_state := get_node_or_null("/root/Global")
-	if global_state and "weather_type" in global_state:
+	if global_state and "weather_type" in global_state and global_state.weather_type != "":
 		initial_mode = global_state.weather_type
 	apply_weather_mode(initial_mode)
 
 func apply_weather_mode(mode: String) -> void:
 	var upper_mode = mode.to_upper()
-	if upper_mode == "SUNNY" or upper_mode == "GÜNEŞLİ":
+	if upper_mode != "RAINY" and upper_mode != "YAĞMURLU":
 		is_raining = false
 		target_fog_density = 0.001
 		current_fog_density = 0.001
@@ -39,27 +39,27 @@ func apply_weather_mode(mode: String) -> void:
 		if env:
 			env.volumetric_fog_enabled = false
 			env.fog_enabled = true
-			env.fog_light_color = Color(0.70, 0.82, 0.95, 1.0)
-			env.fog_density = 0.001
+			env.fog_light_color = Color(0.92, 0.86, 0.80, 1.0)
+			env.fog_density = 0.003
 			
 			if sky_mat:
-				sky_mat.sky_top_color = Color(0.25, 0.55, 0.95, 1.0)
-				sky_mat.sky_horizon_color = Color(0.70, 0.82, 0.95, 1.0)
-				sky_mat.ground_bottom_color = Color(0.20, 0.25, 0.20, 1.0)
-				sky_mat.ground_horizon_color = Color(0.55, 0.65, 0.60, 1.0)
+				sky_mat.sky_top_color = Color(0.22, 0.48, 0.85, 1.0)
+				sky_mat.sky_horizon_color = Color(0.94, 0.78, 0.65, 1.0)
+				sky_mat.ground_bottom_color = Color(0.22, 0.25, 0.30, 1.0)
+				sky_mat.ground_horizon_color = Color(0.75, 0.68, 0.58, 1.0)
 		
 		var sun = get_parent().get_node_or_null("DirectionalLight3D") if get_parent() else null
 		if not sun and get_tree() and get_tree().root:
 			sun = get_tree().root.find_child("DirectionalLight3D", true, false) as DirectionalLight3D
 		if sun:
-			sun.light_color = Color(1.0, 0.95, 0.85, 1.0)
-			sun.light_energy = 1.3
+			sun.light_color = Color(1.0, 0.94, 0.84, 1.0)
+			sun.light_energy = 2.0
 		
 		print("☀️ [WeatherController] Güneşli / Açık hava modu uygulandı.")
 	else:
 		is_raining = true
-		target_fog_density = 0.035
-		current_fog_density = 0.035
+		target_fog_density = 0.025
+		current_fog_density = 0.025
 		if rain_particles:
 			rain_particles.emitting = true
 		
