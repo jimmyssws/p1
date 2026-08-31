@@ -9,60 +9,103 @@
 [ext_resource type="Texture2D" path="res://ui_kenney/red_button00.png" id="tex_red_btn"]
 [ext_resource type="Texture2D" path="res://ui_kenney/grey_button00.png" id="tex_grey_btn"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_Menu_Panel"]
-texture = ExtResource("tex_grey_panel")
-texture_margin_left = 16.0
-texture_margin_top = 16.0
-texture_margin_right = 16.0
-texture_margin_bottom = 16.0
-modulate_color = Color(0.95, 0.97, 1.0, 0.98)
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_Menu_Panel"]
+content_margin_left = 24.0
+content_margin_top = 24.0
+content_margin_right = 24.0
+content_margin_bottom = 24.0
+bg_color = Color(0.06, 0.09, 0.16, 0.88)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.45, 0.65, 0.4)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 16
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_Blue_Btn"]
-texture = ExtResource("tex_blue_btn")
-texture_margin_left = 10.0
-texture_margin_top = 8.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_Blue_Btn"]
+bg_color = Color(0.12, 0.25, 0.48, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.22, 0.74, 0.97, 0.6)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0.12, 0.25, 0.48, 0.35)
+shadow_size = 8
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_Yellow_Btn"]
-texture = ExtResource("tex_yellow_btn")
-texture_margin_left = 10.0
-texture_margin_top = 8.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_Yellow_Btn"]
+bg_color = Color(0.96, 0.76, 0.17, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.9, 0.4, 0.8)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0.96, 0.76, 0.17, 0.4)
+shadow_size = 8
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_Green_Btn"]
-texture = ExtResource("tex_green_btn")
-texture_margin_left = 10.0
-texture_margin_top = 8.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_Green_Btn"]
+bg_color = Color(0.05, 0.4, 0.22, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.8, 0.45, 0.7)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0.05, 0.4, 0.22, 0.35)
+shadow_size = 8
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_Grey_Btn"]
-texture = ExtResource("tex_grey_btn")
-texture_margin_left = 10.0
-texture_margin_top = 8.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_Grey_Btn"]
+bg_color = Color(0.12, 0.16, 0.24, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.4, 0.55, 0.5)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_Red_Btn"]
-texture = ExtResource("tex_red_btn")
-texture_margin_left = 10.0
-texture_margin_top = 8.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxTexture_Red_Btn"]
+bg_color = Color(0.75, 0.12, 0.15, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.95, 0.3, 0.3, 0.7)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0.75, 0.12, 0.15, 0.35)
+shadow_size = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_input"]
-bg_color = Color(0.12, 0.15, 0.22, 0.95)
-border_color = Color(0.3, 0.6, 0.95, 0.8)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+bg_color = Color(0.08, 0.11, 0.18, 0.95)
+border_color = Color(0.22, 0.74, 0.97, 0.8)
+border_width_left = 1.5
+border_width_top = 1.5
+border_width_right = 1.5
+border_width_bottom = 1.5
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="Menu" type="Control" unique_id=1000001]
 layout_mode = 3
@@ -94,15 +137,15 @@ layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="TitleLabel" type="Label" parent="CenterBox/MainPanel/VBox" unique_id=1000005]
-theme_override_colors/font_color = Color(0.12, 0.14, 0.2, 1)
+theme_override_colors/font_color = Color(0.96, 0.76, 0.17, 1)
 theme_override_font_sizes/font_size = 26
-text = "🏛️ MİTİNG: SEÇİM ARİFESİ"
+text = "👑 SUİKASTÇI & BAŞKAN"
 horizontal_alignment = 1
 
 [node name="SubtitleLabel" type="Label" parent="CenterBox/MainPanel/VBox" unique_id=1000006]
-theme_override_colors/font_color = Color(0.35, 0.4, 0.5, 1)
+theme_override_colors/font_color = Color(0.22, 0.74, 0.97, 1)
 theme_override_font_sizes/font_size = 13
-text = "Multiplayer 3D Sosyal Çıkarım & Gizlilik Oyunu"
+text = "3D MULTIPLAYER v1.2 • MİTİNG MEYDANI"
 horizontal_alignment = 1
 
 [node name="HSep" type="HSeparator" parent="CenterBox/MainPanel/VBox" unique_id=1000031]

@@ -602,23 +602,42 @@ func _update_weapon_hud():
 	var _set_slot = func(panel: PanelContainer, label: Label, text: String, is_active: bool, is_disabled: bool = false):
 		if not panel or not label: return
 		panel.show()
-		label.text = text
-		var sb = StyleBoxTexture.new()
-		sb.texture_margin_left = 8.0
-		sb.texture_margin_top = 6.0
-		sb.texture_margin_right = 8.0
-		sb.texture_margin_bottom = 8.0
+		var sb = StyleBoxFlat.new()
+		sb.corner_radius_top_left = 10
+		sb.corner_radius_top_right = 10
+		sb.corner_radius_bottom_right = 10
+		sb.corner_radius_bottom_left = 10
+		sb.content_margin_left = 10
+		sb.content_margin_top = 6
+		sb.content_margin_right = 10
+		sb.content_margin_bottom = 6
 		
 		if is_active:
-			sb.texture = load("res://ui_kenney/blue_button00.png")
-			label.add_theme_color_override("font_color", Color(1, 1, 1))
+			sb.bg_color = Color(0.96, 0.76, 0.17, 0.95) if current_role == "PRESIDENT" else (Color(0.22, 0.74, 0.97, 0.95) if current_role == "GUARD" else Color(0.85, 0.15, 0.15, 0.95))
+			sb.border_width_left = 1.5
+			sb.border_width_top = 1.5
+			sb.border_width_right = 1.5
+			sb.border_width_bottom = 1.5
+			sb.border_color = Color(1, 1, 1, 0.9)
+			sb.shadow_color = Color(sb.bg_color.r, sb.bg_color.g, sb.bg_color.b, 0.4)
+			sb.shadow_size = 8
+			label.add_theme_color_override("font_color", Color(0.05, 0.08, 0.14))
 		elif is_disabled:
-			sb.texture = load("res://ui_kenney/grey_button00.png")
-			sb.modulate_color = Color(0.6, 0.6, 0.6, 0.6)
-			label.add_theme_color_override("font_color", Color(0.45, 0.45, 0.45))
+			sb.bg_color = Color(0.08, 0.1, 0.16, 0.6)
+			sb.border_width_left = 1
+			sb.border_width_top = 1
+			sb.border_width_right = 1
+			sb.border_width_bottom = 1
+			sb.border_color = Color(0.2, 0.25, 0.35, 0.4)
+			label.add_theme_color_override("font_color", Color(0.45, 0.5, 0.6, 0.6))
 		else:
-			sb.texture = load("res://ui_kenney/yellow_button00.png")
-			label.add_theme_color_override("font_color", Color(0.18, 0.15, 0.05))
+			sb.bg_color = Color(0.08, 0.12, 0.2, 0.85)
+			sb.border_width_left = 1
+			sb.border_width_top = 1
+			sb.border_width_right = 1
+			sb.border_width_bottom = 1
+			sb.border_color = Color(0.25, 0.4, 0.6, 0.5)
+			label.add_theme_color_override("font_color", Color(0.85, 0.9, 0.95))
 		panel.add_theme_stylebox_override("panel", sb)
 
 	if current_role == "ASSASSIN":
