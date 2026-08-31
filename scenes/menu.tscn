@@ -164,6 +164,16 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_Green_Btn")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_Green_Btn")
 text = "⚡ Ana Sunucuya Katıl (100.68.81.79)"
 
+[node name="SoloButton" type="Button" parent="CenterBox/MainPanel/VBox/Buttons" unique_id=98472911]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.15, 0.05, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxTexture_Yellow_Btn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_Yellow_Btn")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_Yellow_Btn")
+text = "🎮  Tek Oyunculu / Hızlı Başlat  (Solo)"
+
 [node name="HostButton" type="Button" parent="CenterBox/MainPanel/VBox/Buttons" unique_id=1000009]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
@@ -172,7 +182,7 @@ theme_override_font_sizes/font_size = 15
 theme_override_styles/normal = SubResource("StyleBoxTexture_Blue_Btn")
 theme_override_styles/hover = SubResource("StyleBoxTexture_Blue_Btn")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_Blue_Btn")
-text = "👑  Oda Kur  (Host)"
+text = "👑  Çok Oyunculu Oda Kur  (Host)"
 
 [node name="JoinToggleButton" type="Button" parent="CenterBox/MainPanel/VBox/Buttons" unique_id=1000010]
 custom_minimum_size = Vector2(0, 48)

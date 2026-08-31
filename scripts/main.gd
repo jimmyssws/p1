@@ -165,11 +165,14 @@ func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 	var global_state := get_node_or_null("/root/Global")
-	var net_mode = global_state.network_mode if global_state else "HOST"
+	var net_mode = global_state.network_mode if global_state else "SOLO"
 	if DisplayServer.get_name() == "headless" or "--server" in OS.get_cmdline_args():
 		net_mode = "HOST"
 
-	if net_mode == "HOST":
+	if net_mode == "SOLO":
+		_on_host_pressed()
+		launch_match_from_lobby()
+	elif net_mode == "HOST":
 		_on_host_pressed()
 	elif net_mode == "JOIN":
 		_on_join_pressed()
@@ -185,14 +188,19 @@ func _create_lobby_ui():
 
 	var panel_container = PanelContainer.new()
 	panel_container.custom_minimum_size = Vector2(580, 440)
-	var p_style = StyleBoxTexture.new()
-	var p_tex = load("res://ui_kenney/grey_panel.png")
-	if p_tex:
-		p_style.texture = p_tex
-		p_style.texture_margin_left = 16
-		p_style.texture_margin_right = 16
-		p_style.texture_margin_top = 16
-		p_style.texture_margin_bottom = 16
+	var p_style = StyleBoxFlat.new()
+	p_style.bg_color = Color(0.06, 0.09, 0.16, 0.94)
+	p_style.border_width_left = 1
+	p_style.border_width_top = 1
+	p_style.border_width_right = 1
+	p_style.border_width_bottom = 1
+	p_style.border_color = Color(0.22, 0.74, 0.97, 0.5)
+	p_style.corner_radius_top_left = 16
+	p_style.corner_radius_top_right = 16
+	p_style.corner_radius_bottom_right = 16
+	p_style.corner_radius_bottom_left = 16
+	p_style.shadow_color = Color(0, 0, 0, 0.6)
+	p_style.shadow_size = 20
 	panel_container.add_theme_stylebox_override("panel", p_style)
 	center.add_child(panel_container)
 
@@ -209,10 +217,10 @@ func _create_lobby_ui():
 
 	# Başlık
 	var title_lbl = Label.new()
-	title_lbl.text = "🏛️ BÜYÜK MİTİNG LOBİSİ"
+	title_lbl.text = "👑 BÜYÜK MİTİNG LOBİSİ"
 	title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_lbl.add_theme_font_size_override("font_size", 22)
-	title_lbl.add_theme_color_override("font_color", Color(0.12, 0.18, 0.35))
+	title_lbl.add_theme_color_override("font_color", Color(0.96, 0.76, 0.17))
 	vbox.add_child(title_lbl)
 
 	# Oyuncu Sayacı
@@ -220,7 +228,7 @@ func _create_lobby_ui():
 	lobby_count_label.text = "👥 Bağlı Oyuncular (Hazır: 0 / 0)"
 	lobby_count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lobby_count_label.add_theme_font_size_override("font_size", 13)
-	lobby_count_label.add_theme_color_override("font_color", Color(0.35, 0.4, 0.5))
+	lobby_count_label.add_theme_color_override("font_color", Color(0.6, 0.75, 0.9))
 	vbox.add_child(lobby_count_label)
 
 	# Geri Sayım Bandı
@@ -228,7 +236,7 @@ func _create_lobby_ui():
 	lobby_countdown_label.text = ""
 	lobby_countdown_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lobby_countdown_label.add_theme_font_size_override("font_size", 16)
-	lobby_countdown_label.add_theme_color_override("font_color", Color(0.85, 0.15, 0.15))
+	lobby_countdown_label.add_theme_color_override("font_color", Color(0.95, 0.3, 0.3))
 	vbox.add_child(lobby_countdown_label)
 
 	# Oyuncu Listesi (Scroll)
@@ -284,19 +292,35 @@ func _play_ui_sound(path: String, vol: float = 0.0):
 		sfx.finished.connect(func(): sfx.queue_free())
 
 func _apply_btn_texture(btn: Button, color_name: String):
-	var tex = load("res://ui_kenney/%s_button00.png" % color_name)
-	if not tex: return
-	var sb = StyleBoxTexture.new()
-	sb.texture = tex
-	sb.texture_margin_left = 10
-	sb.texture_margin_right = 10
-	sb.texture_margin_top = 8
-	sb.texture_margin_bottom = 10
+	var sb = StyleBoxFlat.new()
+	sb.corner_radius_top_left = 10
+	sb.corner_radius_top_right = 10
+	sb.corner_radius_bottom_right = 10
+	sb.corner_radius_bottom_left = 10
+	sb.border_width_left = 1
+	sb.border_width_top = 1
+	sb.border_width_right = 1
+	sb.border_width_bottom = 1
+	if color_name == "green":
+		sb.bg_color = Color(0.05, 0.4, 0.22, 0.9)
+		sb.border_color = Color(0.2, 0.8, 0.45, 0.7)
+		btn.add_theme_color_override("font_color", Color(1, 1, 1))
+	elif color_name == "yellow":
+		sb.bg_color = Color(0.96, 0.76, 0.17, 0.95)
+		sb.border_color = Color(1, 0.9, 0.4, 0.8)
+		btn.add_theme_color_override("font_color", Color(0.18, 0.15, 0.05))
+	elif color_name == "red":
+		sb.bg_color = Color(0.75, 0.12, 0.15, 0.9)
+		sb.border_color = Color(0.95, 0.3, 0.3, 0.7)
+		btn.add_theme_color_override("font_color", Color(1, 1, 1))
+	else:
+		sb.bg_color = Color(0.12, 0.25, 0.48, 0.9)
+		sb.border_color = Color(0.22, 0.74, 0.97, 0.6)
+		btn.add_theme_color_override("font_color", Color(1, 1, 1))
 	btn.add_theme_stylebox_override("normal", sb)
 	btn.add_theme_stylebox_override("hover", sb)
 	btn.add_theme_stylebox_override("pressed", sb)
-	btn.add_theme_color_override("font_color", Color(0.1, 0.1, 0.15) if color_name in ["yellow", "grey"] else Color(1, 1, 1))
-	btn.add_theme_font_size_override("font_size", 13)
+	btn.add_theme_font_size_override("font_size", 14)
 
 func _on_host_pressed():
 	var err = peer.create_server(9999)
@@ -391,12 +415,21 @@ func _update_lobby_display():
 		if is_ready: ready_count += 1
 		
 		var card = PanelContainer.new()
-		var card_style = StyleBoxTexture.new()
-		card_style.texture = load("res://ui_kenney/blue_panel.png")
-		card_style.texture_margin_left = 8
-		card_style.texture_margin_right = 8
-		card_style.texture_margin_top = 6
-		card_style.texture_margin_bottom = 6
+		var card_style = StyleBoxFlat.new()
+		card_style.bg_color = Color(0.1, 0.15, 0.25, 0.85)
+		card_style.border_width_left = 1
+		card_style.border_width_top = 1
+		card_style.border_width_right = 1
+		card_style.border_width_bottom = 1
+		card_style.border_color = Color(0.22, 0.74, 0.97, 0.4)
+		card_style.corner_radius_top_left = 8
+		card_style.corner_radius_top_right = 8
+		card_style.corner_radius_bottom_right = 8
+		card_style.corner_radius_bottom_left = 8
+		card_style.content_margin_left = 12
+		card_style.content_margin_right = 12
+		card_style.content_margin_top = 8
+		card_style.content_margin_bottom = 8
 		card.add_theme_stylebox_override("panel", card_style)
 		
 		var hbox = HBoxContainer.new()
@@ -414,12 +447,21 @@ func _update_lobby_display():
 		hbox.add_child(name_lbl)
 		
 		var status_badge = PanelContainer.new()
-		var badge_style = StyleBoxTexture.new()
-		badge_style.texture = load("res://ui_kenney/%s_button00.png" % ("green" if is_ready else "grey"))
-		badge_style.texture_margin_left = 6
-		badge_style.texture_margin_right = 6
-		badge_style.texture_margin_top = 4
-		badge_style.texture_margin_bottom = 4
+		var badge_style = StyleBoxFlat.new()
+		badge_style.bg_color = Color(0.05, 0.4, 0.22, 0.85) if is_ready else Color(0.15, 0.2, 0.3, 0.85)
+		badge_style.border_width_left = 1
+		badge_style.border_width_top = 1
+		badge_style.border_width_right = 1
+		badge_style.border_width_bottom = 1
+		badge_style.border_color = Color(0.2, 0.8, 0.45, 0.8) if is_ready else Color(0.4, 0.5, 0.65, 0.5)
+		badge_style.corner_radius_top_left = 6
+		badge_style.corner_radius_top_right = 6
+		badge_style.corner_radius_bottom_right = 6
+		badge_style.corner_radius_bottom_left = 6
+		badge_style.content_margin_left = 8
+		badge_style.content_margin_right = 8
+		badge_style.content_margin_top = 4
+		badge_style.content_margin_bottom = 4
 		status_badge.add_theme_stylebox_override("panel", badge_style)
 		
 		var badge_lbl = Label.new()

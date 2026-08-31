@@ -1,6 +1,7 @@
 extends Control
 
 @onready var host_btn = $CenterBox/MainPanel/VBox/Buttons/HostButton
+@onready var solo_btn = $CenterBox/MainPanel/VBox/Buttons/SoloButton if has_node("CenterBox/MainPanel/VBox/Buttons/SoloButton") else null
 @onready var join_toggle_btn = $CenterBox/MainPanel/VBox/Buttons/JoinToggleButton
 @onready var join_section = $CenterBox/MainPanel/VBox/Buttons/JoinSection
 @onready var ip_input = $CenterBox/MainPanel/VBox/Buttons/JoinSection/IpInput
@@ -21,6 +22,8 @@ const MAIN_SERVER_IP = "100.68.81.79"
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	_setup_button_sounds()
+	if solo_btn:
+		solo_btn.pressed.connect(_on_solo_pressed)
 	host_btn.pressed.connect(_on_host_pressed)
 	join_toggle_btn.pressed.connect(_on_join_toggle_pressed)
 	join_confirm_btn.pressed.connect(_on_join_confirm_pressed)
@@ -37,7 +40,7 @@ func _ready():
 	_load_settings()
 
 func _setup_button_sounds():
-	var btns = [host_btn, join_toggle_btn, join_confirm_btn, settings_btn, quit_btn, quick_btn, close_settings_btn]
+	var btns = [solo_btn, host_btn, join_toggle_btn, join_confirm_btn, settings_btn, quit_btn, quick_btn, close_settings_btn]
 	for btn in btns:
 		if btn and is_instance_valid(btn):
 			btn.mouse_entered.connect(func(): _play_ui_sound("res://sounds/rollover1.ogg", -6.0))
@@ -53,6 +56,11 @@ func _play_ui_sound(path: String, vol: float = 0.0):
 		add_child(sfx)
 		sfx.play()
 		sfx.finished.connect(func(): sfx.queue_free())
+
+func _on_solo_pressed():
+	if get_node_or_null("/root/Global"):
+		Global.network_mode = "SOLO"
+	get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 func _on_quick_server_pressed():
 	if get_node_or_null("/root/Global"):
