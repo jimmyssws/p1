@@ -4,6 +4,23 @@ const SPEED = 4.2
 const JUMP_VELOCITY = 6.2
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
+# 🏃 Tok & Gerçekçi 3D Fizik Ayarları
+var fall_gravity_multiplier: float = 1.95
+var grounded_accel: float = 18.0
+var grounded_decel: float = 24.0
+var air_accel: float = 4.5
+
+var coyote_time: float = 0.14
+var coyote_timer: float = 0.0
+var jump_buffer_time: float = 0.12
+var jump_buffer_timer: float = 0.0
+
+var _was_on_floor_last_frame: bool = true
+var _prev_y_velocity: float = 0.0
+var landing_dip_offset: float = 0.0
+var target_cam_roll: float = 0.0
+var current_cam_roll: float = 0.0
+
 @onready var camera = $Camera3D
 @onready var raycast = $Camera3D/RayCast3D
 @onready var progress_bar = $HUD/ProgressBar
@@ -1357,12 +1374,31 @@ func _physics_process(delta):
 			_update_player_animation()
 			return
 
+	# ⚖️ 1. Asimetrik Düşüş Fiziği (Jump vs Fall Gravity)
 	if not is_on_floor():
-		velocity.y -= gravity * delta
+		if velocity.y < 0.0:
+			velocity.y -= gravity * fall_gravity_multiplier * delta
+		elif velocity.y > 0.0 and not Input.is_action_pressed("ui_accept"):
+			velocity.y -= gravity * 1.5 * delta
+		else:
+			velocity.y -= gravity * delta
 
-	# Zıplama
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+	# 🐺 2. Coyote Time & Jump Buffer Takibi
+	if is_on_floor():
+		coyote_timer = coyote_time
+	else:
+		coyote_timer = max(0.0, coyote_timer - delta)
+
+	if Input.is_action_just_pressed("ui_accept"):
+		jump_buffer_timer = jump_buffer_time
+	else:
+		jump_buffer_timer = max(0.0, jump_buffer_timer - delta)
+
+	# Zıplama Tetikleme (Coyote Time + Jump Buffer destekli)
+	if jump_buffer_timer > 0.0 and coyote_timer > 0.0:
 		velocity.y = JUMP_VELOCITY
+		coyote_timer = 0.0
+		jump_buffer_timer = 0.0
 		if current_role == "ASSASSIN":
 			suspicion_level = min(100.0, suspicion_level + 20.0)
 
@@ -1375,12 +1411,44 @@ func _physics_process(delta):
 	if penalty_slow_timer > 0.0:
 		current_speed *= 0.45
 
-	if direction:
-		velocity.x = direction.x * current_speed
-		velocity.z = direction.z * current_speed
+	# 🧊 3. Zemin Sürtünmesi & Hava Direnci (Air Control)
+	if is_on_floor():
+		if direction:
+			velocity.x = move_toward(velocity.x, direction.x * current_speed, grounded_accel * delta * current_speed)
+			velocity.z = move_toward(velocity.z, direction.z * current_speed, grounded_accel * delta * current_speed)
+		else:
+			velocity.x = move_toward(velocity.x, 0.0, grounded_decel * delta * current_speed)
+			velocity.z = move_toward(velocity.z, 0.0, grounded_decel * delta * current_speed)
 	else:
-		velocity.x = move_toward(velocity.x, 0, current_speed)
-		velocity.z = move_toward(velocity.z, 0, current_speed)
+		if direction:
+			velocity.x = move_toward(velocity.x, direction.x * current_speed, air_accel * delta * current_speed)
+			velocity.z = move_toward(velocity.z, direction.z * current_speed, air_accel * delta * current_speed)
+
+	# 💥 4. Yere Sert İniş Darbesi & Kamera Esnemesi (Landing Camera Dip)
+	if is_on_floor() and not _was_on_floor_last_frame:
+		if _prev_y_velocity < -3.5:
+			var impact_intensity = clamp(abs(_prev_y_velocity) / 12.0, 0.15, 0.42)
+			landing_dip_offset = -impact_intensity
+			_play_action_sound("res://sounds/footstep_concrete_000.ogg", 3.0, randf_range(0.85, 0.95))
+			if abs(_prev_y_velocity) > 6.5:
+				trigger_camera_shake(0.22)
+				_spawn_landing_dust()
+
+	_was_on_floor_last_frame = is_on_floor()
+	_prev_y_velocity = velocity.y
+
+	landing_dip_offset = lerp(landing_dip_offset, 0.0, 10.0 * delta)
+
+	# 📐 5. Dönüşlerde & Yana Koşularda Kameranın Eğilmesi (Banking / Tilt)
+	var side_input = input_dir.x
+	target_cam_roll = -side_input * 0.035
+	if sprint_active and direction:
+		target_cam_roll *= 1.4
+	
+	current_cam_roll = lerp(current_cam_roll, target_cam_roll, 8.0 * delta)
+	if camera and not drone_mode and not is_viewing_cctv:
+		camera.rotation.z = current_cam_roll
+		camera.position.y = 1.6 + landing_dip_offset
 
 	if char_model:
 		if direction.length_squared() > 0.01:
@@ -1971,3 +2039,37 @@ func _execute_assassin_panic_whistle():
 	var mn = get_node_or_null("/root/main")
 	if mn and mn.has_method("trigger_crowd_panic"):
 		mn.rpc("trigger_crowd_panic", global_position, 35.0)
+
+# 💨 Yere Sert İniş Toz Partikülü (VFX)
+func _spawn_landing_dust():
+	var particles = GPUParticles3D.new()
+	particles.amount = 18
+	particles.lifetime = 0.45
+	particles.one_shot = true
+	particles.explosiveness = 0.9
+	
+	var mat = ParticleProcessMaterial.new()
+	mat.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_RING
+	mat.emission_ring_radius = 0.6
+	mat.direction = Vector3(0, 1, 0)
+	mat.spread = 45.0
+	mat.initial_velocity_min = 2.0
+	mat.initial_velocity_max = 4.5
+	mat.gravity = Vector3(0, -4.0, 0)
+	mat.color = Color(0.7, 0.65, 0.6, 0.5)
+	
+	var mesh = QuadMesh.new()
+	mesh.size = Vector2(0.25, 0.25)
+	var std_mat = StandardMaterial3D.new()
+	std_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	std_mat.albedo_color = Color(0.75, 0.7, 0.65, 0.4)
+	std_mat.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	mesh.material = std_mat
+	
+	particles.process_material = mat
+	particles.draw_pass_1 = mesh
+	if get_parent():
+		get_parent().add_child(particles)
+		particles.global_position = global_position
+		particles.emitting = true
+		get_tree().create_timer(0.6).timeout.connect(func(): if is_instance_valid(particles): particles.queue_free())
