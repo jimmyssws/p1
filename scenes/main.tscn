@@ -36,6 +36,13 @@
 [ext_resource type="PackedScene" path="res://models_kaykit/gltf/watertower.gltf" id="water_tower"]
 [ext_resource type="PackedScene" path="res://models_city/pavement-fountain.glb" id="fountain"]
 [ext_resource type="PackedScene" path="res://models_city/flag.glb" id="rally_flag"]
+[ext_resource type="Material" path="res://assets/materials/plaza_concrete.tres" id="mat_plaza"]
+[ext_resource type="Material" path="res://assets/materials/building_brick.tres" id="mat_building"]
+[ext_resource type="Material" path="res://assets/materials/stage_wood.tres" id="mat_stage_wood"]
+[ext_resource type="Material" path="res://assets/materials/stage_metal.tres" id="mat_stage_metal"]
+[ext_resource type="Material" path="res://assets/materials/barrier_metal.tres" id="mat_barrier"]
+[ext_resource type="Material" path="res://assets/materials/furniture_wood.tres" id="mat_furniture"]
+[ext_resource type="Script" path="res://scripts/recursive_material_override.gd" id="recursive_material_script"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_TopHeader"]
 texture = ExtResource("tex_grey_panel")
@@ -100,14 +107,14 @@ shadow_size = 3
 
 
 [sub_resource type="BoxMesh" id="BoxMesh_ground"]
-size = Vector3(100, 1, 110)
+size = Vector3(100, 0.2, 110)
 
 [sub_resource type="StandardMaterial3D" id="Mat_Ground"]
 albedo_color = Color(0.52, 0.55, 0.6, 1)
 roughness = 0.9
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ground"]
-size = Vector3(100, 1, 110)
+size = Vector3(100, 0.2, 110)
 
 [sub_resource type="BoxMesh" id="BoxMesh_stage_platform"]
 size = Vector3(26, 1.4, 14)
@@ -451,412 +458,402 @@ albedo_color = Color(0.12, 0.13, 0.15, 1)
 metallic = 0.5
 roughness = 0.4
 
-[node name="main" type="Node3D" unique_id=1439855045]
+[node name="main" type="Node3D"]
 script = ExtResource("1_ig7tw")
 
-[node name="Ground" type="StaticBody3D" parent="." unique_id=172206383]
+[node name="PlazaGround" type="StaticBody3D" parent="."]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=200200070]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+[node name="GroundMesh" type="MeshInstance3D" parent="PlazaGround"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 mesh = SubResource("BoxMesh_ground")
-surface_material_override/0 = SubResource("Mat_Ground")
+surface_material_override/0 = ExtResource("mat_plaza")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=979581508]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+[node name="GroundCollision" type="CollisionShape3D" parent="PlazaGround"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 shape = SubResource("BoxShape3D_ground")
 
-[node name="Wall_Left" type="StaticBody3D" parent="." unique_id=1029384]
+[node name="Wall_Left" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 2.0, 0)
 
-[node name="Mesh" type="MeshInstance3D" parent="Wall_Left" unique_id=1029385]
+[node name="Mesh" type="MeshInstance3D" parent="Wall_Left"]
 mesh = SubResource("BoxMesh_wall_long")
 surface_material_override/0 = SubResource("Mat_Wall")
 
-[node name="Col" type="CollisionShape3D" parent="Wall_Left" unique_id=1029386]
+[node name="Col" type="CollisionShape3D" parent="Wall_Left"]
 shape = SubResource("BoxShape3D_wall_long")
 
-[node name="Wall_Right" type="StaticBody3D" parent="." unique_id=2029384]
+[node name="Wall_Right" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 2.0, 0)
 
-[node name="Mesh" type="MeshInstance3D" parent="Wall_Right" unique_id=2029385]
+[node name="Mesh" type="MeshInstance3D" parent="Wall_Right"]
 mesh = SubResource("BoxMesh_wall_long")
 surface_material_override/0 = SubResource("Mat_Wall")
 
-[node name="Col" type="CollisionShape3D" parent="Wall_Right" unique_id=2029386]
+[node name="Col" type="CollisionShape3D" parent="Wall_Right"]
 shape = SubResource("BoxShape3D_wall_long")
 
-[node name="Wall_Back" type="StaticBody3D" parent="." unique_id=2029387]
+[node name="Wall_Back" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0, -55)
 
-[node name="Mesh" type="MeshInstance3D" parent="Wall_Back" unique_id=2029388]
+[node name="Mesh" type="MeshInstance3D" parent="Wall_Back"]
 mesh = SubResource("BoxMesh_wall_width")
 surface_material_override/0 = SubResource("Mat_Wall")
 
-[node name="Col" type="CollisionShape3D" parent="Wall_Back" unique_id=2029389]
+[node name="Col" type="CollisionShape3D" parent="Wall_Back"]
 shape = SubResource("BoxShape3D_wall_width")
 
-[node name="RallyStage" type="StaticBody3D" parent="." unique_id=5829104]
+[node name="StagePlatform" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -35)
 
-[node name="StageMesh" type="MeshInstance3D" parent="RallyStage" unique_id=8472910]
+[node name="StageMesh" type="MeshInstance3D" parent="StagePlatform"]
 mesh = SubResource("BoxMesh_stage_platform")
-surface_material_override/0 = SubResource("Mat_Stage_Floor")
+surface_material_override/0 = ExtResource("mat_stage_wood")
 
-[node name="StageCollision" type="CollisionShape3D" parent="RallyStage" unique_id=2938471]
+[node name="StageCollision" type="CollisionShape3D" parent="StagePlatform"]
 shape = SubResource("BoxShape3D_stage_platform")
 
-[node name="RedCarpet" type="MeshInstance3D" parent="RallyStage" unique_id=8472919]
+[node name="RedCarpet" type="MeshInstance3D" parent="StagePlatform"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.72, 2.0)
 mesh = SubResource("BoxMesh_carpet")
 surface_material_override/0 = SubResource("Mat_Red_Carpet")
 
-[node name="BackdropMesh" type="MeshInstance3D" parent="RallyStage" unique_id=1928374]
+[node name="BackdropMesh" type="MeshInstance3D" parent="StagePlatform"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8, -6.6)
 mesh = SubResource("BoxMesh_backdrop")
-surface_material_override/0 = SubResource("Mat_Backdrop")
+surface_material_override/0 = ExtResource("mat_stage_metal")
 
-[node name="Speaker_L" type="MeshInstance3D" parent="RallyStage" unique_id=8472911]
+[node name="Speaker_L" type="MeshInstance3D" parent="StagePlatform"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 1.8, 4.0)
 mesh = SubResource("BoxMesh_speaker_box")
 surface_material_override/0 = SubResource("Mat_Speaker_Grill")
 
-[node name="Speaker_R" type="MeshInstance3D" parent="RallyStage" unique_id=8472912]
+[node name="Speaker_R" type="MeshInstance3D" parent="StagePlatform"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 1.8, 4.0)
 mesh = SubResource("BoxMesh_speaker_box")
 surface_material_override/0 = SubResource("Mat_Speaker_Grill")
 
-[node name="TaskBox" type="StaticBody3D" parent="." unique_id=2137125687]
+[node name="TaskBox" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.05, -31)
 
-[node name="PodiumBase" type="MeshInstance3D" parent="TaskBox" unique_id=1634296355]
+[node name="PodiumBase" type="MeshInstance3D" parent="TaskBox"]
 mesh = SubResource("BoxMesh_podium_base")
 surface_material_override/0 = SubResource("Mat_Podium_Walnut")
 
-[node name="PodiumTop" type="MeshInstance3D" parent="TaskBox" unique_id=1634296356]
+[node name="PodiumTop" type="MeshInstance3D" parent="TaskBox"]
 transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 0.72, 0)
 mesh = SubResource("BoxMesh_podium_top")
 surface_material_override/0 = SubResource("Mat_Podium_Walnut")
 
-[node name="EmblemMesh" type="MeshInstance3D" parent="TaskBox" unique_id=58291029]
+[node name="EmblemMesh" type="MeshInstance3D" parent="TaskBox"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0.56)
 mesh = SubResource("BoxMesh_podium_emblem")
 surface_material_override/0 = SubResource("Mat_Podium_GoldTrim")
 
-[node name="Mic1" type="MeshInstance3D" parent="TaskBox" unique_id=58291030]
+[node name="Mic1" type="MeshInstance3D" parent="TaskBox"]
 transform = Transform3D(0.965926, -0.258819, 0, 0.258819, 0.965926, 0, 0, 0, 1, -0.3, 0.9, 0.1)
 mesh = SubResource("CylinderMesh_mic")
 surface_material_override/0 = SubResource("Mat_Mic")
 
-[node name="Mic2" type="MeshInstance3D" parent="TaskBox" unique_id=58291031]
+[node name="Mic2" type="MeshInstance3D" parent="TaskBox"]
 transform = Transform3D(0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0, 0, 1, 0.3, 0.9, 0.1)
 mesh = SubResource("CylinderMesh_mic")
 surface_material_override/0 = SubResource("Mat_Mic")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="TaskBox" unique_id=248359187]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TaskBox"]
 shape = SubResource("BoxShape3D_podium")
 
-[node name="StageRamp_Left" type="StaticBody3D" parent="." unique_id=7182910]
-transform = Transform3D(1, 0, 0, 0, 0.97437, -0.224951, 0, 0.224951, 0.97437, -14.4, 0.7, -31.0)
+[node name="StageRamp_Left" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.97437, -0.224951, 0, 0.224951, 0.97437, -14.3, 0.7, -31.0)
 
-[node name="Mesh" type="MeshInstance3D" parent="StageRamp_Left" unique_id=7182911]
+[node name="Mesh" type="MeshInstance3D" parent="StageRamp_Left"]
 mesh = SubResource("BoxMesh_stage_ramp")
-surface_material_override/0 = SubResource("Mat_Stage_Floor")
+surface_material_override/0 = ExtResource("mat_stage_wood")
 
-[node name="Col" type="CollisionShape3D" parent="StageRamp_Left" unique_id=7182912]
+[node name="Col" type="CollisionShape3D" parent="StageRamp_Left"]
 shape = SubResource("BoxShape3D_stage_ramp")
 
-[node name="StageRamp_Right" type="StaticBody3D" parent="." unique_id=7282910]
-transform = Transform3D(1, 0, 0, 0, 0.97437, -0.224951, 0, 0.224951, 0.97437, 14.4, 0.7, -31.0)
+[node name="StageRamp_Right" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.97437, -0.224951, 0, 0.224951, 0.97437, 14.3, 0.7, -31.0)
 
-[node name="Mesh" type="MeshInstance3D" parent="StageRamp_Right" unique_id=7282911]
+[node name="Mesh" type="MeshInstance3D" parent="StageRamp_Right"]
 mesh = SubResource("BoxMesh_stage_ramp")
-surface_material_override/0 = SubResource("Mat_Stage_Floor")
+surface_material_override/0 = ExtResource("mat_stage_wood")
 
-[node name="Col" type="CollisionShape3D" parent="StageRamp_Right" unique_id=7282912]
+[node name="Col" type="CollisionShape3D" parent="StageRamp_Right"]
 shape = SubResource("BoxShape3D_stage_ramp")
 
-[node name="LightTower_Left" type="StaticBody3D" parent="." unique_id=3019284]
+[node name="LightTower_Left" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.0, 3.75, -34.0)
 
-[node name="Mesh" type="MeshInstance3D" parent="LightTower_Left" unique_id=3019285]
+[node name="Mesh" type="MeshInstance3D" parent="LightTower_Left"]
 mesh = SubResource("BoxMesh_tower")
 surface_material_override/0 = SubResource("Mat_Tower")
 
-[node name="Col" type="CollisionShape3D" parent="LightTower_Left" unique_id=3019286]
+[node name="Col" type="CollisionShape3D" parent="LightTower_Left"]
 shape = SubResource("BoxShape3D_tower")
 
-[node name="SoundTower_Right" type="StaticBody3D" parent="." unique_id=4019284]
+[node name="SoundTower_Right" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.0, 3.75, -34.0)
 
-[node name="Mesh" type="MeshInstance3D" parent="SoundTower_Right" unique_id=4019285]
+[node name="Mesh" type="MeshInstance3D" parent="SoundTower_Right"]
 mesh = SubResource("BoxMesh_tower")
 surface_material_override/0 = SubResource("Mat_Tower")
 
-[node name="Col" type="CollisionShape3D" parent="SoundTower_Right" unique_id=4019286]
+[node name="Col" type="CollisionShape3D" parent="SoundTower_Right"]
 shape = SubResource("BoxShape3D_tower")
 
-[node name="Barrier_Left" type="StaticBody3D" parent="." unique_id=5019284]
+[node name="Barrier_Left" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.0, 0.6, -26.0)
 
-[node name="Mesh" type="MeshInstance3D" parent="Barrier_Left" unique_id=5019285]
+[node name="BarrierMesh" type="MeshInstance3D" parent="Barrier_Left"]
 mesh = SubResource("BoxMesh_barrier")
-surface_material_override/0 = SubResource("Mat_Barrier")
+surface_material_override/0 = ExtResource("mat_barrier")
 
-[node name="Col" type="CollisionShape3D" parent="Barrier_Left" unique_id=5019286]
+[node name="BarrierCollision" type="CollisionShape3D" parent="Barrier_Left"]
 shape = SubResource("BoxShape3D_barrier")
 
-[node name="Barrier_Right" type="StaticBody3D" parent="." unique_id=6019284]
+[node name="Barrier_Right" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.0, 0.6, -26.0)
 
-[node name="Mesh" type="MeshInstance3D" parent="Barrier_Right" unique_id=6019285]
+[node name="BarrierMesh" type="MeshInstance3D" parent="Barrier_Right"]
 mesh = SubResource("BoxMesh_barrier")
-surface_material_override/0 = SubResource("Mat_Barrier")
+surface_material_override/0 = ExtResource("mat_barrier")
 
-[node name="Col" type="CollisionShape3D" parent="Barrier_Right" unique_id=6019286]
+[node name="BarrierCollision" type="CollisionShape3D" parent="Barrier_Right"]
 shape = SubResource("BoxShape3D_barrier")
 
-[node name="Barrier_Right" type="StaticBody3D" parent="." unique_id=6019284]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.0, 0.6, -24.0)
-
-[node name="Mesh" type="MeshInstance3D" parent="Barrier_Right" unique_id=6019285]
-mesh = SubResource("BoxMesh_barrier")
-surface_material_override/0 = SubResource("Mat_Barrier")
-
-[node name="Col" type="CollisionShape3D" parent="Barrier_Right" unique_id=6019286]
-shape = SubResource("BoxShape3D_barrier")
-
-[node name="Tent_Water" type="Node3D" parent="." unique_id=7019284]
+[node name="Tent_Water" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.0, 0, -8.0)
 
-[node name="Roof" type="MeshInstance3D" parent="Tent_Water" unique_id=7019285]
+[node name="Roof" type="MeshInstance3D" parent="Tent_Water"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8, 0)
 mesh = SubResource("BoxMesh_tent_roof")
 surface_material_override/0 = SubResource("Mat_Tent_Blue")
 
-[node name="Pole1" type="MeshInstance3D" parent="Tent_Water" unique_id=7019287]
+[node name="Pole1" type="MeshInstance3D" parent="Tent_Water"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 1.9, -3.6)
 mesh = SubResource("CylinderMesh_tent_pole")
 surface_material_override/0 = SubResource("Mat_Pole")
 
-[node name="Pole2" type="MeshInstance3D" parent="Tent_Water" unique_id=7019288]
+[node name="Pole2" type="MeshInstance3D" parent="Tent_Water"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 1.9, -3.6)
 mesh = SubResource("CylinderMesh_tent_pole")
 surface_material_override/0 = SubResource("Mat_Pole")
 
-[node name="Pole3" type="MeshInstance3D" parent="Tent_Water" unique_id=7019289]
+[node name="Pole3" type="MeshInstance3D" parent="Tent_Water"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 1.9, 3.6)
 mesh = SubResource("CylinderMesh_tent_pole")
 surface_material_override/0 = SubResource("Mat_Pole")
 
-[node name="Pole4" type="MeshInstance3D" parent="Tent_Water" unique_id=7019290]
+[node name="Pole4" type="MeshInstance3D" parent="Tent_Water"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 1.9, 3.6)
 mesh = SubResource("CylinderMesh_tent_pole")
 surface_material_override/0 = SubResource("Mat_Pole")
 
-[node name="Table" type="StaticBody3D" parent="Tent_Water" unique_id=7019291]
+[node name="Table" type="StaticBody3D" parent="Tent_Water"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
 
-[node name="Mesh" type="MeshInstance3D" parent="Tent_Water/Table" unique_id=7019292]
+[node name="TableMesh" type="MeshInstance3D" parent="Tent_Water/Table"]
 mesh = SubResource("BoxMesh_table")
-surface_material_override/0 = SubResource("Mat_Table")
+surface_material_override/0 = ExtResource("mat_furniture")
 
-[node name="Col" type="CollisionShape3D" parent="Tent_Water/Table" unique_id=7019293]
+[node name="TableCollision" type="CollisionShape3D" parent="Tent_Water/Table"]
 shape = SubResource("BoxShape3D_table")
 
-[node name="Water1" type="MeshInstance3D" parent="Tent_Water" unique_id=7019294]
+[node name="Water1" type="MeshInstance3D" parent="Tent_Water"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 1.2, 0)
 mesh = SubResource("CylinderMesh_water_bottle")
 surface_material_override/0 = SubResource("Mat_Water_Bottle")
 
-[node name="Water2" type="MeshInstance3D" parent="Tent_Water" unique_id=7019295]
+[node name="Water2" type="MeshInstance3D" parent="Tent_Water"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 1.2, 0)
 mesh = SubResource("CylinderMesh_water_bottle")
 surface_material_override/0 = SubResource("Mat_Water_Bottle")
 
-[node name="Tent_Press" type="Node3D" parent="." unique_id=8019284]
+[node name="Tent_Press" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.0, 0, -8.0)
 
-[node name="Roof" type="MeshInstance3D" parent="Tent_Press" unique_id=8019285]
+[node name="Roof" type="MeshInstance3D" parent="Tent_Press"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8, 0)
 mesh = SubResource("BoxMesh_tent_roof")
 surface_material_override/0 = SubResource("Mat_Tent_Red")
 
-[node name="Pole1" type="MeshInstance3D" parent="Tent_Press" unique_id=8019287]
+[node name="Pole1" type="MeshInstance3D" parent="Tent_Press"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 1.9, -3.6)
 mesh = SubResource("CylinderMesh_tent_pole")
 surface_material_override/0 = SubResource("Mat_Pole")
 
-[node name="Pole2" type="MeshInstance3D" parent="Tent_Press" unique_id=8019288]
+[node name="Pole2" type="MeshInstance3D" parent="Tent_Press"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 1.9, -3.6)
 mesh = SubResource("CylinderMesh_tent_pole")
 surface_material_override/0 = SubResource("Mat_Pole")
 
-[node name="Pole3" type="MeshInstance3D" parent="Tent_Press" unique_id=8019289]
+[node name="Pole3" type="MeshInstance3D" parent="Tent_Press"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 1.9, 3.6)
 mesh = SubResource("CylinderMesh_tent_pole")
 surface_material_override/0 = SubResource("Mat_Pole")
 
-[node name="Pole4" type="MeshInstance3D" parent="Tent_Press" unique_id=8019290]
+[node name="Pole4" type="MeshInstance3D" parent="Tent_Press"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 1.9, 3.6)
 mesh = SubResource("CylinderMesh_tent_pole")
 surface_material_override/0 = SubResource("Mat_Pole")
 
-[node name="Table" type="StaticBody3D" parent="Tent_Press" unique_id=8019291]
+[node name="Table" type="StaticBody3D" parent="Tent_Press"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
 
-[node name="Mesh" type="MeshInstance3D" parent="Tent_Press/Table" unique_id=8019292]
+[node name="TableMesh" type="MeshInstance3D" parent="Tent_Press/Table"]
 mesh = SubResource("BoxMesh_table")
-surface_material_override/0 = SubResource("Mat_Table")
+surface_material_override/0 = ExtResource("mat_furniture")
 
-[node name="Col" type="CollisionShape3D" parent="Tent_Press/Table" unique_id=8019293]
+[node name="TableCollision" type="CollisionShape3D" parent="Tent_Press/Table"]
 shape = SubResource("BoxShape3D_table")
 
-[node name="Tripod1" type="MeshInstance3D" parent="Tent_Press" unique_id=8019294]
+[node name="Tripod1" type="MeshInstance3D" parent="Tent_Press"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0.65, 2.0)
 mesh = SubResource("CylinderMesh_tripod")
 surface_material_override/0 = SubResource("Mat_Pole")
 
-[node name="Cam1" type="MeshInstance3D" parent="Tent_Press" unique_id=8019295]
+[node name="Cam1" type="MeshInstance3D" parent="Tent_Press"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 1.4, 2.0)
 mesh = SubResource("BoxMesh_camera")
 surface_material_override/0 = SubResource("Mat_Camera")
 
-[node name="Tripod2" type="MeshInstance3D" parent="Tent_Press" unique_id=8019296]
+[node name="Tripod2" type="MeshInstance3D" parent="Tent_Press"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0.65, 2.0)
 mesh = SubResource("CylinderMesh_tripod")
 surface_material_override/0 = SubResource("Mat_Pole")
 
-[node name="Cam2" type="MeshInstance3D" parent="Tent_Press" unique_id=8019297]
+[node name="Cam2" type="MeshInstance3D" parent="Tent_Press"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 1.4, 2.0)
 mesh = SubResource("BoxMesh_camera")
 surface_material_override/0 = SubResource("Mat_Camera")
 
-[node name="Buffet_Left" type="StaticBody3D" parent="." unique_id=9019284]
+[node name="Buffet_Left" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.0, 1.6, 12.0)
 
-[node name="Mesh" type="MeshInstance3D" parent="Buffet_Left" unique_id=9019285]
+[node name="Mesh" type="MeshInstance3D" parent="Buffet_Left"]
 mesh = SubResource("BoxMesh_buffet")
 surface_material_override/0 = SubResource("Mat_Buffet_Yellow")
 
-[node name="Col" type="CollisionShape3D" parent="Buffet_Left" unique_id=9019286]
+[node name="Col" type="CollisionShape3D" parent="Buffet_Left"]
 shape = SubResource("BoxShape3D_buffet")
 
-[node name="Buffet_Right" type="StaticBody3D" parent="." unique_id=9119284]
+[node name="Buffet_Right" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.0, 1.6, 12.0)
 
-[node name="Mesh" type="MeshInstance3D" parent="Buffet_Right" unique_id=9119285]
+[node name="Mesh" type="MeshInstance3D" parent="Buffet_Right"]
 mesh = SubResource("BoxMesh_buffet")
 surface_material_override/0 = SubResource("Mat_Buffet_Yellow")
 
-[node name="Col" type="CollisionShape3D" parent="Buffet_Right" unique_id=9119286]
+[node name="Col" type="CollisionShape3D" parent="Buffet_Right"]
 shape = SubResource("BoxShape3D_buffet")
 
 
 
-[node name="Bench_1" type="StaticBody3D" parent="." unique_id=9719284]
+[node name="Bench_1" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.0, 0.25, 17.5)
 
-[node name="Mesh" type="MeshInstance3D" parent="Bench_1" unique_id=9719285]
+[node name="BenchMesh" type="MeshInstance3D" parent="Bench_1"]
 mesh = SubResource("BoxMesh_bench")
-surface_material_override/0 = SubResource("Mat_Bench")
+surface_material_override/0 = ExtResource("mat_furniture")
 
-[node name="Col" type="CollisionShape3D" parent="Bench_1" unique_id=9719286]
+[node name="Col" type="CollisionShape3D" parent="Bench_1"]
 shape = SubResource("BoxShape3D_bench")
 
-[node name="Bench_2" type="StaticBody3D" parent="." unique_id=9819284]
+[node name="Bench_2" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.0, 0.25, 17.5)
 
-[node name="Mesh" type="MeshInstance3D" parent="Bench_2" unique_id=9819285]
+[node name="BenchMesh" type="MeshInstance3D" parent="Bench_2"]
 mesh = SubResource("BoxMesh_bench")
-surface_material_override/0 = SubResource("Mat_Bench")
+surface_material_override/0 = ExtResource("mat_furniture")
 
-[node name="Col" type="CollisionShape3D" parent="Bench_2" unique_id=9819286]
+[node name="Col" type="CollisionShape3D" parent="Bench_2"]
 shape = SubResource("BoxShape3D_bench")
 
-[node name="WC_1" type="StaticBody3D" parent="." unique_id=9219284]
+[node name="WC_1" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38.0, 1.3, 10.0)
 
-[node name="Mesh" type="MeshInstance3D" parent="WC_1" unique_id=9219285]
+[node name="Mesh" type="MeshInstance3D" parent="WC_1"]
 mesh = SubResource("BoxMesh_wc")
 surface_material_override/0 = SubResource("Mat_WC_Green")
 
-[node name="Col" type="CollisionShape3D" parent="WC_1" unique_id=9219286]
+[node name="Col" type="CollisionShape3D" parent="WC_1"]
 shape = SubResource("BoxShape3D_wc")
 
-[node name="WC_2" type="StaticBody3D" parent="." unique_id=9319284]
+[node name="WC_2" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38.0, 1.3, 12.5)
 
-[node name="Mesh" type="MeshInstance3D" parent="WC_2" unique_id=9319285]
+[node name="Mesh" type="MeshInstance3D" parent="WC_2"]
 mesh = SubResource("BoxMesh_wc")
 surface_material_override/0 = SubResource("Mat_WC_Green")
 
-[node name="Col" type="CollisionShape3D" parent="WC_2" unique_id=9319286]
+[node name="Col" type="CollisionShape3D" parent="WC_2"]
 shape = SubResource("BoxShape3D_wc")
 
-[node name="SecurityCheckpoint" type="Node3D" parent="." unique_id=9519284]
+[node name="SecurityCheckpoint" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 22.0)
 
-[node name="Barrier_Left_Wing" type="StaticBody3D" parent="SecurityCheckpoint" unique_id=9519285]
+[node name="Barrier_Left_Wing" type="StaticBody3D" parent="SecurityCheckpoint"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.0, 0.6, 0)
 
-[node name="Mesh" type="MeshInstance3D" parent="SecurityCheckpoint/Barrier_Left_Wing" unique_id=9519286]
+[node name="BarrierMesh" type="MeshInstance3D" parent="SecurityCheckpoint/Barrier_Left_Wing"]
 mesh = SubResource("BoxMesh_barrier")
-surface_material_override/0 = SubResource("Mat_Barrier")
+surface_material_override/0 = ExtResource("mat_barrier")
 
-[node name="Col" type="CollisionShape3D" parent="SecurityCheckpoint/Barrier_Left_Wing" unique_id=9519287]
+[node name="BarrierCollision" type="CollisionShape3D" parent="SecurityCheckpoint/Barrier_Left_Wing"]
 shape = SubResource("BoxShape3D_barrier")
 
-[node name="Barrier_Right_Wing" type="StaticBody3D" parent="SecurityCheckpoint" unique_id=9519288]
+[node name="Barrier_Right_Wing" type="StaticBody3D" parent="SecurityCheckpoint"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.0, 0.6, 0)
 
-[node name="Mesh" type="MeshInstance3D" parent="SecurityCheckpoint/Barrier_Right_Wing" unique_id=9519289]
+[node name="BarrierMesh" type="MeshInstance3D" parent="SecurityCheckpoint/Barrier_Right_Wing"]
 mesh = SubResource("BoxMesh_barrier")
-surface_material_override/0 = SubResource("Mat_Barrier")
+surface_material_override/0 = ExtResource("mat_barrier")
 
-[node name="Col" type="CollisionShape3D" parent="SecurityCheckpoint/Barrier_Right_Wing" unique_id=9519290]
+[node name="BarrierCollision" type="CollisionShape3D" parent="SecurityCheckpoint/Barrier_Right_Wing"]
 shape = SubResource("BoxShape3D_barrier")
 
-[node name="Turnstile_1" type="StaticBody3D" parent="SecurityCheckpoint" unique_id=9519291]
+[node name="Turnstile_1" type="StaticBody3D" parent="SecurityCheckpoint"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0.7, 0)
 
-[node name="Post" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_1" unique_id=9519292]
+[node name="Post" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_1"]
 mesh = SubResource("BoxMesh_turnstile_post")
 surface_material_override/0 = SubResource("Mat_Turnstile_Metal")
 
-[node name="Col" type="CollisionShape3D" parent="SecurityCheckpoint/Turnstile_1" unique_id=9519293]
+[node name="Col" type="CollisionShape3D" parent="SecurityCheckpoint/Turnstile_1"]
 shape = SubResource("BoxShape3D_turnstile_col")
 
-[node name="Light" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_1" unique_id=9519294]
+[node name="Light" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 mesh = SubResource("BoxMesh_turnstile_light")
 surface_material_override/0 = SubResource("Mat_Turnstile_Green")
 
-[node name="Turnstile_2" type="StaticBody3D" parent="SecurityCheckpoint" unique_id=9519295]
+[node name="Turnstile_2" type="StaticBody3D" parent="SecurityCheckpoint"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 
-[node name="Post" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_2" unique_id=9519296]
+[node name="Post" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_2"]
 mesh = SubResource("BoxMesh_turnstile_post")
 surface_material_override/0 = SubResource("Mat_Turnstile_Metal")
 
-[node name="Col" type="CollisionShape3D" parent="SecurityCheckpoint/Turnstile_2" unique_id=9519297]
+[node name="Col" type="CollisionShape3D" parent="SecurityCheckpoint/Turnstile_2"]
 shape = SubResource("BoxShape3D_turnstile_col")
 
-[node name="Light" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_2" unique_id=9519298]
+[node name="Light" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 mesh = SubResource("BoxMesh_turnstile_light")
 surface_material_override/0 = SubResource("Mat_Turnstile_Green")
 
-[node name="Turnstile_3" type="StaticBody3D" parent="SecurityCheckpoint" unique_id=9519299]
+[node name="Turnstile_3" type="StaticBody3D" parent="SecurityCheckpoint"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.7, 0)
 
-[node name="Post" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_3" unique_id=9519300]
+[node name="Post" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_3"]
 mesh = SubResource("BoxMesh_turnstile_post")
 surface_material_override/0 = SubResource("Mat_Turnstile_Metal")
 
-[node name="Col" type="CollisionShape3D" parent="SecurityCheckpoint/Turnstile_3" unique_id=9519301]
+[node name="Col" type="CollisionShape3D" parent="SecurityCheckpoint/Turnstile_3"]
 shape = SubResource("BoxShape3D_turnstile_col")
 
-[node name="Light" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_3" unique_id=9519302]
+[node name="Light" type="MeshInstance3D" parent="SecurityCheckpoint/Turnstile_3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 mesh = SubResource("BoxMesh_turnstile_light")
 surface_material_override/0 = SubResource("Mat_Turnstile_Green")
@@ -870,17 +867,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.5, 0.8, 22.0)
 [node name="Infiltration_Crate_Step3" parent="." instance=ExtResource("crate_box")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.5, 0, 20.5)
 
-[node name="EntranceGate" type="StaticBody3D" parent="." unique_id=9419284]
+[node name="EntranceGate" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 45.0)
 
-[node name="Mesh" type="MeshInstance3D" parent="EntranceGate" unique_id=9419285]
+[node name="Mesh" type="MeshInstance3D" parent="EntranceGate"]
 mesh = SubResource("BoxMesh_gate_arch")
 surface_material_override/0 = SubResource("Mat_Gate")
 
-[node name="Col" type="CollisionShape3D" parent="EntranceGate" unique_id=9419286]
+[node name="Col" type="CollisionShape3D" parent="EntranceGate"]
 shape = SubResource("BoxShape3D_gate")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1277591935]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.866025, -0.353553, 0.353553, 0, 0.707107, 0.707107, -0.5, -0.612372, 0.612372, 0, 30, 0)
 light_color = Color(0.65, 0.75, 0.95, 1)
 light_energy = 0.35
@@ -891,18 +888,18 @@ directional_shadow_split_2 = 0.3
 directional_shadow_split_3 = 0.6
 directional_shadow_blend_splits = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1201575768]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_fglp6")
 
-[node name="SpotLight_Stage" type="SpotLight3D" parent="." unique_id=159675726]
+[node name="SpotLight_Stage" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.7071068, 0.7071068, 0, -0.7071068, 0.7071068, 0, 14, -25)
 light_energy = 6.0
 spot_range = 35.0
 spot_angle = 55.0
 
-[node name="TopBarHUD" type="CanvasLayer" parent="." unique_id=94827103]
+[node name="TopBarHUD" type="CanvasLayer" parent="."]
 
-[node name="TopHeader" type="PanelContainer" parent="TopBarHUD" unique_id=1827394]
+[node name="TopHeader" type="PanelContainer" parent="TopBarHUD"]
 mouse_filter = 2
 anchors_preset = 5
 anchor_left = 0.5
@@ -914,56 +911,56 @@ offset_bottom = 62.0
 grow_horizontal = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_TopHeader")
 
-[node name="Margin" type="MarginContainer" parent="TopBarHUD/TopHeader" unique_id=1827395]
+[node name="Margin" type="MarginContainer" parent="TopBarHUD/TopHeader"]
 layout_mode = 2
 theme_override_constants/margin_left = 14
 theme_override_constants/margin_right = 14
 
-[node name="HBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin" unique_id=1827396]
+[node name="HBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin"]
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="LeftBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox" unique_id=1827397]
+[node name="LeftBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="TimerBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox" unique_id=1827398]
+[node name="TimerBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_TimerBadge")
 
-[node name="TimerLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox/TimerBadge" unique_id=3847291]
+[node name="TimerLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox/TimerBadge"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.2, 0.15, 0.05, 1)
 theme_override_font_sizes/font_size = 13
 text = " ⏱️ 03:00 "
 vertical_alignment = 1
 
-[node name="RoleBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox" unique_id=1827399]
+[node name="RoleBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_RoleBadge")
 
-[node name="RoleLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox/RoleBadge" unique_id=1827400]
+[node name="RoleLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/LeftBox/RoleBadge"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 12
 text = " 👑 BAŞKAN "
 vertical_alignment = 1
 
-[node name="CenterPollBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox" unique_id=1827401]
+[node name="CenterPollBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="PresVoteLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox" unique_id=9871236]
+[node name="PresVoteLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.12, 0.45, 0.9, 1)
 theme_override_font_sizes/font_size = 13
 text = "🏛️ BAŞKAN %46.0"
 vertical_alignment = 1
 
-[node name="VoteProgressBar" type="ProgressBar" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox" unique_id=9871237]
+[node name="VoteProgressBar" type="ProgressBar" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox"]
 custom_minimum_size = Vector2(170, 18)
 layout_mode = 2
 size_flags_vertical = 4
@@ -972,33 +969,33 @@ theme_override_styles/fill = SubResource("StyleBoxTexture_Poll_Fill")
 value = 46.0
 show_percentage = false
 
-[node name="OppVoteLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox" unique_id=9871238]
+[node name="OppVoteLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.18, 0.18, 1)
 theme_override_font_sizes/font_size = 13
 text = "🦅 RAKİP %54.0"
 vertical_alignment = 1
 
-[node name="TrendBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox" unique_id=1827402]
+[node name="TrendBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_StatusBadge")
 
-[node name="TrendLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/TrendBadge" unique_id=9871239]
+[node name="TrendLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/TrendBadge"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.2, 0.25, 0.35, 1)
 theme_override_font_sizes/font_size = 12
 text = "  📊 Canlı Anket  "
 vertical_alignment = 1
 
-[node name="RightBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox" unique_id=1827403]
+[node name="RightBox" type="HBoxContainer" parent="TopBarHUD/TopHeader/Margin/HBox"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="StatusBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/RightBox" unique_id=1827404]
+[node name="StatusBadge" type="PanelContainer" parent="TopBarHUD/TopHeader/Margin/HBox/RightBox"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_StatusBadge")
 
-[node name="StatusLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/RightBox/StatusBadge" unique_id=9283741]
+[node name="StatusLabel" type="Label" parent="TopBarHUD/TopHeader/Margin/HBox/RightBox/StatusBadge"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.2, 0.25, 0.35, 1)
 theme_override_font_sizes/font_size = 12
@@ -1006,33 +1003,33 @@ text = " 👥 Miting Meydanı (130 Kişi) "
 vertical_alignment = 1
 
 
-[node name="PortableWC_1" type="StaticBody3D" parent="." unique_id=7682910]
+[node name="PortableWC_1" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.0, 1.6, 12.0)
 
-[node name="Mesh" type="MeshInstance3D" parent="PortableWC_1" unique_id=7682911]
+[node name="Mesh" type="MeshInstance3D" parent="PortableWC_1"]
 mesh = SubResource("BoxMesh_portable_wc")
 surface_material_override/0 = SubResource("Mat_Portable_WC")
 
-[node name="Col" type="CollisionShape3D" parent="PortableWC_1" unique_id=7682912]
+[node name="Col" type="CollisionShape3D" parent="PortableWC_1"]
 shape = SubResource("BoxShape3D_portable_wc")
 
-[node name="Label3D" type="Label3D" parent="PortableWC_1" unique_id=7682913]
+[node name="Label3D" type="Label3D" parent="PortableWC_1"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 1.05)
 text = "🚻 PORTATİF WC\n[Kılık Değiştirme Kabini]"
 font_size = 28
 outline_size = 8
 
-[node name="PortableWC_2" type="StaticBody3D" parent="." unique_id=7782910]
+[node name="PortableWC_2" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.0, 1.6, 12.0)
 
-[node name="Mesh" type="MeshInstance3D" parent="PortableWC_2" unique_id=7782911]
+[node name="Mesh" type="MeshInstance3D" parent="PortableWC_2"]
 mesh = SubResource("BoxMesh_portable_wc")
 surface_material_override/0 = SubResource("Mat_Portable_WC")
 
-[node name="Col" type="CollisionShape3D" parent="PortableWC_2" unique_id=7782912]
+[node name="Col" type="CollisionShape3D" parent="PortableWC_2"]
 shape = SubResource("BoxShape3D_portable_wc")
 
-[node name="Label3D" type="Label3D" parent="PortableWC_2" unique_id=7782913]
+[node name="Label3D" type="Label3D" parent="PortableWC_2"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 1.05)
 text = "🚻 PORTATİF WC\n[Kılık Değiştirme Kabini]"
 font_size = 28
@@ -1042,33 +1039,56 @@ outline_size = 8
 
 
 
-# --- 🏛️ MİTİNG SAHNESİ VE BAYRAKLAR (Y=0.0 ZEMİNE OTURTULMUŞ) ---
-[node name="RallyFlag_Left" parent="." instance=ExtResource("rally_flag")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -12.0, 1.4, -30.0)
+[node name="RallyFlag_Left" type="Node3D" parent="."]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, -12.0, 0.0, -30.0)
+
+[node name="Model" parent="RallyFlag_Left" instance=ExtResource("rally_flag")]
 
 [node name="RallyFlag_Right" parent="." instance=ExtResource("rally_flag")]
-transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 12.0, 1.4, -30.0)
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 12.0, 0.0, -30.0)
 
-# --- 🏢 SOL CADDE GERÇEK ZEMİNE SIFIR APARTMANLAR (Y=0.0) ---
-[node name="Building_L1" parent="." instance=ExtResource("bld_c")]
+[node name="Building_C" type="Node3D" parent="."]
 transform = Transform3D(-2.18557e-07, 0, 5, 0, 5, 0, -5, 0, -2.18557e-07, -33.0, 0.0, -28.0)
+script = ExtResource("recursive_material_script")
+material = ExtResource("mat_building")
 
-[node name="Building_L2" parent="." instance=ExtResource("bld_d")]
+[node name="Model" parent="Building_C" instance=ExtResource("bld_c")]
+
+[node name="Building_D" type="Node3D" parent="."]
 transform = Transform3D(-2.18557e-07, 0, 5, 0, 5, 0, -5, 0, -2.18557e-07, -33.0, 0.0, -16.0)
+script = ExtResource("recursive_material_script")
+material = ExtResource("mat_building")
 
-[node name="Building_L3" parent="." instance=ExtResource("bld_g")]
+[node name="Model" parent="Building_D" instance=ExtResource("bld_d")]
+
+[node name="Building_G" type="Node3D" parent="."]
 transform = Transform3D(-2.18557e-07, 0, 5, 0, 5, 0, -5, 0, -2.18557e-07, -33.0, 0.0, -4.0)
+script = ExtResource("recursive_material_script")
+material = ExtResource("mat_building")
 
-[node name="Building_L4" parent="." instance=ExtResource("bld_h")]
+[node name="Model" parent="Building_G" instance=ExtResource("bld_g")]
+
+[node name="Building_H" type="Node3D" parent="."]
 transform = Transform3D(-2.18557e-07, 0, 5, 0, 5, 0, -5, 0, -2.18557e-07, -33.0, 0.0, 8.0)
+script = ExtResource("recursive_material_script")
+material = ExtResource("mat_building")
 
-[node name="Building_L5" parent="." instance=ExtResource("bld_a")]
+[node name="Model" parent="Building_H" instance=ExtResource("bld_h")]
+
+[node name="Building_A" type="Node3D" parent="."]
 transform = Transform3D(-2.18557e-07, 0, 5, 0, 5, 0, -5, 0, -2.18557e-07, -33.0, 0.0, 20.0)
+script = ExtResource("recursive_material_script")
+material = ExtResource("mat_building")
 
-[node name="Building_L6" parent="." instance=ExtResource("bld_b")]
+[node name="Model" parent="Building_A" instance=ExtResource("bld_a")]
+
+[node name="Building_B" type="Node3D" parent="."]
 transform = Transform3D(-2.18557e-07, 0, 5, 0, 5, 0, -5, 0, -2.18557e-07, -33.0, 0.0, 32.0)
+script = ExtResource("recursive_material_script")
+material = ExtResource("mat_building")
 
-# --- 🏢 SAĞ CADDE GERÇEK ZEMİNE SIFIR APARTMANLAR (Y=0.0) ---
+[node name="Model" parent="Building_B" instance=ExtResource("bld_b")]
+
 [node name="Building_R1" parent="." instance=ExtResource("bld_c")]
 transform = Transform3D(2.18557e-07, 0, -5, 0, 5, 0, 5, 0, 2.18557e-07, 33.0, 0.0, -28.0)
 
@@ -1081,13 +1101,20 @@ transform = Transform3D(2.18557e-07, 0, -5, 0, 5, 0, 5, 0, 2.18557e-07, 33.0, 0.
 [node name="Building_R4" parent="." instance=ExtResource("bld_h")]
 transform = Transform3D(2.18557e-07, 0, -5, 0, 5, 0, 5, 0, 2.18557e-07, 33.0, 0.0, 8.0)
 
-[node name="Building_R5" parent="." instance=ExtResource("bld_e")]
+[node name="Building_E" type="Node3D" parent="."]
 transform = Transform3D(2.18557e-07, 0, -5, 0, 5, 0, 5, 0, 2.18557e-07, 33.0, 0.0, 20.0)
+script = ExtResource("recursive_material_script")
+material = ExtResource("mat_building")
 
-[node name="Building_R6" parent="." instance=ExtResource("bld_f")]
+[node name="Model" parent="Building_E" instance=ExtResource("bld_e")]
+
+[node name="Building_F" type="Node3D" parent="."]
 transform = Transform3D(2.18557e-07, 0, -5, 0, 5, 0, 5, 0, 2.18557e-07, 33.0, 0.0, 32.0)
+script = ExtResource("recursive_material_script")
+material = ExtResource("mat_building")
 
-# --- 🏢 SAHNE ARKASI ŞEHİR DUVARI (Y=0.0 YERE SIFIR) ---
+[node name="Model" parent="Building_F" instance=ExtResource("bld_f")]
+
 [node name="Building_Back1" parent="." instance=ExtResource("bld_a")]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -20.0, 0.0, -46.0)
 
@@ -1100,28 +1127,32 @@ transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 8.0, 0.0, -46.0)
 [node name="Building_Back4" parent="." instance=ExtResource("bld_f")]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 20.0, 0.0, -46.0)
 
-# --- 🔭 GÖZCÜ KULELERİ (YERE SIFIR Y=0.0 KAİDE) ---
-[node name="WatchTower_L" parent="." instance=ExtResource("water_tower")]
+[node name="WatchTower_L" type="Node3D" parent="."]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -22.0, 0.0, -32.0)
+
+[node name="Model" parent="WatchTower_L" instance=ExtResource("water_tower")]
 
 [node name="WatchTower_R" parent="." instance=ExtResource("water_tower")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 22.0, 0.0, -32.0)
 
-# --- ⛲ MİTİNG MEYDANI SÜS HAVUZU ---
-[node name="CentralFountain" parent="." instance=ExtResource("fountain")]
+[node name="CentralFountain" type="Node3D" parent="."]
 transform = Transform3D(3.0, 0, 0, 0, 3.0, 0, 0, 0, 3.0, 0.0, 0.0, 6.0)
 
-# --- 🚓 MEYDAN GİRİŞİ PARKLARI ---
-[node name="PoliceCar" parent="." instance=ExtResource("car_pol")]
+[node name="Model" parent="CentralFountain" instance=ExtResource("fountain")]
+
+[node name="PoliceCar" type="Node3D" parent="."]
 transform = Transform3D(1.4, 0, 0.35, 0, 1.45, 0, -0.35, 0, 1.4, -14.0, 0.0, 42.0)
+
+[node name="Model" parent="PoliceCar" instance=ExtResource("car_pol")]
 
 [node name="TaxiCar" parent="." instance=ExtResource("car_tax")]
 transform = Transform3D(1.3, 0, -0.65, 0, 1.45, 0, 0.65, 0, 1.3, 14.0, 0.0, 42.0)
 
 
-# --- 🌳 SOKAK VE MEYDAN AĞAÇLARI (Y=0.0 YERE SIFIR MODEL AĞAÇLAR) ---
-[node name="StreetTree_L1" parent="." instance=ExtResource("tree_tall")]
+[node name="StreetTree_L1" type="Node3D" parent="."]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -22.0, 0.0, -22.0)
+
+[node name="Model" parent="StreetTree_L1" instance=ExtResource("tree_tall")]
 
 [node name="StreetTree_L2" parent="." instance=ExtResource("tree_round")]
 transform = Transform3D(2.0, 0, 0, 0, 2.0, 0, 0, 0, 2.0, -22.0, 0.0, -6.0)
@@ -1144,9 +1175,10 @@ transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 22.0, 0.0, 10.0)
 [node name="StreetTree_R4" parent="." instance=ExtResource("tree_round")]
 transform = Transform3D(2.0, 0, 0, 0, 2.0, 0, 0, 0, 2.0, 22.0, 0.0, 26.0)
 
-# --- 🌿 SOKAK ÇALILARI VE ÇEVRE DETAYLARI ---
-[node name="Bush_L1" parent="." instance=ExtResource("bush_prop")]
+[node name="Bush_L1" type="Node3D" parent="."]
 transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, -19.0, 0.0, -12.0)
+
+[node name="Model" parent="Bush_L1" instance=ExtResource("bush_prop")]
 
 [node name="Bush_L2" parent="." instance=ExtResource("bush_prop")]
 transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, -19.0, 0.0, 4.0)
@@ -1166,9 +1198,10 @@ transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 14.0, 0.0, -2.0)
 [node name="Hydrant_1" parent="." instance=ExtResource("hydrant_prop")]
 transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, -18.0, 0.0, 32.0)
 
-# --- 💡 SOKAK AYDINLATMALARI VE BANKLAR ---
-[node name="StreetLight_1" parent="." instance=ExtResource("street_light")]
+[node name="StreetLight_1" type="Node3D" parent="."]
 transform = Transform3D(3.6, 0, 0, 0, 3.6, 0, 0, 0, 3.6, -22.0, 0.0, -18.0)
+
+[node name="Model" parent="StreetLight_1" instance=ExtResource("street_light")]
 
 [node name="StreetLight_2" parent="." instance=ExtResource("street_light")]
 transform = Transform3D(3.6, 0, 0, 0, 3.6, 0, 0, 0, 3.6, 22.0, 0.0, -18.0)
@@ -1191,9 +1224,9 @@ transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, -12.0, 0.0, -2.0)
 [node name="PlazaBench_2" parent="." instance=ExtResource("plaza_bench")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 12.0, 0.0, -2.0)
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=997947994]
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("uid://bts4blx0hl4nn", "uid://bbk7uovn5mim2")
 spawn_path = NodePath("..")
 
-[node name="WeatherController" type="Node" parent="." unique_id=98712345]
+[node name="WeatherController" type="Node" parent="."]
 script = ExtResource("weather_controller_script")

@@ -1637,7 +1637,9 @@ func _execute_assassin_drop_weapon():
 
 
 func _on_volume_slider_changed(val: float):
-	Global.set_volume(val)
+	var global_state := get_node_or_null("/root/Global")
+	if global_state and global_state.has_method("set_volume"):
+		global_state.set_volume(val)
 
 # ===================================================
 # 💥 GERİ BİLDİRİM SİSTEMİ
@@ -2072,4 +2074,7 @@ func _spawn_landing_dust():
 		get_parent().add_child(particles)
 		particles.global_position = global_position
 		particles.emitting = true
-		get_tree().create_timer(0.6).timeout.connect(func(): if is_instance_valid(particles): particles.queue_free())
+		get_tree().create_timer(0.6).timeout.connect(func():
+			if is_instance_valid(particles):
+				particles.queue_free()
+		)

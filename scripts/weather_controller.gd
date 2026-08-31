@@ -22,8 +22,9 @@ func _ready() -> void:
 	set_process(true)
 	
 	var initial_mode = "SUNNY"
-	if get_node_or_null("/root/Global") and "weather_type" in Global:
-		initial_mode = Global.weather_type
+	var global_state := get_node_or_null("/root/Global")
+	if global_state and "weather_type" in global_state:
+		initial_mode = global_state.weather_type
 	apply_weather_mode(initial_mode)
 
 func apply_weather_mode(mode: String) -> void:
@@ -158,8 +159,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			# R tuşu: Yağmurlu / Güneşli modları arasında geçiş yap
 			var new_mode = "SUNNY" if is_raining else "RAINY"
 			apply_weather_mode(new_mode)
-			if get_node_or_null("/root/Global"):
-				Global.weather_type = new_mode
+			var global_state := get_node_or_null("/root/Global")
+			if global_state:
+				global_state.weather_type = new_mode
 		elif event.keycode == KEY_F:
 			# F tuşu: Yoğun sis modunu aç/kapat
 			if target_fog_density > 0.03:

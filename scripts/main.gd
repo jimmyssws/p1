@@ -164,7 +164,8 @@ func _ready():
 	_create_lobby_ui()
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
-	var net_mode = Global.network_mode if get_node_or_null("/root/Global") else "HOST"
+	var global_state := get_node_or_null("/root/Global")
+	var net_mode = global_state.network_mode if global_state else "HOST"
 	if DisplayServer.get_name() == "headless" or "--server" in OS.get_cmdline_args():
 		net_mode = "HOST"
 
@@ -315,10 +316,11 @@ func _on_host_pressed():
 
 func _on_join_pressed():
 	var target_ip = "127.0.0.1"
-	if get_node_or_null("/root/Global") and Global.server_ip != "":
-		target_ip = Global.server_ip
-	elif get_node_or_null("/root/Global") and Global.join_ip != "" and Global.join_ip != "127.0.0.1":
-		target_ip = Global.join_ip
+	var global_state := get_node_or_null("/root/Global")
+	if global_state and global_state.server_ip != "":
+		target_ip = global_state.server_ip
+	elif global_state and global_state.join_ip != "" and global_state.join_ip != "127.0.0.1":
+		target_ip = global_state.join_ip
 
 	var err = peer.create_client(target_ip, 9999)
 	if err == OK:
