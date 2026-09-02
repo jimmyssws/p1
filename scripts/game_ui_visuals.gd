@@ -17,12 +17,17 @@ static func apply_lobby(canvas: CanvasLayer) -> void:
 	var center := canvas.get_node_or_null("LobbyCenter") as CenterContainer
 	if center == null:
 		return
+	# Lobby is a right-side briefing overlay; the live 3D plaza remains the hero.
+	center.anchor_left = 0.56
+	center.anchor_top = 0.12
+	center.anchor_right = 0.96
+	center.anchor_bottom = 0.88
 	var panel := center.get_child(0) as PanelContainer
 	if panel:
-		panel.add_theme_stylebox_override("panel", _panel_box(OXIDE, IVORY, 0, 18))
-		panel.custom_minimum_size = Vector2(680, 500)
+		panel.add_theme_stylebox_override("panel", _panel_box(GOLD, Color(0.025, 0.04, 0.055, 0.88), 0, 14))
+		panel.custom_minimum_size = Vector2(0, 470)
 	for label in _all_labels(canvas):
-		label.add_theme_color_override("font_color", INK)
+		label.add_theme_color_override("font_color", IVORY)
 	for button in _all_buttons(canvas):
 		_apply_button(button, _button_tone(button.text))
 	var title := _first_label_with_text(canvas, "MİTİNG")
@@ -35,8 +40,8 @@ static func apply_lobby(canvas: CanvasLayer) -> void:
 static func apply_match_hud(root: Node) -> void:
 	var header := root.get_node_or_null("TopBarHUD/TopHeader") as PanelContainer
 	if header:
-		header.add_theme_stylebox_override("panel", _panel_box(INK, IVORY, 0, 10))
-		header.custom_minimum_size.y = 60
+		header.add_theme_stylebox_override("panel", _flat_box(Color(0.02, 0.035, 0.05, 0.72), GOLD, 0, 1))
+		header.custom_minimum_size.y = 52
 	var timer := root.find_child("TimerLabel", true, false) as Label
 	if timer:
 		timer.add_theme_color_override("font_color", OXIDE)
@@ -59,7 +64,7 @@ static func apply_player_hud(player: Node) -> void:
 	for path in ["WeaponPanel", "SusMeterPanel", "CCTVPanel", "MissionPanel"]:
 		var panel := hud.get_node_or_null(path) as Control
 		if panel:
-			panel.add_theme_stylebox_override("panel", _panel_box(INK, IVORY, 0, 9))
+			panel.add_theme_stylebox_override("panel", _panel_box(GOLD, Color(0.02, 0.035, 0.05, 0.76), 0, 7))
 	var weapon := hud.get_node_or_null("WeaponPanel") as PanelContainer
 	if weapon:
 		weapon.custom_minimum_size = Vector2(430, 122)
