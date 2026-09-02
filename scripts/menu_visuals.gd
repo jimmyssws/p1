@@ -74,13 +74,13 @@ static func _apply_copy(menu: Control) -> void:
 
 static func _apply_navigation(menu: Control) -> void:
 	var buttons := {
-		"CenterBox/MainPanel/VBox/Buttons/ServerQuickButton": "01  ANA MEYDANA GIR",
-		"CenterBox/MainPanel/VBox/Buttons/SoloButton": "02  TEK KISILIK TATBIKAT",
-		"CenterBox/MainPanel/VBox/Buttons/HostButton": "03  MITING ODASI KUR",
-		"CenterBox/MainPanel/VBox/Buttons/JoinToggleButton": "04  ODAYA BAGLAN",
+		"CenterBox/MainPanel/VBox/Buttons/ServerQuickButton": "◆  ANA MEYDANA GIR\n   CANLI OPERASYON / HIZLI KATILIM",
+		"CenterBox/MainPanel/VBox/Buttons/SoloButton": "◇  TATBIKAT MODU\n   TEK KISILIK / SERBEST KESIF",
+		"CenterBox/MainPanel/VBox/Buttons/HostButton": "◈  MITING ODASI KUR\n   HOST OL / PROTOKOLU BASLAT",
+		"CenterBox/MainPanel/VBox/Buttons/JoinToggleButton": "⌁  GUVENLI BAGLANTI\n   ODA KODU VEYA IP ILE GIR",
 		"CenterBox/MainPanel/VBox/Buttons/JoinSection/JoinConfirmButton": "BAGLANTIYI AÇ",
-		"CenterBox/MainPanel/VBox/Buttons/SettingsButton": "05  PROTOKOL AYARLARI",
-		"CenterBox/MainPanel/VBox/Buttons/QuitButton": "06  OTURUMU KAPAT",
+		"CenterBox/MainPanel/VBox/Buttons/SettingsButton": "⚙  PROTOKOL AYARLARI\n   SES / KONTROL / ERISILEBILIRLIK",
+		"CenterBox/MainPanel/VBox/Buttons/QuitButton": "×  OTURUMU KAPAT\n   ANA TERMINALE DON",
 		"SettingsPanel/VBox/CloseButton": "DEGISIKLIKLERI KAYDET"
 	}
 	for path in buttons:
@@ -104,21 +104,15 @@ static func _apply_settings(menu: Control) -> void:
 		input.add_theme_stylebox_override("normal", _input_box())
 
 static func _apply_nav_button(menu: Control, button: Button, accent: Color) -> void:
-	button.custom_minimum_size.y = 46
+	button.custom_minimum_size.y = 68
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	button.add_theme_font_size_override("font_size", 15)
 	button.add_theme_color_override("font_color", TEXT)
 	button.add_theme_color_override("font_hover_color", GOLD)
-	button.add_theme_stylebox_override("normal", _nav_box(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0))
-	button.add_theme_stylebox_override("hover", _nav_box(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0))
-	button.add_theme_stylebox_override("pressed", _nav_box(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0))
-	button.add_theme_stylebox_override("focus", _nav_box(Color(0, 0, 0, 0), GOLD, 0))
-	var skin_name := "ActionSkin_" + button.name
-	if menu.get_node_or_null(skin_name) == null:
-		var skin := ActionSkin.new()
-		skin.name = skin_name
-		menu.add_child(skin)
-		skin.bind(button)
+	button.add_theme_stylebox_override("normal", _action_card_box(Color(0.04, 0.065, 0.09, 0.58), Color("40505b"), 2))
+	button.add_theme_stylebox_override("hover", _action_card_box(Color(accent.r, accent.g, accent.b, 0.18), accent, 4))
+	button.add_theme_stylebox_override("pressed", _action_card_box(Color(accent.r, accent.g, accent.b, 0.30), TEXT, 5))
+	button.add_theme_stylebox_override("focus", _action_card_box(Color(accent.r, accent.g, accent.b, 0.14), GOLD, 4))
 	button.mouse_entered.connect(func() -> void: _focus(button))
 	button.mouse_exited.connect(func() -> void: _unfocus(button))
 
@@ -134,6 +128,27 @@ static func _rail_box() -> StyleBoxFlat:
 	box.content_margin_top = 32.0
 	box.content_margin_right = 28.0
 	box.content_margin_bottom = 28.0
+	return box
+
+static func _action_card_box(fill: Color, border: Color, left_width: int) -> StyleBoxFlat:
+	var box := StyleBoxFlat.new()
+	box.bg_color = fill
+	box.border_width_left = left_width
+	box.border_width_top = 1
+	box.border_width_right = 1
+	box.border_width_bottom = 1
+	box.border_color = border
+	box.corner_radius_top_left = 12
+	box.corner_radius_top_right = 3
+	box.corner_radius_bottom_left = 3
+	box.corner_radius_bottom_right = 12
+	box.shadow_color = Color(0, 0, 0, 0.34)
+	box.shadow_size = 5
+	box.shadow_offset = Vector2(3, 3)
+	box.content_margin_left = 20.0
+	box.content_margin_top = 7.0
+	box.content_margin_right = 10.0
+	box.content_margin_bottom = 7.0
 	return box
 
 static func _nav_box(fill: Color, border: Color, width: int) -> StyleBoxFlat:
