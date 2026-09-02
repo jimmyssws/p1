@@ -37,7 +37,7 @@ func _draw() -> void:
 		var x := 28.0 + (s.x-56.0) * float(i)/32.0
 		var h := 18.0 if i % 4 == 0 else 9.0
 		draw_line(Vector2(x,y-h), Vector2(x,y+h), Color("9aa5a8"), 1)
-	var knob_x := 28.0 + (s.x-56.0) * clamp((station-88.0)/18.0,0.0,1.0)
+	var knob_x: float = 28.0 + (s.x-56.0) * clampf((station-88.0)/18.0, 0.0, 1.0)
 	draw_circle(Vector2(knob_x,y), 12.0 + sin(phase*3.0)*1.5, GOLD)
 	draw_circle(Vector2(knob_x,y), 5.0, INK)
 	draw_string(ThemeDB.fallback_font, Vector2(28,105), "88.0", HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("89959a"))
