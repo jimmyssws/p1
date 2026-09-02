@@ -3,6 +3,7 @@ extends RefCounted
 
 # Presentation-only. The menu retains every original node path and action signal.
 const Backdrop = preload("res://scripts/menu_backdrop.gd")
+const ActionSkin = preload("res://scripts/menu_action_skin.gd")
 const INK := Color("0f1319")
 const PANEL := Color(0.035, 0.055, 0.075, 0.86)
 const TEXT := Color("e7e9e6")
@@ -86,7 +87,7 @@ static func _apply_navigation(menu: Control) -> void:
 		var button := menu.get_node_or_null(path) as Button
 		if button:
 			button.text = buttons[path]
-			_apply_nav_button(button, RED if "KAPAT" in button.text else GOLD)
+			_apply_nav_button(menu, button, RED if "KAPAT" in button.text else GOLD)
 
 static func _apply_settings(menu: Control) -> void:
 	var panel := menu.get_node_or_null("SettingsPanel") as PanelContainer
@@ -102,16 +103,22 @@ static func _apply_settings(menu: Control) -> void:
 		input.add_theme_color_override("placeholder_color", MUTED)
 		input.add_theme_stylebox_override("normal", _input_box())
 
-static func _apply_nav_button(button: Button, accent: Color) -> void:
+static func _apply_nav_button(menu: Control, button: Button, accent: Color) -> void:
 	button.custom_minimum_size.y = 46
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	button.add_theme_font_size_override("font_size", 15)
 	button.add_theme_color_override("font_color", TEXT)
 	button.add_theme_color_override("font_hover_color", GOLD)
 	button.add_theme_stylebox_override("normal", _nav_box(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0))
-	button.add_theme_stylebox_override("hover", _nav_box(Color(accent.r, accent.g, accent.b, 0.12), accent, 4))
-	button.add_theme_stylebox_override("pressed", _nav_box(Color(accent.r, accent.g, accent.b, 0.24), TEXT, 4))
-	button.add_theme_stylebox_override("focus", _nav_box(Color(accent.r, accent.g, accent.b, 0.10), GOLD, 4))
+	button.add_theme_stylebox_override("hover", _nav_box(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0))
+	button.add_theme_stylebox_override("pressed", _nav_box(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0))
+	button.add_theme_stylebox_override("focus", _nav_box(Color(0, 0, 0, 0), GOLD, 0))
+	var skin_name := "ActionSkin_" + button.name
+	if menu.get_node_or_null(skin_name) == null:
+		var skin := ActionSkin.new()
+		skin.name = skin_name
+		menu.add_child(skin)
+		skin.bind(button)
 	button.mouse_entered.connect(func() -> void: _focus(button))
 	button.mouse_exited.connect(func() -> void: _unfocus(button))
 
