@@ -34,22 +34,22 @@ static func _apply_scene(menu: Control) -> void:
 		tuner = RadioTunerScene.new()
 		tuner.name = "MitingFMTuner"
 		menu.add_child(tuner)
-	# The old centered layout is deliberately repurposed as a quiet left navigation rail.
+	# The menu is a physical CRT broadcast monitor, centered over the rally scene.
 	var center := menu.get_node_or_null("CenterBox") as CenterContainer
 	if center:
-		center.anchor_left = 0.0
-		center.anchor_top = 0.0
-		center.anchor_right = 0.36
-		center.anchor_bottom = 1.0
-		center.offset_left = 38.0
-		center.offset_top = 42.0
+		center.anchor_left = 0.30
+		center.anchor_top = 0.12
+		center.anchor_right = 0.78
+		center.anchor_bottom = 0.84
+		center.offset_left = 0.0
+		center.offset_top = 0.0
 		center.offset_right = 0.0
-		center.offset_bottom = -42.0
+		center.offset_bottom = 0.0
 	var panel := menu.get_node_or_null("CenterBox/MainPanel") as PanelContainer
 	if panel:
-		panel.custom_minimum_size = Vector2(0, 610)
+		panel.custom_minimum_size = Vector2(640, 610)
 		panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		panel.add_theme_stylebox_override("panel", _rail_box())
+		panel.add_theme_stylebox_override("panel", _tv_box())
 	var vbox := menu.get_node_or_null("CenterBox/MainPanel/VBox") as VBoxContainer
 	if vbox:
 		vbox.add_theme_constant_override("separation", 8)
@@ -79,10 +79,10 @@ static func _apply_copy(menu: Control) -> void:
 
 static func _apply_navigation(menu: Control) -> void:
 	var buttons := {
-		"CenterBox/MainPanel/VBox/Buttons/ServerQuickButton": "◆  ANA MEYDANA GIR\n   CANLI OPERASYON / HIZLI KATILIM",
-		"CenterBox/MainPanel/VBox/Buttons/SoloButton": "◇  TATBIKAT MODU\n   TEK KISILIK / SERBEST KESIF",
-		"CenterBox/MainPanel/VBox/Buttons/HostButton": "◈  MITING ODASI KUR\n   HOST OL / PROTOKOLU BASLAT",
-		"CenterBox/MainPanel/VBox/Buttons/JoinToggleButton": "⌁  GUVENLI BAGLANTI\n   ODA KODU VEYA IP ILE GIR",
+		"CenterBox/MainPanel/VBox/Buttons/ServerQuickButton": "KANAL 04  //  MEYDAN YAYINI\n104.2 MHz  •  CANLI",
+		"CenterBox/MainPanel/VBox/Buttons/SoloButton": "KANAL 03  //  TATBIKAT\n96.3 MHz  •  KAYIT",
+		"CenterBox/MainPanel/VBox/Buttons/HostButton": "KANAL 02  //  MITING ODASI\n92.7 MHz  •  YAYIN AC",
+		"CenterBox/MainPanel/VBox/Buttons/JoinToggleButton": "KANAL 01  //  GUVENLI HAT\n88.4 MHz  •  BAGLAN",
 		"CenterBox/MainPanel/VBox/Buttons/JoinSection/JoinConfirmButton": "BAGLANTIYI AÇ",
 		"CenterBox/MainPanel/VBox/Buttons/SettingsButton": "⚙  PROTOKOL AYARLARI\n   SES / KONTROL / ERISILEBILIRLIK",
 		"CenterBox/MainPanel/VBox/Buttons/QuitButton": "×  OTURUMU KAPAT\n   ANA TERMINALE DON",
@@ -124,6 +124,27 @@ static func _apply_nav_button(menu: Control, button: Button, accent: Color) -> v
 	button.add_theme_stylebox_override("focus", _action_card_box(Color(accent.r, accent.g, accent.b, 0.14), GOLD, 4))
 	button.mouse_entered.connect(func() -> void: _focus(button))
 	button.mouse_exited.connect(func() -> void: _unfocus(button))
+
+static func _tv_box() -> StyleBoxFlat:
+	var box := StyleBoxFlat.new()
+	box.bg_color = Color("101d21")
+	box.border_width_left = 18
+	box.border_width_top = 18
+	box.border_width_right = 18
+	box.border_width_bottom = 26
+	box.border_color = Color("2b3430")
+	box.corner_radius_top_left = 32
+	box.corner_radius_top_right = 32
+	box.corner_radius_bottom_left = 44
+	box.corner_radius_bottom_right = 44
+	box.shadow_color = Color(0, 0, 0, 0.82)
+	box.shadow_size = 34
+	box.shadow_offset = Vector2(0, 16)
+	box.content_margin_left = 42.0
+	box.content_margin_top = 34.0
+	box.content_margin_right = 42.0
+	box.content_margin_bottom = 34.0
+	return box
 
 static func _rail_box() -> StyleBoxFlat:
 	var box := StyleBoxFlat.new()

@@ -68,7 +68,6 @@ func _draw() -> void:
 		return
 	var accent := RED if is_danger else GOLD
 	var mid_y := s.y * 0.5
-	var notch: float = minf(18.0, s.y * 0.34)
 	# The default state is a pair of open tactical brackets — intentionally not a card.
 	draw_line(Vector2(2, 5), Vector2(28, 5), STEEL, 1.0)
 	draw_line(Vector2(2, 5), Vector2(2, s.y - 5), STEEL, 1.0)

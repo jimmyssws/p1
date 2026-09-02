@@ -95,15 +95,15 @@ var is_viewing_cctv: bool = false
 
 # ⏸️ Pause Menüsü
 @onready var pause_panel = $HUD/PausePanel if has_node("HUD/PausePanel") else null
-@onready var pause_resume_btn = $HUD/PausePanel/VBox/ResumeButton if has_node("HUD/PausePanel/VBox/ResumeButton") else null
-@onready var pause_quit_btn = $HUD/PausePanel/VBox/QuitButton if has_node("HUD/PausePanel/VBox/QuitButton") else null
+@onready var pause_resume_btn = $HUD/PausePanel/CenterBox/Card/VBox/ResumeButton if has_node("HUD/PausePanel/CenterBox/Card/VBox/ResumeButton") else null
+@onready var pause_quit_btn = $HUD/PausePanel/CenterBox/Card/VBox/QuitButton if has_node("HUD/PausePanel/CenterBox/Card/VBox/QuitButton") else null
 
 var is_paused: bool = false
 # 🖱️ Fare Hassasiyeti Ayarı
 var base_sensitivity: float = 0.0035
 var mouse_sensitivity: float = 1.0
-@onready var sens_slider = $HUD/PausePanel/VBox/SensContainer/SensSlider if has_node("HUD/PausePanel/VBox/SensContainer/SensSlider") else null
-@onready var sens_val_label = $HUD/PausePanel/VBox/SensContainer/SensHeader/SensValLabel if has_node("HUD/PausePanel/VBox/SensContainer/SensHeader/SensValLabel") else null
+@onready var sens_slider = $HUD/PausePanel/CenterBox/Card/VBox/SensContainer/SensSlider if has_node("HUD/PausePanel/CenterBox/Card/VBox/SensContainer/SensSlider") else null
+@onready var sens_val_label = $HUD/PausePanel/CenterBox/Card/VBox/SensContainer/SensHeader/SensValLabel if has_node("HUD/PausePanel/CenterBox/Card/VBox/SensContainer/SensHeader/SensValLabel") else null
 
 
 # 💼 Çelik Çanta Kalkanı (Başkan)
@@ -126,10 +126,10 @@ const DRONE_SPEED_V = 5.0
 
 # 📊 Özet
 @onready var summary_panel = $HUD/SummaryPanel if has_node("HUD/SummaryPanel") else null
-@onready var summary_winner = $HUD/SummaryPanel/VBox/WinnerLabel if has_node("HUD/SummaryPanel/VBox/WinnerLabel") else null
-@onready var summary_role   = $HUD/SummaryPanel/VBox/RoleLabel if has_node("HUD/SummaryPanel/VBox/RoleLabel") else null
-@onready var summary_time   = $HUD/SummaryPanel/VBox/TimeLabel if has_node("HUD/SummaryPanel/VBox/TimeLabel") else null
-@onready var summary_quit   = $HUD/SummaryPanel/VBox/QuitButton if has_node("HUD/SummaryPanel/VBox/QuitButton") else null
+@onready var summary_winner = $HUD/SummaryPanel/CenterBox/Panel/VBox/WinnerLabel if has_node("HUD/SummaryPanel/CenterBox/Panel/VBox/WinnerLabel") else null
+@onready var summary_role = $HUD/SummaryPanel/CenterBox/Panel/VBox/StatsBox/RoleLabel if has_node("HUD/SummaryPanel/CenterBox/Panel/VBox/StatsBox/RoleLabel") else null
+@onready var summary_time = $HUD/SummaryPanel/CenterBox/Panel/VBox/StatsBox/TimeLabel if has_node("HUD/SummaryPanel/CenterBox/Panel/VBox/StatsBox/TimeLabel") else null
+@onready var summary_quit = $HUD/SummaryPanel/CenterBox/Panel/VBox/QuitButton if has_node("HUD/SummaryPanel/CenterBox/Panel/VBox/QuitButton") else null
 
 var task_progress: float = 0.0
 var speech_checkpoint: float = 0.0
