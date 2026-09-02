@@ -3,7 +3,7 @@ extends RefCounted
 
 # Presentation-only. The menu retains every original node path and action signal.
 const Backdrop = preload("res://scripts/menu_backdrop.gd")
-const ActionSkin = preload("res://scripts/menu_action_skin.gd")
+const RadioTunerScene = preload("res://scripts/radio_tuner.gd")
 const INK := Color("0f1319")
 const PANEL := Color(0.035, 0.055, 0.075, 0.86)
 const TEXT := Color("e7e9e6")
@@ -29,6 +29,11 @@ static func _apply_scene(menu: Control) -> void:
 		backdrop.name = "RallyNightBackdrop"
 		menu.add_child(backdrop)
 		menu.move_child(backdrop, 1)
+	var tuner := menu.get_node_or_null("MitingFMTuner") as RadioTuner
+	if tuner == null:
+		tuner = RadioTunerScene.new()
+		tuner.name = "MitingFMTuner"
+		menu.add_child(tuner)
 	# The old centered layout is deliberately repurposed as a quiet left navigation rail.
 	var center := menu.get_node_or_null("CenterBox") as CenterContainer
 	if center:
@@ -88,6 +93,10 @@ static func _apply_navigation(menu: Control) -> void:
 		if button:
 			button.text = buttons[path]
 			_apply_nav_button(menu, button, RED if "KAPAT" in button.text else GOLD)
+			var tuner := menu.get_node_or_null("MitingFMTuner") as RadioTuner
+			if tuner:
+				var freq := 104.2 if "ServerQuick" in path else (96.3 if "Solo" in path else (92.7 if "Host" in path else 88.4))
+				button.mouse_entered.connect(func(): tuner.tune(freq, button.text.split("\n")[0]))
 
 static func _apply_settings(menu: Control) -> void:
 	var panel := menu.get_node_or_null("SettingsPanel") as PanelContainer
