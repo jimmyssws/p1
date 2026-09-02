@@ -1,5 +1,7 @@
 extends Node3D
 
+const GameUIVisuals = preload("res://scripts/game_ui_visuals.gd")
+
 var peer = ENetMultiplayerPeer.new()
 var player_scene = preload("res://scenes/player.tscn")
 var npc_scene = preload("res://scenes/npc.tscn")
@@ -154,6 +156,7 @@ func _ready():
 	_setup_ambient_audio()
 	_setup_weather_system()
 	_create_news_ticker_ui()
+	call_deferred("_apply_game_presentation")
 	sync_poll_score(46.0, "📊 Canlı Anket Başladı")
 	sync_timer(180)
 	if has_node("TopBarHUD"):
@@ -177,12 +180,16 @@ func _ready():
 	elif net_mode == "JOIN":
 		_on_join_pressed()
 
+func _apply_game_presentation() -> void:
+	GameUIVisuals.apply_match_hud(self)
+
 func _create_lobby_ui():
 	lobby_canvas = CanvasLayer.new()
 	lobby_canvas.name = "LobbyReadyCanvasLayer"
 	add_child(lobby_canvas)
 
 	var center = CenterContainer.new()
+	center.name = "LobbyCenter"
 	center.set_anchors_preset(Control.PRESET_FULL_RECT)
 	lobby_canvas.add_child(center)
 
@@ -279,6 +286,11 @@ func _create_lobby_ui():
 	leave_btn.mouse_entered.connect(func(): _play_ui_sound("res://sounds/rollover1.ogg", -6.0))
 	leave_btn.pressed.connect(func(): _play_ui_sound("res://sounds/mouseclick1.ogg", 0.0); _on_lobby_leave_pressed())
 	btn_hbox.add_child(leave_btn)
+	call_deferred("_apply_lobby_presentation")
+
+func _apply_lobby_presentation() -> void:
+	if lobby_canvas:
+		GameUIVisuals.apply_lobby(lobby_canvas)
 
 func _play_ui_sound(path: String, vol: float = 0.0):
 	var sfx = AudioStreamPlayer.new()
@@ -498,6 +510,8 @@ func _update_lobby_display():
 			lobby_countdown_label.text = "🚨 OYUN BAŞLIYOR: %d SANİYE..." % lobby_countdown
 		else:
 			lobby_countdown_label.text = ""
+	if lobby_canvas:
+		GameUIVisuals.apply_lobby(lobby_canvas)
 
 func _on_lobby_ready_toggle_pressed():
 	var my_id = multiplayer.get_unique_id()

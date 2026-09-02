@@ -1,5 +1,7 @@
 extends CharacterBody3D
 
+const GameUIVisuals = preload("res://scripts/game_ui_visuals.gd")
+
 const SPEED = 4.2
 const JUMP_VELOCITY = 6.2
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -249,6 +251,8 @@ func _ready():
 		if hand_anchor: hand_anchor.hide()
 		return
 		
+	GameUIVisuals.apply_player_hud(self)
+
 	if char_model:
 		char_model.hide()
 		
