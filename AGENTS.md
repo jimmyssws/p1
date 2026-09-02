@@ -13,3 +13,7 @@ Bu projenin tüm GDD, kriz mekaniği, ses ve harita tasarım dokümanları `./no
 - `notes/03_🗺️_Harita_ve_Cevre_Tasarimi.md`: Harita ve çevre mimarisi
 - `notes/04_🧠_Yapay_Zeka_ve_Sivil_Davranislari.md`: Sivil AI yapısı
 - `notes/Miting_Oyunu_Kriz_Mekanigi.md`: Kriz ve karar mekanikleri
+
+
+## 🧠 PROJECT_MEMORY.MD GÜNCELLEME KURALI (MANDATORY)
+Projede yapılan HER yeni geliştirme, mimari değişiklik, hata düzeltmesi veya eklenen özellik; TAMAMLANDIKTAN ANINDA SONRA projenin kökündeki  dosyasına tarih atılarak 1-2 cümlelik özet halinde eklenmelidir.
