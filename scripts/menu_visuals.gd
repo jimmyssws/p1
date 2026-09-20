@@ -1,65 +1,51 @@
 class_name MenuVisuals
 extends RefCounted
 
-# Sinematik karanlık thriller stili menü görsel katmanı.
-# Tüm node yolları ve sinyaller menu.gd'de değişmez.
+# The Last of Us / Control tarzı sol panel menü.
+# Butonlarda SIFIR dikdörtgen kutu — sadece metin + hover çizgisi.
 
 const RadioTunerGd = preload("res://scripts/radio_tuner.gd")
 const Backdrop     = preload("res://scripts/menu_backdrop.gd")
 
-const TEXT   := Color("e7e9e6")
-const MUTED  := Color("7a858c")
-const GOLD   := Color("e5a93c")
-const AMBER  := Color("e8850f")
-const RED    := Color("ca3432")
-const INK    := Color(0.02, 0.025, 0.032)
-
-# [frekans, başlık, altyazı, kırmızı_mı]
-const CHANNELS : Dictionary = {
-	"CenterBox/MainPanel/VBox/Buttons/ServerQuickButton": [104.2, "MEYDAN YAYINI", "CANLI • ANA SUNUCU"],
-	"CenterBox/MainPanel/VBox/Buttons/SoloButton":        [ 96.3, "TATBIKAT",      "TEK OYUNCU • KAYIT"],
-	"CenterBox/MainPanel/VBox/Buttons/HostButton":        [ 92.7, "MITING ODASI",  "COK OYUNCU • HOST"],
-	"CenterBox/MainPanel/VBox/Buttons/JoinToggleButton":  [ 88.4, "GUVENLI HAT",   "IP ILE BAGLAN"],
-}
-const DANGER_PATHS : Array = [
-	"CenterBox/MainPanel/VBox/Buttons/QuitButton",
-]
-const OTHER_PATHS : Array = [
-	"CenterBox/MainPanel/VBox/Buttons/SettingsButton",
-	"CenterBox/MainPanel/VBox/Buttons/JoinSection/JoinConfirmButton",
-]
+const TEXT  := Color(1.0, 1.0, 1.0, 1.0)
+const DIM   := Color(0.65, 0.65, 0.65, 1.0)
+const GOLD  := Color(0.90, 0.68, 0.22, 1.0)
+const RED   := Color(0.82, 0.18, 0.18, 1.0)
 
 static func apply(menu: Control) -> void:
-	_setup_bg(menu)
-	_setup_layout(menu)
-	_setup_tuner(menu)
-	_setup_copy(menu)
-	_setup_buttons(menu)
-	_setup_settings(menu)
-	_play_intro(menu)
+	_bg(menu)
+	_layout(menu)
+	_title(menu)
+	_buttons(menu)
+	_settings(menu)
+	_intro(menu)
 
-# ── Arka plan ────────────────────────────────────────────────────────────────
+# ── Arka plan ─────────────────────────────────────────────────────────────────
 
-static func _setup_bg(menu: Control) -> void:
+static func _bg(menu: Control) -> void:
 	var bg := menu.get_node_or_null("Background") as ColorRect
 	if bg:
 		bg.color = Color(0.0, 0.0, 0.0, 1.0)
-	var bd := menu.get_node_or_null("RallyNightBackdrop")
-	if bd == null:
-		bd = Backdrop.new()
+	if menu.get_node_or_null("RallyNightBackdrop") == null:
+		var bd := Backdrop.new()
 		bd.name = "RallyNightBackdrop"
 		menu.add_child(bd)
 		menu.move_child(bd, 1)
+	# RadioTuner varsa gizle — bu stilde kullanmıyoruz
+	var tuner := menu.get_node_or_null("MitingFMTuner")
+	if tuner:
+		tuner.hide()
 
-# ── Layout ───────────────────────────────────────────────────────────────────
+# ── Layout: Sol panel full-height ─────────────────────────────────────────────
 
-static func _setup_layout(menu: Control) -> void:
+static func _layout(menu: Control) -> void:
+	# CenterBox → Sol panel: ekranın sol %38'i, tam yükseklik
 	var center := menu.get_node_or_null("CenterBox") as CenterContainer
 	if center:
-		center.anchor_left   = 0.30
-		center.anchor_top    = 0.06
-		center.anchor_right  = 0.72
-		center.anchor_bottom = 0.92
+		center.anchor_left   = 0.0
+		center.anchor_top    = 0.0
+		center.anchor_right  = 0.40
+		center.anchor_bottom = 1.0
 		center.offset_left   = 0.0
 		center.offset_top    = 0.0
 		center.offset_right  = 0.0
@@ -70,113 +56,106 @@ static func _setup_layout(menu: Control) -> void:
 		panel.custom_minimum_size = Vector2(0.0, 0.0)
 		panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		panel.size_flags_vertical   = Control.SIZE_EXPAND_FILL
-		panel.add_theme_stylebox_override("panel", _panel_box())
+		panel.add_theme_stylebox_override("panel", _left_panel_box())
 
 	var vbox := menu.get_node_or_null("CenterBox/MainPanel/VBox") as VBoxContainer
 	if vbox:
-		vbox.add_theme_constant_override("separation", 5)
+		vbox.add_theme_constant_override("separation", 2)
 
-# ── RadioTuner (üst frekans şeridi) ─────────────────────────────────────────
+	# VersionLabel → Sol alta
+	var ver := menu.get_node_or_null("VersionLabel") as Label
+	if ver:
+		ver.anchor_left   = 0.0
+		ver.anchor_top    = 1.0
+		ver.anchor_right  = 0.40
+		ver.anchor_bottom = 1.0
+		ver.offset_left   = 20.0
+		ver.offset_top    = -30.0
+		ver.offset_right  = 0.0
+		ver.offset_bottom = -8.0
+		ver.grow_horizontal = Control.GROW_DIRECTION_END
+		ver.grow_vertical   = Control.GROW_DIRECTION_BEGIN
+		ver.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		ver.text = "v0.5  •  ERKEN ERİŞİM"
+		ver.add_theme_color_override("font_color", Color(0.45, 0.45, 0.45, 1.0))
+		ver.add_theme_font_size_override("font_size", 11)
 
-static func _setup_tuner(menu: Control) -> void:
-	var tuner := menu.get_node_or_null("MitingFMTuner")
-	if tuner == null:
-		tuner = RadioTunerGd.new()
-		tuner.name = "MitingFMTuner"
-		menu.add_child(tuner)
-	tuner.anchor_left   = 0.30
-	tuner.anchor_top    = 0.06
-	tuner.anchor_right  = 0.72
-	tuner.anchor_bottom = 0.06
-	tuner.offset_top    = 0.0
-	tuner.offset_bottom = 82.0
-	tuner.offset_left   = 0.0
-	tuner.offset_right  = 0.0
+# ── Başlık ─────────────────────────────────────────────────────────────────────
 
-# ── Başlık metinleri ─────────────────────────────────────────────────────────
-
-static func _setup_copy(menu: Control) -> void:
+static func _title(menu: Control) -> void:
 	var title := menu.get_node_or_null("CenterBox/MainPanel/VBox/TitleLabel") as Label
 	if title:
-		title.text = "SUIKASTCI\nVE BASKAN"
+		title.text = "SUİKASTÇI\nVE BAŞKAN"
 		title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-		title.add_theme_font_size_override("font_size", 32)
+		title.add_theme_font_size_override("font_size", 42)
 		title.add_theme_color_override("font_color", TEXT)
 		title.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 1.0))
-		title.add_theme_constant_override("outline_size", 3)
+		title.add_theme_constant_override("outline_size", 0)
+		title.add_theme_constant_override("line_spacing", 4)
 
 	var sub := menu.get_node_or_null("CenterBox/MainPanel/VBox/SubtitleLabel") as Label
 	if sub:
-		sub.text = "GIZLI ROLLER  //  ACIK HESAPLASMA"
+		sub.text = "GİZLİ ROLLER  //  AÇIK HESAPLAŞMA"
 		sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 		sub.add_theme_font_size_override("font_size", 11)
-		sub.add_theme_color_override("font_color", Color(GOLD, 0.72))
+		sub.add_theme_color_override("font_color", Color(GOLD, 0.75))
 
-	var ver := menu.get_node_or_null("VersionLabel") as Label
-	if ver:
-		ver.text = "ERKEN ERISIM  //  v0.5"
-		ver.add_theme_color_override("font_color", Color(MUTED, 0.7))
+	# Separator düzenle
+	var sep := menu.get_node_or_null("CenterBox/MainPanel/VBox/HSep") as HSeparator
+	if sep:
+		sep.add_theme_color_override("color", Color(1.0, 1.0, 1.0, 0.10))
+		sep.add_theme_constant_override("separation", 14)
 
-# ── Butonlar ─────────────────────────────────────────────────────────────────
+# ── Butonlar: SIFIR dikdörtgen, sadece metin ──────────────────────────────────
 
-static func _setup_buttons(menu: Control) -> void:
-	var tuner := menu.get_node_or_null("MitingFMTuner") as RadioTuner
-
-	# Kanal butonları
-	for path in CHANNELS:
-		var btn := menu.get_node_or_null(path) as Button
-		if btn == null:
-			continue
-		var ch : Array = CHANNELS[path]
-		_style_btn(btn, GOLD)
-		if tuner:
-			var freq : float  = ch[0]
-			var lbl  : String = ch[1]
-			var sub2 : String = ch[2]
-			btn.mouse_entered.connect(func(): tuner.tune(freq, lbl, sub2))
-		btn.mouse_entered.connect(func(): _slide_in(btn))
-		btn.mouse_exited.connect(func():  _slide_out(btn))
-
-	# Tehlike butonu (çıkış)
-	for path in DANGER_PATHS:
+static func _buttons(menu: Control) -> void:
+	# Normal butonlar → altın vurgu
+	var main_btns : Array[String] = [
+		"CenterBox/MainPanel/VBox/Buttons/ServerQuickButton",
+		"CenterBox/MainPanel/VBox/Buttons/SoloButton",
+		"CenterBox/MainPanel/VBox/Buttons/HostButton",
+		"CenterBox/MainPanel/VBox/Buttons/JoinToggleButton",
+	]
+	for path in main_btns:
 		var btn := menu.get_node_or_null(path) as Button
 		if btn:
-			_style_btn(btn, RED)
-			btn.mouse_entered.connect(func(): _slide_in(btn))
-			btn.mouse_exited.connect(func():  _slide_out(btn))
+			_plain_btn(btn, GOLD)
 
-	# Diğer butonlar (ayarlar, bağlan)
-	for path in OTHER_PATHS:
-		var btn := menu.get_node_or_null(path) as Button
-		if btn:
-			_style_btn(btn, Color(MUTED, 1.0))
+	# Ayarlar → soluk
+	var sb := menu.get_node_or_null("CenterBox/MainPanel/VBox/Buttons/SettingsButton") as Button
+	if sb:
+		_plain_btn(sb, Color(0.60, 0.60, 0.60, 1.0))
 
-	# Metinler
-	_set_text(menu, "CenterBox/MainPanel/VBox/Buttons/ServerQuickButton",
-		"⚡  MEYDAN YAYINI\n    104.2 MHz  •  Ana Sunucu: 100.68.81.79")
-	_set_text(menu, "CenterBox/MainPanel/VBox/Buttons/SoloButton",
-		"▶  TATBIKAT MODU\n    96.3 MHz  •  Tek Oyuncu / Hizli Basla")
-	_set_text(menu, "CenterBox/MainPanel/VBox/Buttons/HostButton",
-		"◈  MITING ODASI  —  ODA KUR\n    92.7 MHz  •  Port 9999")
-	_set_text(menu, "CenterBox/MainPanel/VBox/Buttons/JoinToggleButton",
-		"→  GUVENLI HAT  —  IP ILE BAGLAN\n    88.4 MHz")
-	_set_text(menu, "CenterBox/MainPanel/VBox/Buttons/JoinSection/JoinConfirmButton",
-		"  BAGLAN")
-	_set_text(menu, "CenterBox/MainPanel/VBox/Buttons/SettingsButton",
-		"⚙  PROTOKOL AYARLARI")
-	_set_text(menu, "CenterBox/MainPanel/VBox/Buttons/QuitButton",
-		"×  OTURUMU KAPAT")
+	# Çıkış → kırmızı
+	var qb := menu.get_node_or_null("CenterBox/MainPanel/VBox/Buttons/QuitButton") as Button
+	if qb:
+		_plain_btn(qb, RED)
 
-	# IP input
+	# Bağlan butonu
+	var cb := menu.get_node_or_null("CenterBox/MainPanel/VBox/Buttons/JoinSection/JoinConfirmButton") as Button
+	if cb:
+		_plain_btn(cb, GOLD)
+		cb.custom_minimum_size.y = 0.0
+
+	# Metinler — temiz, kısa
+	_txt(menu, "CenterBox/MainPanel/VBox/Buttons/ServerQuickButton", "Ana Sunucuya Katıl")
+	_txt(menu, "CenterBox/MainPanel/VBox/Buttons/SoloButton",        "Tek Oyuncu Başlat")
+	_txt(menu, "CenterBox/MainPanel/VBox/Buttons/HostButton",        "Oda Kur  (Host)")
+	_txt(menu, "CenterBox/MainPanel/VBox/Buttons/JoinToggleButton",  "IP ile Katıl")
+	_txt(menu, "CenterBox/MainPanel/VBox/Buttons/JoinSection/JoinConfirmButton", "Bağlan →")
+	_txt(menu, "CenterBox/MainPanel/VBox/Buttons/SettingsButton",    "Ayarlar")
+	_txt(menu, "CenterBox/MainPanel/VBox/Buttons/QuitButton",        "Çıkış")
+
+	# IP input → minimal
 	var ip := menu.get_node_or_null("CenterBox/MainPanel/VBox/Buttons/JoinSection/IpInput") as LineEdit
 	if ip:
 		ip.add_theme_color_override("font_color", TEXT)
-		ip.add_theme_color_override("font_placeholder_color", Color(MUTED, 0.5))
+		ip.add_theme_color_override("font_placeholder_color", Color(0.45, 0.45, 0.45, 1.0))
 		ip.add_theme_stylebox_override("normal", _ip_box())
 
-# ── Ayarlar paneli ───────────────────────────────────────────────────────────
+# ── Ayarlar paneli ─────────────────────────────────────────────────────────────
 
-static func _setup_settings(menu: Control) -> void:
+static func _settings(menu: Control) -> void:
 	var panel := menu.get_node_or_null("SettingsPanel") as PanelContainer
 	if panel:
 		panel.add_theme_stylebox_override("panel", _settings_box())
@@ -187,135 +166,125 @@ static func _setup_settings(menu: Control) -> void:
 			lbl.add_theme_color_override("font_color", TEXT)
 	var cb := menu.get_node_or_null("SettingsPanel/VBox/CloseButton") as Button
 	if cb:
-		_style_btn(cb, GOLD)
-		cb.text = "← KAYDET & KAPAT"
+		_plain_btn(cb, GOLD)
+		cb.text = "← Kaydet & Kapat"
 
-# ── Intro ─────────────────────────────────────────────────────────────────────
+# ── Intro ──────────────────────────────────────────────────────────────────────
 
-static func _play_intro(menu: Control) -> void:
+static func _intro(menu: Control) -> void:
 	var panel := menu.get_node_or_null("CenterBox/MainPanel") as Control
 	if panel:
 		panel.modulate.a = 0.0
 		var tw := menu.create_tween()
-		tw.tween_property(panel, "modulate:a", 1.0, 0.60)
+		tw.tween_property(panel, "modulate:a", 1.0, 0.50)
 
-# ── StyleBox fabrikaları ─────────────────────────────────────────────────────
+# ── Buton stili: ŞEFFAF normal, ince alt çizgi hover ──────────────────────────
 
-static func _panel_box() -> StyleBoxFlat:
+static func _plain_btn(btn: Button, accent: Color) -> void:
+	btn.custom_minimum_size.y = 46.0
+	btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	btn.add_theme_font_size_override("font_size", 16)
+	btn.add_theme_color_override("font_color", Color(0.80, 0.80, 0.80, 1.0))
+	btn.add_theme_color_override("font_hover_color", Color(accent, 1.0))
+	btn.add_theme_color_override("font_pressed_color", TEXT)
+	# Normal: tamamen şeffaf — SIFIR kutu
+	btn.add_theme_stylebox_override("normal",  _clear_box())
+	# Hover: sadece sol ince çizgi + çok hafif transparan fill
+	btn.add_theme_stylebox_override("hover",   _hover_box(accent))
+	# Pressed: biraz dolu
+	btn.add_theme_stylebox_override("pressed", _pressed_box(accent))
+	btn.add_theme_stylebox_override("focus",   _clear_box())
+	# Hover animasyonu
+	btn.mouse_entered.connect(func(): _slide_in(btn))
+	btn.mouse_exited.connect(func():  _slide_out(btn))
+
+static func _clear_box() -> StyleBoxFlat:
 	var b := StyleBoxFlat.new()
-	b.bg_color = Color(0.04, 0.045, 0.055, 0.88)
-	b.border_width_left   = 3
-	b.border_width_top    = 1
-	b.border_width_right  = 1
-	b.border_width_bottom = 1
-	b.border_color = Color(GOLD, 0.55)
-	b.corner_radius_top_left     = 4
-	b.corner_radius_top_right    = 4
-	b.corner_radius_bottom_left  = 4
-	b.corner_radius_bottom_right = 4
-	b.shadow_color = Color(0.0, 0.0, 0.0, 0.90)
-	b.shadow_size  = 32
-	b.shadow_offset = Vector2(0.0, 8.0)
-	b.content_margin_left   = 22.0
-	b.content_margin_top    = 88.0   # RadioTuner için boşluk
-	b.content_margin_right  = 18.0
-	b.content_margin_bottom = 14.0
+	b.bg_color = Color(0.0, 0.0, 0.0, 0.0)
+	b.draw_center = false
+	b.border_width_left   = 0
+	b.border_width_top    = 0
+	b.border_width_right  = 0
+	b.border_width_bottom = 0
+	b.content_margin_left   = 4.0
+	b.content_margin_top    = 4.0
+	b.content_margin_right  = 4.0
+	b.content_margin_bottom = 4.0
 	return b
 
-static func _btn_normal(accent: Color) -> StyleBoxFlat:
+static func _hover_box(accent: Color) -> StyleBoxFlat:
 	var b := StyleBoxFlat.new()
-	b.bg_color = Color(0.05, 0.055, 0.065, 0.82)
+	b.bg_color = Color(accent.r, accent.g, accent.b, 0.07)
 	b.border_width_left   = 3
 	b.border_width_top    = 0
 	b.border_width_right  = 0
-	b.border_width_bottom = 1
-	b.border_color = Color(accent, 0.55)
-	b.corner_radius_top_left     = 2
-	b.corner_radius_top_right    = 2
-	b.corner_radius_bottom_left  = 2
-	b.corner_radius_bottom_right = 2
-	b.content_margin_left   = 16.0
-	b.content_margin_top    = 7.0
-	b.content_margin_right  = 10.0
-	b.content_margin_bottom = 7.0
+	b.border_width_bottom = 0
+	b.border_color = Color(accent, 0.85)
+	b.content_margin_left   = 12.0
+	b.content_margin_top    = 4.0
+	b.content_margin_right  = 4.0
+	b.content_margin_bottom = 4.0
 	return b
 
-static func _btn_hover(accent: Color) -> StyleBoxFlat:
-	var b := _btn_normal(accent)
-	b.bg_color = Color(accent.r, accent.g, accent.b, 0.16)
-	b.border_color = Color(accent, 0.90)
-	b.border_width_left = 4
-	b.shadow_color = Color(accent, 0.25)
-	b.shadow_size  = 8
+static func _pressed_box(accent: Color) -> StyleBoxFlat:
+	var b := StyleBoxFlat.new()
+	b.bg_color = Color(accent.r, accent.g, accent.b, 0.15)
+	b.border_width_left   = 3
+	b.border_color = Color(accent, 1.0)
+	b.content_margin_left   = 12.0
+	b.content_margin_top    = 4.0
+	b.content_margin_right  = 4.0
+	b.content_margin_bottom = 4.0
 	return b
 
-static func _btn_pressed(accent: Color) -> StyleBoxFlat:
-	var b := _btn_normal(accent)
-	b.bg_color = Color(accent.r, accent.g, accent.b, 0.28)
-	b.border_color = TEXT
-	b.border_width_left = 5
+static func _left_panel_box() -> StyleBoxFlat:
+	var b := StyleBoxFlat.new()
+	# Soldan sağa doğru eriyip kaybolan koyu panel
+	b.bg_color = Color(0.04, 0.04, 0.05, 0.82)
+	b.draw_center = true
+	b.border_width_left   = 0
+	b.border_width_top    = 0
+	b.border_width_right  = 0
+	b.border_width_bottom = 0
+	b.content_margin_left   = 48.0
+	b.content_margin_top    = 80.0
+	b.content_margin_right  = 32.0
+	b.content_margin_bottom = 60.0
 	return b
 
 static func _ip_box() -> StyleBoxFlat:
 	var b := StyleBoxFlat.new()
-	b.bg_color = Color(0.05, 0.055, 0.07)
-	b.border_width_left   = 2
-	b.border_width_top    = 1
-	b.border_width_right  = 1
+	b.bg_color = Color(0.08, 0.08, 0.10, 1.0)
 	b.border_width_bottom = 1
-	b.border_color = Color(GOLD, 0.40)
-	b.corner_radius_top_left     = 3
-	b.corner_radius_top_right    = 3
-	b.corner_radius_bottom_left  = 3
-	b.corner_radius_bottom_right = 3
-	b.content_margin_left = 10.0
+	b.border_color = Color(GOLD, 0.50)
+	b.content_margin_left = 8.0
 	b.content_margin_right = 8.0
 	return b
 
 static func _settings_box() -> StyleBoxFlat:
 	var b := StyleBoxFlat.new()
-	b.bg_color = Color(0.04, 0.045, 0.055, 0.97)
-	b.border_width_left   = 3
-	b.border_width_top    = 1
-	b.border_width_right  = 1
-	b.border_width_bottom = 1
-	b.border_color = Color(GOLD, 0.45)
-	b.corner_radius_top_left     = 6
-	b.corner_radius_top_right    = 6
-	b.corner_radius_bottom_left  = 6
-	b.corner_radius_bottom_right = 6
-	b.shadow_color = Color(0.0, 0.0, 0.0, 0.85)
+	b.bg_color = Color(0.06, 0.06, 0.08, 0.97)
+	b.border_width_left   = 2
+	b.border_color = Color(GOLD, 0.40)
+	b.shadow_color = Color(0.0, 0.0, 0.0, 0.90)
 	b.shadow_size  = 28
-	b.content_margin_left   = 26.0
-	b.content_margin_top    = 26.0
-	b.content_margin_right  = 26.0
-	b.content_margin_bottom = 26.0
+	b.content_margin_left   = 28.0
+	b.content_margin_top    = 28.0
+	b.content_margin_right  = 28.0
+	b.content_margin_bottom = 28.0
 	return b
 
-# ── Buton stili uygula ───────────────────────────────────────────────────────
-
-static func _style_btn(btn: Button, accent: Color) -> void:
-	btn.custom_minimum_size.y = 58.0
-	btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	btn.add_theme_font_size_override("font_size", 14)
-	btn.add_theme_color_override("font_color", TEXT)
-	btn.add_theme_color_override("font_hover_color", accent)
-	btn.add_theme_stylebox_override("normal",  _btn_normal(accent))
-	btn.add_theme_stylebox_override("hover",   _btn_hover(accent))
-	btn.add_theme_stylebox_override("pressed", _btn_pressed(accent))
-	btn.add_theme_stylebox_override("focus",   _btn_normal(Color(accent, 0.5)))
-
-static func _set_text(menu: Control, path: String, text: String) -> void:
-	var btn := menu.get_node_or_null(path) as Button
-	if btn:
-		btn.text = text
-
-# ── Animasyon ────────────────────────────────────────────────────────────────
+# ── Animasyon ──────────────────────────────────────────────────────────────────
 
 static func _slide_in(btn: Button) -> void:
 	var tw := btn.create_tween()
-	tw.tween_property(btn, "position:x", 8.0, 0.07)
+	tw.tween_property(btn, "position:x", 6.0, 0.06)
 
 static func _slide_out(btn: Button) -> void:
 	var tw := btn.create_tween()
-	tw.tween_property(btn, "position:x", 0.0, 0.09)
+	tw.tween_property(btn, "position:x", 0.0, 0.08)
+
+static func _txt(menu: Control, path: String, text: String) -> void:
+	var btn := menu.get_node_or_null(path) as Button
+	if btn:
+		btn.text = text
