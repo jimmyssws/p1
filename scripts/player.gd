@@ -441,19 +441,20 @@ func _process_drone(delta):
 
 func _setup_sounds():
 	sfx_knife = AudioStreamPlayer3D.new()
-	sfx_knife.stream = load("res://sounds/knife.ogg")
-	sfx_knife.unit_size = 6.0
+	sfx_knife.stream = load("res://sounds/knife.wav")
+	sfx_knife.unit_size = 10.0
 	add_child(sfx_knife)
 
 	sfx_gunshot = AudioStreamPlayer3D.new()
 	sfx_gunshot.stream = load("res://sounds/gunshot.wav")
 	sfx_gunshot.volume_db = 8.0
-	sfx_gunshot.unit_size = 25.0
+	sfx_gunshot.unit_size = 35.0
 	add_child(sfx_gunshot)
 
 	sfx_taser = AudioStreamPlayer3D.new()
-	sfx_taser.stream = load("res://sounds/taser.ogg")
-	sfx_taser.unit_size = 10.0
+	sfx_taser.stream = load("res://sounds/taser.wav")
+	sfx_taser.volume_db = 6.0
+	sfx_taser.unit_size = 15.0
 	add_child(sfx_taser)
 
 	sfx_scan = AudioStreamPlayer3D.new()
@@ -895,24 +896,39 @@ func _input(event):
 	if event is InputEventKey and event.pressed:
 		if event.keycode == KEY_1:
 			selected_slot = 1
-			_play_action_sound("res://sounds/switch1.ogg", -4.0, 1.05)
+			if current_role == "ASSASSIN":
+				_play_action_sound("res://sounds/knife_draw.ogg", 2.0)
+			elif current_role == "GUARD":
+				_play_action_sound("res://sounds/metalClick.ogg", 0.0)
+			else:
+				_play_action_sound("res://sounds/switch1.ogg", -2.0, 1.05)
 			_update_weapon_hud()
 		elif event.keycode == KEY_2:
 			selected_slot = 2
-			_play_action_sound("res://sounds/switch1.ogg", -4.0, 1.0)
+			if current_role == "ASSASSIN":
+				_play_action_sound("res://sounds/metalLatch.ogg", 3.0)
+			elif current_role == "GUARD" and guard_class == 1:
+				_play_action_sound("res://sounds/switch2.ogg", 0.0)
+			elif current_role == "GUARD" and guard_class == 3:
+				_play_action_sound("res://sounds/switch3.ogg", 0.0)
+			else:
+				_play_action_sound("res://sounds/switch1.ogg", -2.0, 1.0)
 			_update_weapon_hud()
 			if current_role == "GUARD" and guard_class == 2:
 				if drone_mode: _deactivate_drone()
 				else: _activate_drone()
 		elif event.keycode == KEY_3:
 			selected_slot = 3
-			_play_action_sound("res://sounds/switch1.ogg", -4.0, 0.95)
+			if current_role == "PRESIDENT":
+				_play_action_sound("res://sounds/handleSmallLeather.ogg", 2.0)
+			else:
+				_play_action_sound("res://sounds/switch1.ogg", -2.0, 0.95)
 			_update_weapon_hud()
 			if current_role == "ASSASSIN":
 				_execute_assassin_stampede()
 		elif event.keycode == KEY_4:
 			selected_slot = 4
-			_play_action_sound("res://sounds/switch1.ogg", -4.0, 0.90)
+			_play_action_sound("res://sounds/tea_throw.ogg", 0.0)
 			_update_weapon_hud()
 			if current_role == "PRESIDENT":
 				_execute_president_throw_tea()
@@ -997,7 +1013,8 @@ func _execute_president_rally_call():
 # 🔪 Suikastçı Bıçak İnfazı (SADECE 2.4m YAKIN TEMAS)
 func _execute_assassin_knife():
 	_animate_knife_slash()
-	_play_action_sound("res://sounds/knifeSlice.ogg", 4.0, randf_range(0.9, 1.15))
+	_play_action_sound("res://sounds/knife.wav", 6.0, randf_range(0.95, 1.05))
+	if sfx_knife: sfx_knife.play()
 	trigger_camera_shake(0.4, 0.2)
 	set_weapon_exposed(true)
 	
@@ -1019,11 +1036,9 @@ func _execute_assassin_knife():
 							_show_temp_prompt("💥 BIÇAK BAŞKANIN ÇELİK ÇANTASINA ÇARPTI VE SEKTİ! [G] ile Kaç!")
 							return
 						if mn and mn.has_method("net_game_over"):
-							mn.rpc("net_game_over", "BAŞKAN YAKINDAN BIÇAKLANDI!
-🗡️ SUİKASTÇI KAZANDI!")
+							mn.rpc("net_game_over", "BAŞKAN YAKINDAN BIÇAKLANDI!\n🗡️ SUİKASTÇI KAZANDI!")
 					elif col.current_role == "GUARD":
-						col.rpc("apply_stun_effect", 8.0, "BIÇAKLANDINIZ!
-8 Saniye Ağır Yaralısınız!")
+						col.rpc("apply_stun_effect", 8.0, "BIÇAKLANDINIZ!\n8 Saniye Ağır Yaralısınız!")
 				else:
 					if col.has_method("die_and_drop"):
 						col.rpc("die_and_drop", "BIÇAK")
@@ -1045,6 +1060,7 @@ func _execute_assassin_pistol():
 	pistol_ammo -= 1
 	_update_weapon_hud()
 	_animate_gun_recoil()
+	_play_action_sound("res://sounds/gunshot.wav", 8.0)
 	if sfx_gunshot: sfx_gunshot.play()
 	trigger_camera_shake(0.75, 0.35)
 	
@@ -1075,11 +1091,9 @@ func _execute_assassin_pistol():
 						_show_temp_prompt("💥 MERMİ BAŞKANIN ÇELİK ÇANTASINA ÇARPTI VE SEKTİ! [G] ile Kaç!")
 						return
 					if mn and mn.has_method("net_game_over"):
-						mn.rpc("net_game_over", "BAŞKAN UZAKTAN VURULDU!
-🔫 SUİKASTÇI KAZANDI!")
+						mn.rpc("net_game_over", "BAŞKAN UZAKTAN VURULDU!\n🔫 SUİKASTÇI KAZANDI!")
 				elif target.current_role == "GUARD":
-					target.rpc("apply_stun_effect", 6.0, "MERMİYLE VURULDUNUZ!
-6 Saniye Ağır Yaralısınız!")
+					target.rpc("apply_stun_effect", 6.0, "MERMİYLE VURULDUNUZ!\n6 Saniye Ağır Yaralısınız!")
 			else:
 				if target.has_method("apply_stun"):
 					target.rpc("apply_stun", 12.0)
@@ -1101,6 +1115,7 @@ func _execute_guard_taser():
 		
 	taser_cooldown = 4.0
 	_animate_gun_recoil(true)
+	_play_action_sound("res://sounds/taser.wav", 7.0)
 	if sfx_taser: sfx_taser.play()
 	trigger_camera_shake(0.3, 0.2)
 	_update_weapon_hud()
