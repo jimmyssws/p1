@@ -239,17 +239,16 @@ static func _pressed_box(accent: Color) -> StyleBoxFlat:
 
 static func _left_panel_box() -> StyleBoxFlat:
 	var b := StyleBoxFlat.new()
-	# Soldan sağa doğru eriyip kaybolan koyu panel
-	b.bg_color = Color(0.04, 0.04, 0.05, 0.82)
+	b.bg_color = Color(0.02, 0.02, 0.025, 0.88)
 	b.draw_center = true
 	b.border_width_left   = 0
 	b.border_width_top    = 0
 	b.border_width_right  = 0
 	b.border_width_bottom = 0
-	b.content_margin_left   = 48.0
-	b.content_margin_top    = 80.0
-	b.content_margin_right  = 32.0
-	b.content_margin_bottom = 60.0
+	b.content_margin_left   = 52.0
+	b.content_margin_top    = 90.0
+	b.content_margin_right  = 40.0
+	b.content_margin_bottom = 70.0
 	return b
 
 static func _ip_box() -> StyleBoxFlat:
