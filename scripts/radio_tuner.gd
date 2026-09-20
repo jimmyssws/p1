@@ -16,12 +16,19 @@ var station  := 104.2
 var title    := "MEYDAN ANA YAYINI"
 var subtitle := "CANLI YAYIN"
 
+var _box : StyleBoxFlat = null
+
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	# Merkez panelin üst kısmına tam genişlikte yapış
 	set_anchors_preset(Control.PRESET_TOP_WIDE)
 	offset_top    = 0.0
 	offset_bottom = 90.0
+	_box = StyleBoxFlat.new()
+	_box.bg_color = Color(0.04, 0.05, 0.06, 0.96)
+	_box.border_width_bottom = 2
+	_box.border_color = Color(0.88, 0.65, 0.22, 0.50)
+	_box.shadow_color = Color(0.0, 0.0, 0.0, 0.70)
+	_box.shadow_size  = 12
 
 func tune(value: float, label: String, sub: String = "SECILDI") -> void:
 	station  = value
@@ -36,15 +43,9 @@ func _process(delta: float) -> void:
 func _draw() -> void:
 	var s := size
 	if s.x < 40.0: return
+	if _box == null: return
 
-	# Arka plan çubuğu
-	var box := StyleBoxFlat.new()
-	box.bg_color = Color(0.04, 0.05, 0.06, 0.96)
-	box.border_width_bottom = 2
-	box.border_color = Color(GOLD, 0.50)
-	box.shadow_color = Color(0, 0, 0, 0.7)
-	box.shadow_size  = 12
-	draw_style_box(box, Rect2(Vector2.ZERO, s))
+	draw_style_box(_box, Rect2(Vector2.ZERO, s))
 
 	var font := ThemeDB.fallback_font
 
