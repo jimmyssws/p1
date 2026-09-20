@@ -1,0 +1,371 @@
+================================================================================
+🎮 BÜYÜK MİTİNG & SUİKASTÇI OYUNU — SUNO & YAPAY ZEKA SES PROMPT KÜTÜPHANESİ
+================================================================================
+Bu dosya, oyundaki tüm silah, ekipman, rol yetenekleri, kalabalık ambiyansı, 
+megafon/telsiz konuşmaları ve menü müziklerini Suno AI (ve ElevenLabs/SFX AI) 
+üzerinde en yüksek kalitede üretmeniz için hazırlanmış profesyonel prompt rehberidir.
+
+Suno'da En İyi Sonuç İçin İpuçları:
+1. "Custom Mode" (Özel Mod) seçeneğini açın.
+2. "Style of Music" kutusuna verilen stil/enstrüman etiketlerini yapıştırın.
+3. "Lyrics" kutusuna köşeli parantezli [Meta-Tag] komutlarını ve metinleri yapıştırın.
+4. Sadece ses efekti (SFX/Ambiyans) istiyorsanız "Instrumental" anahtarını açabilir veya prompta [Sound Effect Only, No Vocals] ekleyebilirsiniz.
+================================================================================
+
+
+================================================================================
+🔫 1. SİLAH VE SALDIRI SESLERİ (WEAPONS & COMBAT SFX)
+================================================================================
+
+[SES 01] 🔫 9mm TABANCA ATEŞİ (Tek Mermili Suikastçı Tabancası)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/gunshot.wav
+• Oyundaki Yeri: Suikastçı 2. slot tabanca ateşlendiğinde (50m yankı, kalabalık paniği)
+• Suno Style of Music:
+  Cinematic sound design, 9mm pistol gunshot, explosive gunpowder blast, sharp mechanical crack, outdoor stadium acoustic echo, heavy transient, sub bass punch, high fidelity foley, realism, sound effect
+• Suno Lyrics / Tag Box:
+  [Sound Effect]
+  [Loud explosive 9mm gunshot crack]
+  [Sharp metallic slide action]
+  [Deep low-frequency punch]
+  [Wide open square acoustic reverb tail fading out]
+
+---
+
+[SES 02] 🔪 GİZLİ BIÇAK SAVURMA VE KESME (Knife Slash & Swish)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/knifeSlice.ogg & res://sounds/knife.wav
+• Oyundaki Yeri: Suikastçı 1. slot bıçak saldırısı (2.4m yakın temas)
+• Suno Style of Music:
+  Foley sound design, sharp knife slash, fast steel blade swish, razor swoosh, metallic cutting wind, close-up acoustic, hyper-detailed combat sound effect
+• Suno Lyrics / Tag Box:
+  [Sound Effect]
+  [Fast whoosh of steel blade slicing through air]
+  [Sharp metallic resonance]
+  [Quick aerodynamic swish, crisp high-end transient]
+
+---
+
+[SES 03] 🗡️ BIÇAK KININDAN ÇEKME (Knife Draw / Equip)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/knife_draw.ogg / res://sounds/drawKnife1.ogg
+• Oyundaki Yeri: Suikastçı bıçağı eline aldığında
+• Suno Style of Music:
+  Crisp metal friction, dagger unsheathe, polished steel scraping, sharp tactical knife draw, metallic slide, ASMR foley
+• Suno Lyrics / Tag Box:
+  [Sound Effect]
+  [High-pitched metallic friction of sharp blade sliding out of leather sheath]
+  [Subtle metal click lock]
+
+---
+
+[SES 04] ⚡ TASER ŞOK TABANCASI (Guard Taser Dart & Voltage Arc)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/taser.wav & res://sounds/taser.ogg
+• Oyundaki Yeri: Koruma 1. slot Taser atışı (7.5m menzil, 4.5 sn felç şoku)
+• Suno Style of Music:
+  Sci-Fi stun gun, compressed air dart launch pop, intense 50,000 volt electrical spark, buzzing zap, crackling electric arc, stuttering blue lightning hum, aggressive sub shock
+• Suno Lyrics / Tag Box:
+  [Sound Effect]
+  [Pneumatic dart launch: Pffft-Pop!]
+  [Aggressive electrical arc buzzing: BZZZZTTT-ZZZT-KZZT!]
+  [60Hz low hum oscillation with sharp sparks crackling]
+
+---
+
+[SES 05] 🛡️ ÇELİK ÇANTA MERMİ/BIÇAK SEKME SESİ (Briefcase Shield Ricochet)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/metal_clang.wav
+• Oyundaki Yeri: Başkanın çelik çantasının mermiyi veya bıçağı engellediği an ("ÇIIIINGGG!")
+• Suno Style of Music:
+  Heavy bullet ricochet on hardened titanium metal, piercing high-frequency metallic ping, explosive spark impact, resonant metal clang, cinematic deflection ring
+• Suno Lyrics / Tag Box:
+  [Sound Effect]
+  [Violent bullet impact on thick steel armor plate: CLAAANG-PIIINGGG!]
+  [Whistling ricochet deflection spinning away: TWEEENGGG]
+  [Vibrating metallic decay ring]
+
+---
+
+[SES 06] 🎯 KESKİN NİŞANCI / SİLAH TEHLİKE UYARISI (Sniper Aim Warning HUD)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/sniper_warning.wav
+• Oyundaki Yeri: Suikastçı Başkana tabancayla nişan aldığında çalan acil durum HUD alarmı
+• Suno Style of Music:
+  High-tech military HUD warning tone, rapid dual-tone ping, urgent lock-on beep, 880Hz electronic pulse, tense sci-fi radar ping, danger sensor alert
+• Suno Lyrics / Tag Box:
+  [Sound Effect]
+  [Urgent rapid high-pitched dual beeps: BEEP-BEEP! BEEP-BEEP!]
+  [Pulsing electronic hazard alarm with subtle static edge]
+
+
+================================================================================
+📢 2. MEGAFON, TELSİZ VE PROTOKOL ANONS SESLERİ (SPEECH & COMMS)
+================================================================================
+
+[SES 07] 📢 KORUMA 3: "HERKES DURSUN!" MEGAFON ANONSU (Guard Freeze Shout)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/megaphone_shout.wav / res://sounds/radio_glitch_megaphone.wav
+• Oyundaki Yeri: Koruma 3 megafonla bağırdığında siviller donar, suikastçı deşifre olur
+• Suno Style of Music:
+  Authoritative male security voice, distorted outdoor horn megaphone, metallic clipping, stadium PA horn echo, siren undertone, gritty law enforcement broadcast
+• Suno Lyrics / Tag Box:
+  [Sound Effect: Loud megaphone squelch and feedback hum]
+  (Spoken with extreme authority through a loud distorted megaphone):
+  "DİKKAT! GÜVENLİK ALARMI! HERKES OLDUĞU YERDE DURSUUUN! HAREKET ETMEYİN!"
+  [Sound Effect: Megaphone button click release, long open-air reverb decay]
+
+---
+
+[SES 08] 🎙️ BAŞKAN SEÇİM MÜJDELERİ & KÜRSÜ KONUŞMASI (President Speeches)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/stage_announcement_speech.wav
+• Oyundaki Yeri: Başkan kürsüde konuşma yaparken (%25, %50, %75 checkpointleri)
+• Suno Style of Music:
+  Charismatic Turkish political speech, public rally microphone, large stadium reverb, passionate leader voice, cheering crowd background, 90s political timbre
+• Suno Lyrics / Tag Box:
+  [Intro: Microphone feedback, huge crowd chanting]
+  (Passionate president speaking through giant rally PA speakers):
+  "Aziz milletim, sevgili hemşehrilerim! 
+  Bugün sizlere tarihi müjdeler açıklıyorum! 
+  Her mahalleye bedava sıcak döner, kesintisiz çay çeşmesi ve bin megabit internet geliyor! 
+  Miting meydanımız dünyanın en büyük bayram yeri olacak!"
+  [Crowd: Wild roaring cheers, applause and rhythmic clapping!]
+
+---
+
+[SES 09] 📻 TAKTİK KORUMA TELSİZİ VE İHBAR SESİ (Tactical Radio Comms)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/guard_radio.wav
+• Oyundaki Yeri: Koruma 3 telsiz ihbarı yaptığında ve şüpheli tespitinde
+• Suno Style of Music:
+  Tactical walkie-talkie communication, radio squelch burst, bandpass filter, walkie talkie static, 8-bit frequency hiss, professional bodyguard agent voice
+• Suno Lyrics / Tag Box:
+  [Sound Effect: Crisp walkie-talkie click & squelch burst]
+  (Stern tactical radio filter voice):
+  "Merkez 1, Protokol Koruma! Miting alanında saat 2 yönünde şüpheli hareket tespit edildi. Tüm birimler teyakkuzda kalsın, tekrar ediyorum teyakkuzda kalın!"
+  [Sound Effect: Double tactical radio chirp]
+
+---
+
+[SES 10] 🍵 BAŞKAN KEYİF ÇAYI FIRLATMA VE HALK KAPIŞMASI (Tea Throw)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/tea_throw.wav & res://sounds/tea_throw.ogg
+• Oyundaki Yeri: Başkan [4] ile kalabalığa çay fırlattığında halkın kapışma sevinci
+• Suno Style of Music:
+  Comedic rally sound effect, swoosh of flying cardboard tea box, crowd laughing and cheering, scrambling hands foley, humorous Turkish crowd reactions
+• Suno Lyrics / Tag Box:
+  [Sound Effect: Fast swoosh of flying object]
+  (President shouting with joy): "Afiyet olsun milletime, keyif çayları benden!"
+  [Crowd scrambling]: "Çayı ben kaptım! Bana da at Başkanım! Yaşa!"
+  [Sound Effect: Cheerful crowd laughter and clapping]
+
+
+================================================================================
+🎵 3. MİTİNG MARŞLARI, MÜZİKLER VE JINGLE'LAR (MUSIC & JINGLES)
+================================================================================
+
+[SES 11] 🕺 BÜYÜK SEÇİM MARŞI & MİTİNG FON MÜZİĞİ (Rally Ambient Music BGM)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/rally_ambient_music.wav
+• Oyundaki Yeri: Oyun boyunca çalan enerjik, davul zurnalı ve trompetli seçim miting marşı
+• Suno Style of Music:
+  Upbeat Turkish election rally anthem, energetic brass section, driving davul and darbuka rhythm, epic synthesizer lead, triumphant trumpets, optimistic political march, stadium crowd clap beat, 126 BPM, festival vibes
+• Suno Lyrics / Tag Box:
+  [Intro: Energetic davul roll, soaring brass fanfares]
+  [Crowd rhythmic clapping to the beat: 1-2, 1-2-3!]
+  [Verse 1: Triumphant synth arpeggios, driving bassline]
+  Meydanlar coşuyor, halkımız burada,
+  Omuz omuza hep birlikte bu yolda!
+  Hizmet aşkıyla çarpar bu yürekler,
+  Gelecek bizimdir, zafer bizimle!
+  [Chorus: Powerful choir and full brass fanfare blast]
+  Haydi meydanlara, el ele zafere!
+  Büyük miting başladı, ses ver memlekete!
+  [Outro: Epic brass crescendo, crowd cheers fading into drum roll]
+
+---
+
+[SES 12] 🏆 GÖREV TAMAMLANDI & ZAFER JINGLE'I (Victory Stinger)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/task_complete.wav
+• Oyundaki Yeri: Görev bitişlerinde ve Başkan/Korumalar kazandığında çalan zafer tınısı
+• Suno Style of Music:
+  Triumphant orchestral victory fanfare, C-E-G-C major chord progression, bright brass trumpets, shimmering chimes, celebratory percussion roll, glorious short game achievement jingle, 6 seconds
+• Suno Lyrics / Tag Box:
+  [Instrumental Stinger]
+  [Bright ascending chime sparkle]
+  [Majestic brass blast: Da-Da-Da-DAAA!]
+  [Warm orchestral bass hit with triumphant cymbal crash]
+
+---
+
+[SES 13] ❌ SEÇİM KAYBI & SUİKAST YENİLGİ FONU (Defeat / Game Over Stinger)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/game_over_defeat.wav
+• Oyundaki Yeri: Muhalefet kazandığında veya Başkan vurulduğunda çalan hüzünlü/dramatik ton
+• Suno Style of Music:
+  Dark dramatic brass hit, descending minor piano chords, tragic political downfall melody, tense strings, distant muted trumpet, cinematic loss stinger, 8 seconds
+• Suno Lyrics / Tag Box:
+  [Instrumental Stinger]
+  [Deep low-frequency bass impact boom]
+  [Melancholic descending brass progression: Dun-Dun-Dun-Dooown...]
+  [Echoing solitary piano minor chord fading into dark silence]
+
+---
+
+[SES 14] 📻 FM RADYO GEÇİŞ VE İSTASYON CIZIRTISI (Radio Tuner Scanner)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/radio_tuner_scan.wav
+• Oyundaki Yeri: Menüdeki analog FM radyo tuner skalası değiştirilirken
+• Suno Style of Music:
+  Analog FM radio dial tuning, white noise static bursts, frequency sweep whines, snippets of retro Turkish music passing through, vintage radio crackle, lo-fi foley
+• Suno Lyrics / Tag Box:
+  [Sound Effect]
+  [Fast analog dial friction: Schhh-kzzzt-whine]
+  [Brief 0.5s fragment of traditional clarinet music buried in static]
+  [Resonant frequency squeal locking into a clean stereo broadcast channel]
+
+
+================================================================================
+👥 4. KALABALIK, PANİK VE ORTAM SESLERİ (CROWD & AMBIENCE)
+================================================================================
+
+[SES 15] 🏟️ CANLI MİTİNG MEYDANI UĞULTUSU (Crowd Ambient & Murmur Loop)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/crowd_ambient.wav & res://sounds/npc_murmur.wav
+• Oyundaki Yeri: Meydandaki 130 sivilin organik miting uğultusu, fısıltıları ve coşkusu
+• Suno Style of Music:
+  Massive outdoor political rally ambience, 10,000 people murmuring, distant slogans, light laughter, occasional whistle, festival atmosphere, spacious stereo field, seamless loop, immersive documentary soundscape
+• Suno Lyrics / Tag Box:
+  [Ambience Loop - No single loud voice]
+  [Continuous dense wall of organic crowd murmurs and gentle footsteps]
+  [Distant cheerful whistles, soft clapping from different corners]
+  [Warm open-air square reverberation]
+
+---
+
+[SES 16] 😱 BÜYÜK İZDİHAM VE PANİK ÇIĞLIKLARI (Mass Stampede & Screams)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/crowd_panic.wav
+• Oyundaki Yeri: Silah patladığında veya izdiham başlatıldığında kaçışan halk
+• Suno Style of Music:
+  Terrified crowd panic, chaotic screaming, hundreds of rushing footsteps on concrete, knocking over metal barriers, intense adrenaline rush, movie scene sound design, realistic crowd stampede
+• Suno Lyrics / Tag Box:
+  [Sound Effect]
+  [Sudden mass gasp followed by loud panic shrieks: "Kaçın! Silah patladı!"]
+  [Thunderous stampede of heavy running shoes trampling pavement]
+  [Metal crowd control barriers clattering to the floor]
+  [Dispersed chaotic screaming fading into the distance]
+
+---
+
+[SES 17] 👏 COŞKULU ALKIŞ TUFANI VE TEZAHÜRAT (Cheer & Applause)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/cheer_applause.wav
+• Oyundaki Yeri: Başkan vaat verdiğinde ve miting alkışlandığında
+• Suno Style of Music:
+  Enthusiastic mass crowd applause, thousands clapping hands in sync, loud whistles, ecstatic cheering, Turkish stadium chanting vibes, joyful roar
+• Suno Lyrics / Tag Box:
+  [Sound Effect: Sudden explosion of thunderous applause]
+  [Sharp rhythmic hand claps filling the entire stereo spectrum]
+  [High-pitched stadium whistles and joyous roars: "Yürü be!", "Helal olsun!"]
+
+---
+
+[SES 18] 🗣️ KOMİK SİVİL DİYALOGLARI VE GEYİKLERİ (Silly NPC Chatter)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/silly_chatter_1.wav, 2.wav, 3.wav
+• Oyundaki Yeri: Sivillerin yanından geçerken duyulan komik miting replikleri
+• Suno Style of Music:
+  Humorous Turkish street banter, everyday civilians talking in queue, comedic tone, natural dialogue, binaural close-mic podcast recording
+• Suno Lyrics / Tag Box:
+  (Vatandaş 1): "Kardeşim sırayı bozma ya, kaç saattir WC kuyruğundayız!"
+  (Vatandaş 2): "Yahu Başkan bedava çay atacak dediler, biz bayrak sallıyoruz burda!"
+  (Vatandaş 3): "Şu dedektörden geçerken anahtarlığı öttürme yine, rezil olduk korumalara!"
+
+---
+
+[SES 19] 🚨 POLİS / PROTOKOL ACİL DURUM SİRENİ (Emergency Alarm Siren)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/alarm_siren.wav
+• Oyundaki Yeri: Dedektör alarmı veya genel acil durum uyarısı
+• Suno Style of Music:
+  Urgent dual-tone European presidential escort siren, wailing police car horn, oscillating high-low acoustic siren, echoing off city buildings, high stakes action
+• Suno Lyrics / Tag Box:
+  [Sound Effect]
+  [Oscillating high-low emergency wail: WEE-WOO-WEE-WOO-WEE-WOO!]
+  [Heavy urban concrete echo reverberating across high-rise plaza]
+
+
+================================================================================
+🛠️ 5. FİZİK, AYAK VE CİHAZ SESLERİ (FOLEY & PROPS)
+================================================================================
+
+[SES 20] 🚁 GÖZETLEME DRONU PERVANESİ & CCTV SABİTLEME (Drone Quadcopter)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/drone_loop.ogg
+• Oyundaki Yeri: Koruma 2 gözetleme dronu uçururken ve CCTV sabitlemede
+• Suno Style of Music:
+  High-pitch 4-rotor quadcopter drone hum, aerodynamic blade buzz, brushless motor whine, altitude air turbulence, telemetry electronic blip
+• Suno Lyrics / Tag Box:
+  [Sound Effect: High-pitched smooth quadcopter rotor whirring: ZZZZZZ-WHIRRRRR]
+  [Subtle pitch modulation on pitch tilt and acceleration]
+  [Mechanical servo lock click for CCTV mode]
+
+---
+
+[SES 21] 🚪 PORTATİF WC KABİNİ KAPI VE KILIK DEĞİŞTİRME (WC Disguise Foley)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/wc_door.ogg
+• Oyundaki Yeri: Suikastçı portatif tuvalete girip kılık değiştirdiğinde
+• Suno Style of Music:
+  Plastic portable toilet cabin door squeak, hollow latch lock, fast fabric rustling, zipper slide, suit jacket shake, muffled echo
+• Suno Lyrics / Tag Box:
+  [Sound Effect]
+  [Plastic door spring hinge creak opening and slamming shut: Ka-Chunck!]
+  [Rapid cloth rustling and zipper slide: Ziiip-Shhh-Snap]
+  [Metallic latch unlocking]
+
+---
+
+[SES 22] 💓 BAŞKAN KALP ATIŞI GERİLİMİ (Danger Heartbeat Pulse)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/heartbeat.wav
+• Oyundaki Yeri: Suikastçı Başkana yaklaştıkça hızlanan ve bası artan nabız
+• Suno Style of Music:
+  Cinematic sub bass heartbeat, deep chest thump, muffled cardiac pulse, increasing tempo, intense thriller suspense foley, 60 to 140 BPM ramp
+• Suno Lyrics / Tag Box:
+  [Sound Effect]
+  [Deep chest resonance: LUB-DUB... LUB-DUB... LUB-DUB!]
+  [Subwoofer 40Hz shockwave with soft flesh dampening]
+  [Accelerating heart rhythm pulsing with tension]
+
+---
+
+[SES 23] 📡 DEDEKTÖR ARAMA VE BİP SESLERİ (Metal Detector Sweep)
+--------------------------------------------------------------------------------
+• Hedef Dosya: res://sounds/scan.wav
+• Oyundaki Yeri: Koruma 1 metal dedektörüyle şüpheliyi taradığında
+• Suno Style of Music:
+  Handheld airport security metal detector, frequency pitch glide, warbling search tone, rapid detection chirps, clean electronic foley
+• Suno Lyrics / Tag Box:
+  [Sound Effect]
+  [Smooth frequency hum sweeping across target: Humm-Wuuup-Wuuup]
+  [Double affirmative detection beep: BEEP-BOOP!]
+
+
+================================================================================
+📋 SUNO'DA HIZLI KOPYALA-YAPIŞTIR İÇİN TOPLU ÖZET TABLOSU
+================================================================================
+1. TABANCA:       "Cinematic 9mm gunshot crack, explosive blast, open square echo"
+2. BIÇAK:         "Razor sharp steel blade slash, fast aerodynamic swoosh whoosh"
+3. TASER:         "Sci-fi stun gun, pneumatic pop, 50000 volt electrical spark arc"
+4. ÇANTA SEKMESİ: "Heavy titanium ricochet metal clang, sharp deflection ping"
+5. MEGAFON:       "Distorted outdoor horn megaphone shout, security guard voice"
+6. MİTİNG MARŞI:  "Upbeat Turkish election rally anthem, brass fanfare, davul zurna"
+7. PANİK:         "Mass crowd stampede panic, rushing footsteps, screaming"
+8. ALKIŞ:         "Huge stadium crowd applause, cheering whistles, rhythmic claps"
+9. TELSİZ:        "Tactical walkie-talkie squelch click, bandpass filtered voice"
+10. RADYO:        "Analog FM radio tuning static, dial scanner frequency whine"
+================================================================================

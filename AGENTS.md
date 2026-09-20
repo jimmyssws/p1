@@ -16,4 +16,11 @@ Bu projenin tüm GDD, kriz mekaniği, ses ve harita tasarım dokümanları `./no
 
 
 ## 🧠 PROJECT_MEMORY.MD GÜNCELLEME KURALI (MANDATORY)
-Projede yapılan HER yeni geliştirme, mimari değişiklik, hata düzeltmesi veya eklenen özellik; TAMAMLANDIKTAN ANINDA SONRA projenin kökündeki  dosyasına tarih atılarak 1-2 cümlelik özet halinde eklenmelidir.
+Projede yapılan HER yeni geliştirme, mimari değişiklik, hata düzeltmesi veya eklenen özellik; TAMAMLANDIKTAN ANINDA SONRA projenin kökündeki `./PROJECT_MEMORY.md` dosyasına tarih atılarak 1-2 cümlelik özet halinde eklenmelidir.
+
+
+## 📦 OTOMATİK GİT COMMIT & PUSH KURALI (MANDATORY)
+Projede yapılan HER geliştirme, düzeltme veya doküman güncellemesinden sonra:
+1. `PROJECT_MEMORY.md` dosyası güncellenecektir.
+2. `git add -A && git commit -m "Auto-checkpoint: <yapılan geliştirme özeti>"` komutu çalıştırılacaktır.
+3. Remote repo tanımlıysa `git push` komutu ile değişiklikler anında yedeklenecektir.
