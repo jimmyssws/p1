@@ -87,7 +87,7 @@ func _draw() -> void:
 		var bx := vu_x + 4.0 + float(i) * (bar_w + 1.5)
 		var vu_idx := int(float(i) / float(bar_count) * 8.0)
 		var level := _vu_levels[clampi(vu_idx, 0, 7)]
-		var jitter := abs(sin(t * 3.0 + float(i) * 0.8)) * 0.2
+		var jitter : float = abs(sin(t * 3.0 + float(i) * 0.8)) * 0.2
 		var lv := clampf(level + jitter, 0.0, 1.0)
 		var bh_full := vu_h - 8.0
 		var bh := bh_full * lv
