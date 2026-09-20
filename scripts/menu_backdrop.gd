@@ -1,24 +1,20 @@
 class_name MenuBackdrop
 extends Control
 
-# Tam ekran retro FM radyo kasası arka planı.
-# Procedural _draw() — sıfır asset.
+# Menü arka planı: gerçek atmosferik miting görseli + hafif procedural overlay.
+# Görsel yüklenemezse saf renkle devam eder.
 
 var t := 0.0
+var _bg_tex : Texture2D = null
+var _loaded  := false
 
-const C_BODY    := Color(0.055, 0.060, 0.068)
-const C_PANEL   := Color(0.040, 0.045, 0.055)
-const C_CHROME  := Color(0.30, 0.32, 0.34)
-const C_CHROME2 := Color(0.55, 0.58, 0.60)
 const C_GOLD    := Color(0.88, 0.65, 0.22)
 const C_AMBER   := Color(0.93, 0.52, 0.08)
 const C_RED_LED := Color(0.92, 0.20, 0.18)
 const C_GREEN   := Color(0.22, 0.82, 0.38)
-const C_SPEAKER := Color(0.060, 0.065, 0.075)
-const C_FABRIC  := Color(0.12, 0.10, 0.08)
 
 var _vu_levels  : Array[float] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-var _vu_targets : Array[float] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+var _vu_targets : Array[float] = [0.3, 0.5, 0.7, 0.4, 0.6, 0.8, 0.3, 0.5]
 var _signal     := 0.0
 var _scan       := 0.0
 
@@ -26,16 +22,20 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	resized.connect(queue_redraw)
+	# Arka plan görselini yükle
+	if ResourceLoader.exists("res://assets/menu_bg.jpg"):
+		_bg_tex = load("res://assets/menu_bg.jpg") as Texture2D
+		_loaded = _bg_tex != null
 	call_deferred("queue_redraw")
 
 func _process(delta: float) -> void:
 	t += delta
 	for i in 8:
-		_vu_levels[i]  = lerp(_vu_levels[i], _vu_targets[i], delta * 7.0)
+		_vu_levels[i]  = lerp(_vu_levels[i], _vu_targets[i], delta * 6.0)
 		if abs(_vu_levels[i] - _vu_targets[i]) < 0.02:
 			_vu_targets[i] = randf()
-	_signal = 0.60 + 0.40 * sin(t * 0.75) * (0.7 + 0.3 * sin(t * 2.1))
-	_scan   = fmod(t * 0.16, 1.0)
+	_signal = 0.55 + 0.45 * abs(sin(t * 0.6) * sin(t * 1.9))
+	_scan   = fmod(t * 0.14, 1.0)
 	queue_redraw()
 
 func _draw() -> void:
@@ -43,210 +43,75 @@ func _draw() -> void:
 	if s.x < 10.0 or s.y < 10.0:
 		return
 
-	# ── Arka plan degrade ────────────────────────────────────────────────────
-	for i in 24:
-		var r := float(i) / 23.0
-		var c := Color(0.04, 0.045, 0.06).lerp(Color(0.02, 0.025, 0.035), r)
-		draw_rect(Rect2(0.0, r * s.y, s.x, s.y / 23.0 + 2.0), c)
+	# ── Arka plan görseli ────────────────────────────────────────────────────
+	if _loaded and _bg_tex:
+		draw_texture_rect(_bg_tex, Rect2(Vector2.ZERO, s), false)
+		# Görselin üstüne koyu overlay — menü okunabilirliği için
+		draw_rect(Rect2(Vector2.ZERO, s), Color(0.0, 0.0, 0.0, 0.58))
+	else:
+		# Fallback: basit degrade
+		for i in 20:
+			var r := float(i) / 19.0
+			var c := Color(0.04, 0.045, 0.06).lerp(Color(0.015, 0.02, 0.03), r)
+			draw_rect(Rect2(0.0, r * s.y, s.x, s.y / 19.0 + 2.0), c)
 
-	# ── Ana gövde ────────────────────────────────────────────────────────────
-	var px := s.x * 0.04
-	var py := s.y * 0.05
-	var bx := px
-	var by := py
-	var bw := s.x - px * 2.0
-	var bh := s.y - py * 2.0
-	_fill_rect(bx, by, bw, bh, C_BODY, 26.0)
-	_stroke_rect(bx, by, bw, bh, C_CHROME, 26.0, 3.0)
-	_stroke_rect(bx + 6.0, by + 6.0, bw - 12.0, bh - 12.0, Color(C_CHROME2, 0.30), 22.0, 1.0)
-
-	# ── Sol hoparlör ─────────────────────────────────────────────────────────
-	var sp_w := bw * 0.26
-	_draw_speaker(bx + 18.0, by + 18.0, sp_w, bh - 36.0)
-
-	# ── Sağ hoparlör ─────────────────────────────────────────────────────────
-	_draw_speaker(bx + bw - sp_w - 18.0, by + 18.0, sp_w, bh - 36.0)
-
-	# ── Merkez panel (radyo ekran çerçevesi) ──────────────────────────────────
-	var cx  := bx + sp_w + 26.0
-	var cw  := bw - sp_w * 2.0 - 52.0
-	var cy  := by + 14.0
-	var ch  := bh - 28.0
-	_fill_rect(cx, cy, cw, ch, C_PANEL, 14.0)
-	_stroke_rect(cx, cy, cw, ch, C_CHROME, 14.0, 2.0)
-
-	# ── Frekans şeridi ────────────────────────────────────────────────────────
-	var scale_h := ch * 0.13
-	_draw_freq_scale(cx + 8.0, cy + 8.0, cw - 16.0, scale_h)
-
-	# ── LED satırı ────────────────────────────────────────────────────────────
-	var led_y := cy + 8.0 + scale_h + 5.0
-	_draw_led_row(cx + 12.0, led_y, cw - 24.0)
-
-	# ── VU-meter ──────────────────────────────────────────────────────────────
-	var vu_h := ch * 0.09
-	_draw_vu_meter(cx + 8.0, cy + ch - vu_h - 8.0, cw - 16.0, vu_h)
-
-	# ── Alt model etiketi ────────────────────────────────────────────────────
-	var font := ThemeDB.fallback_font
-	draw_string(font, Vector2(cx, by + bh - 20.0),
-		"MFM-104  •  MITING FM  •  v0.5",
-		HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.35, 0.38, 0.42))
-
-	# ── Vignette ─────────────────────────────────────────────────────────────
-	for i in 6:
-		var a := 0.022 + float(i) * 0.010
-		draw_rect(Rect2(float(i) * 14.0, float(i) * 12.0,
-			s.x - float(i) * 28.0, s.y - float(i) * 24.0),
-			Color(0.0, 0.0, 0.0, a), false, 14.0)
-
-# ─── Hoparlör ──────────────────────────────────────────────────────────────
-
-func _draw_speaker(x: float, y: float, w: float, h: float) -> void:
-	_fill_rect(x, y, w, h, C_SPEAKER, 10.0)
-	_stroke_rect(x, y, w, h, C_CHROME, 10.0, 2.0)
-	var ix := x + 8.0
-	var iy := y + 8.0
-	var iw := w - 16.0
-	var ih := h - 16.0
-	_fill_rect(ix, iy, iw, ih, C_FABRIC, 7.0)
-	var row_count := int(ih / 6.0)
-	for row in row_count:
-		var ry := iy + float(row) * 6.0 + 3.0
-		if ry > iy + ih - 4.0:
-			break
-		draw_line(Vector2(ix + 6.0, ry), Vector2(ix + iw - 6.0, ry),
-			Color(0.10, 0.09, 0.07), 1.0)
-	var cx_ := x + w * 0.5
-	var cy_ := y + h * 0.5
-	draw_circle(Vector2(cx_, cy_), w * 0.28, Color(0.07, 0.065, 0.075))
-	draw_circle(Vector2(cx_, cy_), w * 0.22, Color(0.09, 0.085, 0.095))
-	draw_circle(Vector2(cx_, cy_), w * 0.09, Color(0.11, 0.10, 0.12))
-	draw_circle(Vector2(cx_, cy_), w * 0.030, Color(C_CHROME, 0.5))
-	# Vidalar
-	var corners_x := [x + 10.0, x + w - 10.0, x + w - 10.0, x + 10.0]
-	var corners_y := [y + 10.0, y + 10.0,      y + h - 10.0, y + h - 10.0]
-	for i in 4:
-		draw_circle(Vector2(corners_x[i], corners_y[i]), 4.0, C_CHROME)
-		draw_circle(Vector2(corners_x[i], corners_y[i]), 1.5, C_PANEL)
-
-# ─── Frekans şeridi ────────────────────────────────────────────────────────
-
-func _draw_freq_scale(x: float, y: float, w: float, h: float) -> void:
-	_fill_rect(x, y, w, h, Color(0.08, 0.06, 0.03), 5.0)
-	_stroke_rect(x, y, w, h, C_GOLD, 5.0, 1.5)
-	var font := ThemeDB.fallback_font
-	draw_string(font, Vector2(x + 8.0, y + h * 0.55),
-		"MITING FM", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(C_GOLD, 0.65))
-	draw_string(font, Vector2(x + w - 8.0, y + h * 0.55),
-		"STEREO", HORIZONTAL_ALIGNMENT_RIGHT, -1, 9, Color(C_AMBER, 0.75))
-	var lx   := x + 14.0
-	var lw   := w - 28.0
-	for tick in 41:
-		var freq := 88.0 + float(tick) * 0.5
-		var tx   := lx + lw * (freq - 88.0) / 20.0
-		var major := (tick % 2) == 0
-		var th    := h * (0.50 if major else 0.28)
-		var col   := Color(C_GOLD, 0.75 if major else 0.30)
-		draw_line(Vector2(tx, y + 4.0), Vector2(tx, y + 4.0 + th), col, 1.0)
-		if major and (int(freq) % 4 == 0):
-			draw_string(font, Vector2(tx - 9.0, y + h - 2.0),
-				str(int(freq)), HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color(C_GOLD, 0.60))
-	# Hareketli iğne
-	var needle_freq := 104.2 + 1.8 * sin(t * 0.28)
-	var nx := lx + lw * clampf((needle_freq - 88.0) / 20.0, 0.0, 1.0)
-	draw_line(Vector2(nx, y + 2.0), Vector2(nx, y + h - 2.0),
-		Color(C_AMBER, 0.88 + 0.12 * sin(t * 4.0)), 2.0)
-	draw_circle(Vector2(nx, y + 5.0), 4.5, C_AMBER)
-	# Tarama efekti
-	var sx2 := lx + lw * _scan
-	draw_line(Vector2(sx2, y + 2.0), Vector2(sx2, y + h - 2.0),
-		Color(1.0, 1.0, 1.0, 0.05 + 0.03 * sin(t * 5.0)), 1.0)
-
-# ─── LED satırı ────────────────────────────────────────────────────────────
-
-func _draw_led_row(x: float, y: float, _w: float) -> void:
-	# Power LED
-	draw_circle(Vector2(x + 6.0, y + 7.0), 5.0,
-		Color(C_RED_LED, 0.82 + 0.18 * sin(t * 3.0)))
-	draw_circle(Vector2(x + 6.0, y + 7.0), 2.5, Color(1.0, 0.55, 0.55, 0.85))
-	var font := ThemeDB.fallback_font
-	var labels := ["STEREO", "104.2 MHz", "CANLI"]
-	var on_arr := [true, true, true]
-	var lx := x + 22.0
-	for i in 3:
-		var on: bool = on_arr[i]
-		var col := Color(C_AMBER, 0.88 if on else 0.14)
-		draw_rect(Rect2(lx, y + 4.0, 6.0, 6.0), col)
-		draw_string(font, Vector2(lx + 9.0, y + 13.0),
-			labels[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 9,
-			Color(col, 0.80 if on else 0.20))
-		lx += 80.0
-	# REC yanıp sönen
-	var rec_on := fmod(t, 1.4) > 0.7
-	var rec_col := Color(C_RED_LED, 0.88 if rec_on else 0.12)
-	draw_rect(Rect2(lx, y + 4.0, 6.0, 6.0), rec_col)
-	draw_string(font, Vector2(lx + 9.0, y + 13.0),
-		"REC", HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color(rec_col, 0.80 if rec_on else 0.15))
-	# Sinyal çubukları (sağ taraf)
-	var sig_x := x + _w
-	for i in 5:
-		var bh2 := 4.0 + float(i) * 2.5
-		var bx2  := sig_x - float(5 - i) * 9.0
-		var filled := _signal > float(i) / 4.5
-		var sc := Color(C_GREEN, 0.88 if filled else 0.13)
-		draw_rect(Rect2(bx2, y + 14.0 - bh2, 6.0, bh2), sc)
-
-# ─── VU-meter ──────────────────────────────────────────────────────────────
-
-func _draw_vu_meter(x: float, y: float, w: float, h: float) -> void:
-	_fill_rect(x, y, w, h, Color(0.04, 0.04, 0.05), 4.0)
-	var bar_w := (w - 10.0) / 8.0 - 2.0
+	# ── Film grain / vignette ──────────────────────────────────────────────
+	# Vignet (köşeleri karart)
 	for i in 8:
-		var bx2 := x + 5.0 + float(i) * (bar_w + 2.0)
-		var level := _vu_levels[i]
-		var segs := 12
-		for seg in segs:
-			var ratio := float(seg) / float(segs - 1)
-			var sy2   := y + h - 4.0 - ratio * (h - 8.0)
-			var active := level > ratio
-			var col: Color
-			if ratio > 0.84:
-				col = Color(C_RED_LED, 0.88 if active else 0.07)
-			elif ratio > 0.64:
-				col = Color(C_GOLD, 0.88 if active else 0.07)
-			else:
-				col = Color(C_GREEN, 0.82 if active else 0.07)
-			draw_rect(Rect2(bx2, sy2, bar_w, h / float(segs) * 0.68), col)
+		var a := 0.03 + float(i) * 0.015
+		var margin := float(i) * 20.0
+		draw_rect(Rect2(margin, margin * 0.75, s.x - margin * 2.0, s.y - margin * 1.5),
+			Color(0.0, 0.0, 0.0, a), false, 20.0)
 
-# ─── Köşeli dikdörtgen yardımcıları ────────────────────────────────────────
-# GDScript 4 mixed-type array'dan kaçınmak için sadece float alır.
+	# Yatay ince tarama çizgileri (CRT efekti, hafif)
+	var line_spacing := 4.0
+	var line_count := int(s.y / line_spacing)
+	for i in line_count:
+		if i % 2 == 0:
+			draw_line(Vector2(0.0, float(i) * line_spacing),
+				Vector2(s.x, float(i) * line_spacing),
+				Color(0.0, 0.0, 0.0, 0.08), 1.0)
 
-func _fill_rect(x: float, y: float, w: float, h: float, color: Color, radius: float) -> void:
-	var r := minf(radius, minf(w, h) * 0.5)
-	# Orta yatay şerit
-	draw_rect(Rect2(x, y + r, w, h - r * 2.0), color)
-	# Üst + alt yatay şerit (kenar boşluğu hariç)
-	draw_rect(Rect2(x + r, y, w - r * 2.0, r), color)
-	draw_rect(Rect2(x + r, y + h - r, w - r * 2.0, r), color)
-	# Dört köşe çeyrek daire
-	_quarter(x + r,       y + r,       r, PI,        color)
-	_quarter(x + w - r,   y + r,       r, PI * 1.5,  color)
-	_quarter(x + w - r,   y + h - r,   r, 0.0,       color)
-	_quarter(x + r,       y + h - r,   r, PI * 0.5,  color)
+	# ── Alt VU-meter şeridi ──────────────────────────────────────────────────
+	var vu_h := 48.0
+	var vu_y := s.y - vu_h - 12.0
+	var vu_x := s.x * 0.02
+	var vu_w := s.x * 0.96
+	# Arka plan
+	draw_rect(Rect2(vu_x, vu_y, vu_w, vu_h), Color(0.0, 0.0, 0.0, 0.65))
+	draw_rect(Rect2(vu_x, vu_y, vu_w, vu_h), Color(C_GOLD, 0.15), false, 1.0)
+	# Barlar
+	var bar_count := 40
+	var bar_w := (vu_w - 8.0) / float(bar_count) - 1.5
+	for i in bar_count:
+		var bx := vu_x + 4.0 + float(i) * (bar_w + 1.5)
+		var vu_idx := int(float(i) / float(bar_count) * 8.0)
+		var level := _vu_levels[clampi(vu_idx, 0, 7)]
+		var jitter := abs(sin(t * 3.0 + float(i) * 0.8)) * 0.2
+		var lv := clampf(level + jitter, 0.0, 1.0)
+		var bh_full := vu_h - 8.0
+		var bh := bh_full * lv
+		var ratio := lv
+		var col: Color
+		if ratio > 0.80:
+			col = Color(C_RED_LED, 0.90)
+		elif ratio > 0.60:
+			col = Color(C_AMBER, 0.88)
+		else:
+			col = Color(C_GREEN, 0.82)
+		draw_rect(Rect2(bx, vu_y + 4.0 + bh_full - bh, bar_w, bh), col)
 
-func _stroke_rect(x: float, y: float, w: float, h: float, color: Color, radius: float, lw: float) -> void:
-	var r := minf(radius, minf(w, h) * 0.5)
-	draw_line(Vector2(x + r, y),         Vector2(x + w - r, y),         color, lw)
-	draw_line(Vector2(x + w, y + r),     Vector2(x + w, y + h - r),     color, lw)
-	draw_line(Vector2(x + r, y + h),     Vector2(x + w - r, y + h),     color, lw)
-	draw_line(Vector2(x, y + r),         Vector2(x, y + h - r),         color, lw)
+	# ── Frekans band bilgisi (sol alt köşe) ────────────────────────────────
+	var font := ThemeDB.fallback_font
+	draw_string(font, Vector2(vu_x + 8.0, vu_y - 8.0),
+		"104.2 MHz  •  MITING FM  •  CANLI YAYIN",
+		HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(C_GOLD, 0.65))
 
-func _quarter(cx: float, cy: float, r: float, start_angle: float, color: Color) -> void:
-	var steps := 8
-	var pts   := PackedVector2Array()
-	pts.append(Vector2(cx, cy))
-	for i in steps + 1:
-		var a := start_angle + PI * 0.5 * float(i) / float(steps)
-		pts.append(Vector2(cx + cos(a) * r, cy + sin(a) * r))
-	draw_colored_polygon(pts, color)
+	# ── Sağ alt sinyal çubukları ──────────────────────────────────────────
+	var sig_x := s.x - 70.0
+	for i in 5:
+		var bh2 := 5.0 + float(i) * 3.5
+		var bx2 := sig_x + float(i) * 11.0
+		var filled := _signal > float(i) / 5.0
+		draw_rect(Rect2(bx2, vu_y - bh2 - 6.0, 8.0, bh2),
+			Color(C_GREEN, 0.88 if filled else 0.12))
