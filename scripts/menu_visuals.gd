@@ -49,13 +49,6 @@ static func _setup_background(menu: Control) -> void:
 		menu.add_child(backdrop)
 		menu.move_child(backdrop, 1)
 
-	# RadioTuner — merkez panel içine yerleşecek (layout'ta eklenir)
-	var tuner := menu.get_node_or_null("MitingFMTuner") as RadioTuner
-	if tuner == null:
-		tuner = RadioTunerGd.new()
-		tuner.name = "MitingFMTuner"
-		# Tuner'ı merkez panelin içine koyacağız, layout aşamasında yapılır
-
 # ── 2. Layout — CenterBox'ı radyonun merkez kutusuna hizala ─────────────────
 
 static func _setup_layout(menu: Control) -> void:
