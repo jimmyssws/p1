@@ -45,12 +45,46 @@ static func apply_match_hud(root: Node) -> void:
 	if header:
 		header.add_theme_stylebox_override("panel", _topbar_box())
 		header.custom_minimum_size.y = 48
+
 	var timer := root.find_child("TimerLabel", true, false) as Label
 	if timer:
-		timer.add_theme_color_override("font_color", WHITE)
+		timer.add_theme_color_override("font_color", Color(1.0, 0.88, 0.30, 1.0))
 		timer.add_theme_color_override("font_outline_color", INK)
 		timer.add_theme_constant_override("outline_size", 3)
-		timer.add_theme_font_size_override("font_size", 20)
+		timer.add_theme_font_size_override("font_size", 16)
+
+	# Oy oranı etiketleri — font küçük tutulur, kırpma olmaz
+	var pres := root.get_node_or_null("TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/PresVoteLabel") as Label
+	if pres:
+		pres.add_theme_font_size_override("font_size", 11)
+		pres.add_theme_color_override("font_color", Color(0.30, 0.72, 1.0, 1.0))
+		pres.add_theme_color_override("font_outline_color", INK)
+		pres.add_theme_constant_override("outline_size", 2)
+		pres.clip_text = false
+
+	var opp := root.get_node_or_null("TopBarHUD/TopHeader/Margin/HBox/CenterPollBox/OppVoteLabel") as Label
+	if opp:
+		opp.add_theme_font_size_override("font_size", 11)
+		opp.add_theme_color_override("font_color", Color(1.0, 0.45, 0.45, 1.0))
+		opp.add_theme_color_override("font_outline_color", INK)
+		opp.add_theme_constant_override("outline_size", 2)
+		opp.clip_text = false
+
+	# Rol etiketi
+	var role := root.get_node_or_null("TopBarHUD/TopHeader/Margin/HBox/RoleBadge/RoleLabel") as Label
+	if role:
+		role.add_theme_font_size_override("font_size", 12)
+		role.add_theme_color_override("font_color", WHITE)
+		role.add_theme_color_override("font_outline_color", INK)
+		role.add_theme_constant_override("outline_size", 2)
+
+	# Kişi sayısı etiketi
+	var status := root.get_node_or_null("TopBarHUD/TopHeader/Margin/HBox/StatusLabel") as Label
+	if status:
+		status.add_theme_font_size_override("font_size", 11)
+		status.add_theme_color_override("font_color", Color(0.75, 0.85, 1.0, 1.0))
+		status.add_theme_color_override("font_outline_color", INK)
+		status.add_theme_constant_override("outline_size", 2)
 
 # ── Oyuncu HUD ───────────────────────────────────────────────────────────────
 
