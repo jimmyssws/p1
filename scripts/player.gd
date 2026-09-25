@@ -844,6 +844,7 @@ func _input(event):
 			mission_done = [false, false, false]
 			has_briefcase_shield = true
 			if drone_mode: _deactivate_drone()
+			_apply_character_role_visuals("PRESIDENT")
 			_update_weapon_hud()
 			_update_role_indicator("PRESIDENT")
 			_update_mission_hud()
@@ -857,6 +858,7 @@ func _input(event):
 				guard_class = 1
 			selected_slot = 1
 			if drone_mode: _deactivate_drone()
+			_apply_character_role_visuals("GUARD")
 			_update_weapon_hud()
 			_update_role_indicator("GUARD")
 			if mission_panel: mission_panel.hide()
@@ -869,6 +871,7 @@ func _input(event):
 			pistol_ammo = 1
 			selected_slot = 1
 			if drone_mode: _deactivate_drone()
+			_apply_character_role_visuals("ASSASSIN")
 			_update_weapon_hud()
 			_update_role_indicator("ASSASSIN")
 			if mission_panel: mission_panel.hide()
